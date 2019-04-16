@@ -1,4 +1,4 @@
-# PandaCluster-GUI
+# PiCluster-GUI
 
 Repository of the GUI to interact with the Raspberry Pi cluster deployed as part of one of my Ph. D. thesis projects.
 
