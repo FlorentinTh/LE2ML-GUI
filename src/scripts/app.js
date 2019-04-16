@@ -2,6 +2,5 @@ import '../scss/app.scss';
 
 import 'jquery';
 
-jQuery(document).ready(() => {
-	
-});
+// eslint-disable-next-line no-undef
+jQuery(document).ready(() => {});

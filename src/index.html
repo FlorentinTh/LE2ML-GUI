@@ -8,38 +8,22 @@
 	<link rel="dns-prefetch" href="//code.jquery.com/" />
 </head>
 <body>
-	<div class="wrap">
-		<nav class="menu">
-			<div class="smartphone-menu-trigger"></div>
-			<header class="logo">
-				<a href="#"><img src="images/logo-liara-large.png" /></a>
-				<h2>Smart Home</h2>
-			</header>
-			
-			<ul>
-				<li class="active icon-home">
-					<span>Home</span>
-				</li>
-				<li class="icon-data-viz">
-					<span>Data Visualization</span>
-				</li>
-				<li class="icon-workflow">
-					<span>Workflow</span>
-				</li>
-				<li class="icon-cluster">
-					<span>Cluster Management</span>
-				</li>
-				<li class="icon-proxy">
-					<span>Proxy Management</span>
-				</li>
-				<li class="icon-menu-logout">
-					<span>Logout</span>
-				</li>
-			</ul>
-		</nav>
-		<main>
-	
-		</main>
+	<div class="login">
+		<header class="logo">
+			<img src="images/logo-liara-large.png" />
+			<h2>Smart Home</h2>
+		</header>
+		<div class="form">
+			<form action="">
+				<input type="text" class="user" placeholder="Username"/>
+				<input type="password" class="password" placeholder="Password"/>
+				<button type="submit">Login</button>
+			</form>
+		</div>
+		<footer class="links">
+			<a href="#">Cluster Management</a>
+			<a href="#">Proxy Management</a>
+		</footer>
 	</div>
 	<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
 </body>

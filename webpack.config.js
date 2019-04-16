@@ -10,7 +10,7 @@ const postcssNormalize = require('postcss-normalize');
 
 const PATHS = {
 	src: path.resolve(__dirname, 'src'),
-	build: path.resolve(__dirname, 'build'),
+	build: path.resolve(__dirname, 'build')
 };
 
 module.exports = (env, options) => {
@@ -20,7 +20,7 @@ module.exports = (env, options) => {
 		entry: path.join(PATHS.src, 'scripts/app.js'),
 		output: {
 			path: PATHS.build,
-			filename: 'app.min.js',
+			filename: 'scripts/app.min.js'
 		},
 		module: {
 			rules: [
@@ -28,14 +28,14 @@ module.exports = (env, options) => {
 					test: /\.js$/,
 					exclude: /node_modules/,
 					use: {
-						loader: 'babel-loader',
-					},
+						loader: 'babel-loader'
+					}
 				},
 				{
 					enforce: 'pre',
 					test: /\.(js|s?[ca]ss)$/,
 					include: PATHS.src,
-					loader: 'import-glob',
+					loader: 'import-glob'
 				},
 				{
 					test: /\.(ttf|otf|eot|woff2?|png|jpe?g|gif|svg|ico)$/,
@@ -45,33 +45,40 @@ module.exports = (env, options) => {
 						limit: 2048,
 						name: '[name].[ext]',
 						useRelativePath: true,
-						outputPath: 'images/',
-					},
+						outputPath: 'images/'
+					}
 				},
 				{
 					test: /\.html$/,
 					use: [
 						{
 							loader: 'html-loader',
-							options: { 
-								minimize: false 
-							},
-						},
-					],
-				},
-			],
+							options: {
+								minimize: false
+							}
+						}
+					]
+				}
+			]
 		},
 		plugins: [
-			new CleanWebpackPlugin(),
-
+			new CleanWebpackPlugin({
+				verbose: true
+			}),
 			new HtmlWebPackPlugin({
 				filename: 'index.html',
-				template: path.join(PATHS.src, 'index.html'),
+				inject: true,
+				template: path.join(PATHS.src, 'index.html')
 			}),
+			new HtmlWebPackPlugin({
+				filename: 'admin.html',
+				inject: true,
+				template: path.join(PATHS.src, 'admin.html')
+			})
 		],
 		externals: {
-			jquery: 'jQuery',
-		},
+			jquery: 'jQuery'
+		}
 	};
 
 	const DEV = {
@@ -79,17 +86,17 @@ module.exports = (env, options) => {
 			rules: [
 				{
 					test: /\.(sa|sc|c)ss$/,
-					use: ['style-loader', 'css-loader', 'sass-loader'],
-				},
-			],
+					use: [ 'style-loader', 'css-loader', 'sass-loader' ]
+				}
+			]
 		},
-		plugins: [new webpack.HotModuleReplacementPlugin()],
+		plugins: [ new webpack.HotModuleReplacementPlugin() ],
 		devtool: 'source-map',
 		devServer: {
 			hot: true,
 			compress: true,
-			port: 8080,
-		},
+			port: 8080
+		}
 	};
 
 	const PROD = {
@@ -98,8 +105,15 @@ module.exports = (env, options) => {
 				{
 					test: /\.(sa|sc|c)ss$/,
 					use: [
-						MiniCssExtractPlugin.loader, 
-						'css-loader',
+						{
+							loader: MiniCssExtractPlugin.loader,
+							options: {
+								publicPath: '../'
+							}
+						},
+						{
+							loader: 'css-loader'
+						},
 						{
 							loader: 'postcss-loader',
 							options: {
@@ -108,17 +122,17 @@ module.exports = (env, options) => {
 									require('postcss-flexbugs-fixes'),
 									require('postcss-preset-env')({
 										autoprefixer: {
-											flexbox: 'no-2009',
+											flexbox: 'no-2009'
 										},
-										stage: 3,
+										stage: 3
 									}),
-									postcssNormalize(),
+									postcssNormalize()
 								],
-								sourceMap: true,
-							},
+								sourceMap: true
+							}
 						},
-						'sass-loader',
-					],
+						'sass-loader'
+					]
 				},
 				{
 					test: /\.(gif|png|jpe?g|svg)$/i,
@@ -129,26 +143,26 @@ module.exports = (env, options) => {
 							options: {
 								mozjpeg: {
 									progressive: true,
-									quality: 75,
+									quality: 75
 								},
 								optipng: {
-									enabled: false,
+									enabled: false
 								},
 								pngquant: {
 									quality: '75-90',
-									speed: 4,
+									speed: 4
 								},
 								gifsicle: {
-									interlaced: false,
+									interlaced: false
 								},
 								webp: {
-									quality: 75,
-								},
-							},
-						},
-					],
-				},
-			],
+									quality: 75
+								}
+							}
+						}
+					]
+				}
+			]
 		},
 		optimization: {
 			minimizer: [
@@ -156,31 +170,31 @@ module.exports = (env, options) => {
 					terserOptions: {
 						compress: {
 							warnings: true,
-							drop_console: true,
+							drop_console: true
 						},
 						output: {
-							comments: false,
-						},
+							comments: false
+						}
 					},
 					cache: true,
 					parallel: true,
-					sourceMap: true,
+					sourceMap: true
 				}),
 
 				new OptimizeCSSAssetsPlugin({
 					cssProcessor: require('cssnano'),
 					cssProcessorPluginOptions: {
-						preset: ['default', { discardComments: { removeAll: true } }],
-					},
-				}),
-			],
+						preset: [ 'default', { discardComments: { removeAll: true } } ]
+					}
+				})
+			]
 		},
 		plugins: [
 			new MiniCssExtractPlugin({
-				filename: 'app.min.css',
-			}),
-		],
+				filename: 'css/app.min.css'
+			})
+		]
 	};
 
-	return isProd ? merge(COMMON, PROD) : merge(COMMON, DEV) ;
+	return isProd ? merge(COMMON, PROD) : merge(COMMON, DEV);
 };
