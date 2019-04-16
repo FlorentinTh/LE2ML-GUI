@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const merge = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -70,6 +71,24 @@ module.exports = (env, options) => {
 		],
 		externals: {
 			jquery: 'jQuery',
+		},
+	};
+
+	const DEV = {
+		module: {
+			rules: [
+				{
+					test: /\.(sa|sc|c)ss$/,
+					use: ['style-loader', 'css-loader', 'sass-loader'],
+				},
+			],
+		},
+		plugins: [new webpack.HotModuleReplacementPlugin()],
+		devtool: 'source-map',
+		devServer: {
+			hot: true,
+			compress: true,
+			port: 8080,
 		},
 	};
 
@@ -163,5 +182,5 @@ module.exports = (env, options) => {
 		],
 	};
 
-	return isProd ? merge(COMMON, PROD) : null ;
+	return isProd ? merge(COMMON, PROD) : merge(COMMON, DEV) ;
 };
