@@ -1,6 +1,6 @@
 # PandaCluster-GUI
 
-Repository of the GUI to interact with the smart home cluster deployed as part of one of my Ph. D. thesis projects.
+Repository of the GUI to interact with the Raspberry Pi cluster deployed as part of one of my Ph. D. thesis projects.
 
 ## Authors
 
