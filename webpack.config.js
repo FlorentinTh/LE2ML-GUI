@@ -17,10 +17,11 @@ module.exports = (env, options) => {
 	const isProd = options.mode === 'production';
 
 	const COMMON = {
+		mode: isProd ? 'production' : 'development',
 		entry: path.join(PATHS.src, 'scripts/app.js'),
 		output: {
 			path: PATHS.build,
-			filename: 'scripts/app.min.js'
+			filename: 'scripts/app' + (isProd ? '.min.js' : '.js')
 		},
 		module: {
 			rules: [
@@ -122,6 +123,7 @@ module.exports = (env, options) => {
 									require('postcss-flexbugs-fixes'),
 									require('postcss-preset-env')({
 										autoprefixer: {
+											grid: 'true',
 											flexbox: 'no-2009'
 										},
 										stage: 3
@@ -191,7 +193,7 @@ module.exports = (env, options) => {
 		},
 		plugins: [
 			new MiniCssExtractPlugin({
-				filename: 'css/app.min.css'
+				filename: 'css/main' + (isProd ? '.min.css' : '.css')
 			})
 		]
 	};

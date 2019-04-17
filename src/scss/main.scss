@@ -19,36 +19,6 @@ $icon-cluster: "../images/icon-cluster.png";
 $icon-proxy: "../images/icon-proxy.png";
 $icon-menu-logout: "../images/icon-logout.png";
 
-@mixin optional-at-root($sel) {
-	@at-root #{if(not &, $sel, selector-append(&, $sel))} {
-		@content;
-	}
-}
-
-@mixin placeholder {
-	@include optional-at-root('::-webkit-input-placeholder') {
-		@content;
-	}
-
-	@include optional-at-root(':-moz-placeholder') {
-		@content;
-	}
-
-	@include optional-at-root('::-moz-placeholder') {
-		@content;
-	}
-
-	@include optional-at-root(':-ms-input-placeholder') {
-		@content;
-	}
-}
-
-@mixin box-shadow($params...) {
-	-webkit-box-shadow: $params;
-	-moz-box-shadow: $params;
-	box-shadow: $params;
-}
-
 * {
 	margin: 0;
 	padding: 0;
@@ -101,12 +71,13 @@ body {
 	.user,
 	.password {
 		background: $color-secondary;
-		@include box-shadow(inset 1px 2px 6px rgba(43, 41, 41, 0.65));
+		box-shadow: inset 1px 2px 6px rgba(43, 41, 41, 0.65);
 		padding: 0 1em;
-		@include placeholder {
+		color: $color-text;
+
+		&::placeholder {
 			color: $color-text-darker;
 		}
-		color: $color-text;
 	}
 
 	button {
