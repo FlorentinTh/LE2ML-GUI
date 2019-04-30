@@ -1,6 +1,11 @@
+/* eslint-disable no-undef */
 import '../scss/main.scss';
 
 import 'jquery';
 
-// eslint-disable-next-line no-undef
-jQuery(document).ready(() => {});
+import * as theme from './utils/theme';
+
+jQuery(document).ready(() => {
+	theme.init();
+	theme.toggle();
+});

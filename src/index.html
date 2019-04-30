@@ -6,24 +6,38 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>SmartHome</title>
 	<link rel="dns-prefetch" href="//code.jquery.com/" />
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 </head>
 <body>
-	<div class="login">
-		<header class="logo">
-			<img src="images/logo-liara-large.png" />
-			<h2>Smart Home</h2>
-		</header>
-		<div class="form">
-			<form action="">
-				<input type="text" class="user" placeholder="Username"/>
-				<input type="password" class="password" placeholder="Password"/>
-				<button type="submit">Login</button>
-			</form>
+	<div id="root">
+		<div class="wrap">
+			<div class="login">
+				<header class="logo">
+					<img src="images/logo-liara-large.png" />
+					<h2>Smart Home</h2>
+				</header>
+				<div class="form">
+					<form action="">
+						<input type="text" class="user" placeholder="Username"/>
+						<input type="password" class="password" placeholder="Password"/>
+						<button type="submit">Login</button>
+					</form>
+				</div>
+				<footer class="links">
+					<div class="switch-theme">
+						<input type="radio" name="switch" id="switch-light">
+						<input type="radio" name="switch" id="switch-dark">
+			
+						<label for="switch-light"><i class="fas fa-sun"></i></label>
+						<label for="switch-dark"><i class="fas fa-moon"></i></label>
+			
+						<span class="toggle"></span>
+					</div>
+					<a href="#">Cluster Management</a>
+					<a href="#">Proxy Management</a>
+				</footer>
+			</div>
 		</div>
-		<footer class="links">
-			<a href="#">Cluster Management</a>
-			<a href="#">Proxy Management</a>
-		</footer>
 	</div>
 	<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
 </body>
