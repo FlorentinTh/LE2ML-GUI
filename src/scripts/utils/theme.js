@@ -1,7 +1,9 @@
 /* eslint-disable no-undef */
 var $rootApp = $('#root');
+
 var $switchLight = $('input#switch-light');
 var $switchDark = $('input#switch-dark');
+
 var theme;
 
 export function init() {

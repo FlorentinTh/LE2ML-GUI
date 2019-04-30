@@ -6,7 +6,7 @@ main {
 .menu {
 	@include themify($themes) {
 		background-color: themed('color-secondary');
-		border-right: 3px solid themed('color-accent');
+		border-right: 3px solid $color-accent;
 	}
 
 	height: 100vh;
@@ -63,7 +63,7 @@ main {
 
 			&.active {
 				@include themify($themes) {
-					background-color: themed('color-accent');
+					background-color: $color-accent;
 					color: 3px solid themed('color-text-active');
 				}
 			}
@@ -97,7 +97,7 @@ main {
 	}
 }
 
-@media screen and (max-width: 900px) and (min-width: 400px) {
+@media screen and (max-width: 900px) {
 	.menu {
 		width: $menu-width-tablet;
 
