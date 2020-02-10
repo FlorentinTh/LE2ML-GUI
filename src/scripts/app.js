@@ -1,11 +1,8 @@
 /* eslint-disable no-undef */
 import '../scss/main.scss';
-
-import 'jquery';
-
-import * as theme from './utils/theme';
+import { Router } from './middleware/Router';
 
 jQuery(document).ready(() => {
-	theme.init();
-	theme.toggle();
+	let router = new Router();
+	router.route();
 });

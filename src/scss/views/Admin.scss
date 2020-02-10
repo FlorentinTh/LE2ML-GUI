@@ -44,21 +44,10 @@ main {
 			font-weight: regular;
 			transition: all 0.10s linear;
 			cursor: pointer;
+			font-size: 1.25em;
 
 			& > *:not(i) {
 				padding-left: 1em;
-			}
-
-			&:first-of-type {
-				i {
-					font-size: .85em;
-				}
-			}
-
-			&:not(:first-of-type) {
-				i {
-					font-size: 1.25em;
-				}
 			}
 
 			&.active {
@@ -82,16 +71,15 @@ main {
 				outline: none;
 			}
 
-			&:first-of-type {
-				padding-left: 0;
-				padding-right: 0;
-			}
-
 			.switch-theme {
 				height: 19px;
 				position: relative;
 				width: 47px;
 				margin: 0 auto 30px auto;
+
+				i {
+					font-size: .85em;
+				}
 			}
 		}
 	}
