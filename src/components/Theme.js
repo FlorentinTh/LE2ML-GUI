@@ -3,9 +3,10 @@ export class Theme {
 		this.context = context;
 		this.switchLight = this.context.querySelector('div.switch-theme input#switch-light');
 		this.switchDark = this.context.querySelector('div.switch-theme input#switch-dark');
+		this._init();
 	}
 
-	init() {
+	_init() {
 		let theme;
 
 		if (window.localStorage.getItem('theme') === null) {

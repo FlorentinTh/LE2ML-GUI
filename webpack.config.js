@@ -18,10 +18,10 @@ module.exports = (env, options) => {
 
 	const COMMON = {
 		mode: isProd ? 'production' : 'development',
-		entry: path.join(PATHS.src, 'scripts/app.js'),
+		entry: path.join(PATHS.src, 'main.js'),
 		output: {
 			path: PATHS.build,
-			filename: 'scripts/app' + (isProd ? '.min.js' : '.js')
+			filename: 'scripts/main' + (isProd ? '.min.js' : '.js')
 		},
 		module: {
 			rules: [
@@ -46,7 +46,7 @@ module.exports = (env, options) => {
 						limit: 2048,
 						name: '[name].[ext]',
 						useRelativePath: true,
-						outputPath: 'images/'
+						outputPath: 'assets/'
 					}
 				},
 				{
@@ -168,6 +168,7 @@ module.exports = (env, options) => {
 			]
 		},
 		optimization: {
+			minimize: true,
 			minimizer: [
 				new TerserPlugin({
 					terserOptions: {
@@ -181,7 +182,7 @@ module.exports = (env, options) => {
 					},
 					cache: true,
 					parallel: true,
-					sourceMap: true
+					sourceMap: false
 				}),
 
 				new OptimizeCSSAssetsPlugin({
@@ -194,7 +195,7 @@ module.exports = (env, options) => {
 		},
 		plugins: [
 			new MiniCssExtractPlugin({
-				filename: 'css/main' + (isProd ? '.min.css' : '.css')
+				filename: 'styles/style' + (isProd ? '.min.css' : '.css')
 			})
 		]
 	};

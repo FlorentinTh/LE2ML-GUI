@@ -85,7 +85,7 @@ main {
 	}
 }
 
-.main-content {
+main.content {
 	position: relative;
 	margin: 50px 50px 50px $menu-width-desktop + 50px;
 	text-align: center;
@@ -171,7 +171,7 @@ main {
 		}
 	}
 
-	.main-content {
+	main.content {
 		margin: 25px 25px 25px $menu-width-tablet + 25px;
 	}
 }

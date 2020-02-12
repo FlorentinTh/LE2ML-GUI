@@ -1,6 +1,8 @@
-import { Theme } from './Theme';
-import { Url } from './../utils/Url';
-import { Router } from './../middleware/Router';
+import { Router } from './../../router/Router';
+import { Theme } from './../Theme';
+import { URL } from '../../utils/URL';
+
+import menu from '../../pages/fragment/admin/menu.html';
 
 const defaultContext = document.querySelector('nav.menu');
 
@@ -9,7 +11,7 @@ const defaultItems = [
 	{ label: 'Running Jobs', icon: 'fas fa-tasks', url: null },
 	{ label: 'Cluster Management', icon: 'fab fa-docker', url: 'https://www.portainer.io/' },
 	{ label: 'Proxy Management', icon: 'fas fa-network-wired', url: 'https://containo.us/traefik/' },
-	{ label: 'Logout', icon: 'fas fa-sign-out-alt', url: null }
+	{ label: 'Logout', icon: 'fas fa-sign-out-alt', url: '#' }
 ];
 
 export class Menu {
@@ -17,52 +19,42 @@ export class Menu {
 		this.context = context;
 		this.items = items;
 		this.theme = theme;
+		this._init();
 	}
 
-	build() {
-		let content = `<div class="smartphone-menu-trigger"></div>
-					<header class="logo">
-						<a href="#">
-							<img src="images/logo-liara-large.png" />
-						</a>
-						<h2>Dashboard</h2>
-					</header>
-					<ul>`;
+	_init() {
+		this._build();
+		this.setActive(URL.getHash());
 
-		if (this.theme) {
-			content += `<li>
-							<div class="switch-theme">
-								<input type="radio" name="switch" id="switch-light">
-								<input type="radio" name="switch" id="switch-dark" checked>
+		window.onhashchange = (event) => {
+			Router.route();
+			this.setActive(URL.getHash());
+		};
+	}
 
-								<label for="switch-light"><i class="fas fa-sun"></i></label>
-								<label for="switch-dark"><i class="fas fa-moon"></i></label>
+	_build() {
+		this.context.insertAdjacentHTML('beforeend', menu);
 
-								<span class="toggle"></span>
-							</div>
-						</li>`;
-		}
+		let content = '';
 
 		Array.from(this.items, (item) => {
 			content += `<li>
 							<i class="${item.icon}"></i>`;
 			if (item.url === null) {
-				content += `<a href="${Url.toAnchor(Url.toSlug(item.label))}">${item.label}</a>`;
+				content += `<a href="${URL.toAnchor(URL.toSlug(item.label))}">${item.label}</a>`;
 			} else {
 				content += `<a href="${item.url}">${item.label}</a>`;
 			}
 			content += '</li>';
 		});
 
-		content += '</ul>';
-		this.context.innerHTML = content;
+		this.context.querySelector('ul').insertAdjacentHTML('beforeend', content);
 	}
 
 	enableTheme() {
 		if (this.theme) {
-			const ctx = document.body.querySelector('*[class^="theme-"]');
-			const theme = new Theme(ctx);
-			theme.init();
+			const context = document.body.querySelector('*[class^="theme-"]');
+			const theme = new Theme(context);
 			theme.toggle();
 		}
 	}
@@ -79,7 +71,8 @@ export class Menu {
 		for (let i = 0; i < list.length; ++i) {
 			const item = list[i];
 			item.removeAttribute('class');
-			if (item.children[1].hash === hash) {
+			const hashAttr = item.children[1].hash;
+			if (URL.getHashName(hashAttr) === hash && hashAttr !== '') {
 				item.setAttribute('class', 'active');
 			}
 		}
@@ -92,28 +85,30 @@ export class Menu {
 		this.switchMenu();
 	}
 
-	switchMenu(handler) {
-		let hash = Router.getHash();
-
-		if (hash === '') {
-			hash = Url.toAnchor(Url.toSlug(this.items[0].label));
-		}
-
-		this.setActive(hash);
-		Router.setRoute(Router.getPath() + hash);
-		Router.route(hash);
-
+	switch(handler) {
 		const links = this.context.querySelectorAll('a');
 
 		for (let i = 0; i < links.length; ++i) {
 			const link = links[i];
 			link.addEventListener('click', (event) => {
 				event.preventDefault();
-				this.setActive(event.target.hash);
-				Router.setRoute(Router.getPath() + event.target.hash);
+				event.stopImmediatePropagation();
 
-				if (typeof handler == 'function') {
-					handler(event.target.hash);
+				if (link.getAttribute('href').startsWith('#')) {
+					this.setActive(URL.getHashName(event.target.hash));
+					Router.setRoute(URL.getPage() + event.target.hash);
+
+					if (typeof handler === 'function') {
+						handler(event.target.hash);
+					} else {
+						throw new Error('handler must be a function.');
+					}
+				} else {
+					if (typeof handler === 'function') {
+						handler(null, link.getAttribute('href'));
+					} else {
+						throw new Error('handler must be a function.');
+					}
 				}
 			});
 		}
