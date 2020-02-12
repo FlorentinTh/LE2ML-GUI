@@ -1,10 +1,8 @@
-/* eslint-disable no-undef */
-
 export class Theme {
 	constructor(context) {
 		this.context = context;
-		this.switchLight = $(this.context).find('div.switch-theme input#switch-light');
-		this.switchDark = $(this.context).find('div.switch-theme input#switch-dark');
+		this.switchLight = this.context.querySelector('div.switch-theme input#switch-light');
+		this.switchDark = this.context.querySelector('div.switch-theme input#switch-dark');
 	}
 
 	init() {
@@ -18,24 +16,30 @@ export class Theme {
 		}
 
 		if (theme === 'dark') {
-			this.switchDark.prop('checked', true);
+			this.switchDark.checked = true;
 		} else {
-			this.switchLight.prop('checked', true);
+			this.switchLight.checked = true;
 		}
-		this.context.removeClass().addClass(`theme-${theme}`);
+		this.context.className = '';
+		this.context.className = `theme-${theme}`;
 	}
 
 	toggle() {
-		let input = $(this.context).find('div.switch-theme input[name="switch"]');
-		$(input).on('change', (event) => {
-			if (event.target.id === 'switch-dark') {
-				localStorage.setItem('theme', 'dark');
-				this.switchDark.prop('checked', true);
-			} else {
-				localStorage.setItem('theme', 'light');
-				this.switchLight.prop('checked', true);
-			}
-			this.context.removeClass().addClass(`theme-${window.localStorage.getItem('theme')}`);
-		});
+		const inputs = this.context.querySelectorAll('div.switch-theme input[name="switch"]');
+
+		for (let i = 0; i < inputs.length; i++) {
+			const input = inputs[i];
+			input.addEventListener('change', (event) => {
+				if (event.target.id === 'switch-dark') {
+					localStorage.setItem('theme', 'dark');
+					this.switchDark.checked = true;
+				} else {
+					localStorage.setItem('theme', 'light');
+					this.switchLight.checked = true;
+				}
+				this.context.className = '';
+				this.context.className = `theme-${window.localStorage.getItem('theme')}`;
+			});
+		}
 	}
 }

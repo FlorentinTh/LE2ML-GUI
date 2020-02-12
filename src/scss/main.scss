@@ -16,6 +16,13 @@ body {
 	font-family: "Open Sans", Helvetica Neue, Helvetica, Arial, sans-serif;
 }
 
+a {
+	text-decoration: none;
+	@include themify($themes) {
+		color: themed('color-text-primary');
+	}
+}
+
 input[type="radio"] {
 	box-sizing: border-box;
 	padding: 0;

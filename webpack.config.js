@@ -75,15 +75,12 @@ module.exports = (env, options) => {
 				filename: 'admin.html',
 				inject: true,
 				template: path.join(PATHS.src, 'admin.html')
-			}),
-			new webpack.ProvidePlugin({
-				$: 'jquery',
-				jQuery: 'jquery'
 			})
-		] /*,
-		externals: {
-			jquery: 'jQuery'
-		}*/
+			// new webpack.ProvidePlugin({
+			// 	$: 'jquery',
+			// 	jQuery: 'jquery'
+			// })
+		]
 	};
 
 	const DEV = {

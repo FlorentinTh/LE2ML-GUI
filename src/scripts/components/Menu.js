@@ -1,15 +1,15 @@
-/* eslint-disable no-undef */
 import { Theme } from './Theme';
 import { Url } from './../utils/Url';
+import { Router } from './../middleware/Router';
 
-const defaultContext = $('#root').find('nav.menu');
+const defaultContext = document.querySelector('nav.menu');
 
 const defaultItems = [
-	{ label: 'Home', icon: 'fas fa-home' },
-	{ label: 'Running Jobs', icon: 'fas fa-tasks' },
-	{ label: 'Cluster Management', icon: 'fab fa-docker' },
-	{ label: 'Proxy Management', icon: 'fas fa-network-wired' },
-	{ label: 'Logout', icon: 'fas fa-sign-out-alt' }
+	{ label: 'Home', icon: 'fas fa-home', url: null },
+	{ label: 'Running Jobs', icon: 'fas fa-tasks', url: null },
+	{ label: 'Cluster Management', icon: 'fab fa-docker', url: 'https://www.portainer.io/' },
+	{ label: 'Proxy Management', icon: 'fas fa-network-wired', url: 'https://containo.us/traefik/' },
+	{ label: 'Logout', icon: 'fas fa-sign-out-alt', url: null }
 ];
 
 export class Menu {
@@ -45,19 +45,23 @@ export class Menu {
 
 		Array.from(this.items, (item) => {
 			content += `<li>
-							<i class="${item.icon}"></i>
-							<a href="${Url.toAnchor(Url.toSlug(item.label))}">${item.label}</a>
-						</li>`;
+							<i class="${item.icon}"></i>`;
+			if (item.url === null) {
+				content += `<a href="${Url.toAnchor(Url.toSlug(item.label))}">${item.label}</a>`;
+			} else {
+				content += `<a href="${item.url}">${item.label}</a>`;
+			}
+			content += '</li>';
 		});
 
 		content += '</ul>';
-		this.context.html(content);
+		this.context.innerHTML = content;
 	}
 
 	enableTheme() {
 		if (this.theme) {
-			let ctx = $('body').find('*[class^="theme-"]');
-			let theme = new Theme(ctx);
+			const ctx = document.body.querySelector('*[class^="theme-"]');
+			const theme = new Theme(ctx);
 			theme.init();
 			theme.toggle();
 		}
@@ -67,17 +71,51 @@ export class Menu {
 		let list = null;
 
 		if (this.theme) {
-			list = this.context.children('ul').children('li').slice(1);
+			list = [].slice.call(this.context.querySelectorAll('ul > li')).slice(1);
 		} else {
-			list = this.context.children('ul').children('li');
+			list = [].slice.call(this.context.querySelectorAll('ul > li'));
 		}
 
 		for (let i = 0; i < list.length; ++i) {
-			let item = list[i];
+			const item = list[i];
 			item.removeAttribute('class');
 			if (item.children[1].hash === hash) {
 				item.setAttribute('class', 'active');
 			}
+		}
+	}
+
+	addItem(position, label, icon) {
+		this.items.splice(position, 0, { label: label, icon: icon });
+		this.build();
+		this.enableTheme();
+		this.switchMenu();
+	}
+
+	switchMenu(handler) {
+		let hash = Router.getHash();
+
+		if (hash === '') {
+			hash = Url.toAnchor(Url.toSlug(this.items[0].label));
+		}
+
+		this.setActive(hash);
+		Router.setRoute(Router.getPath() + hash);
+		Router.route(hash);
+
+		const links = this.context.querySelectorAll('a');
+
+		for (let i = 0; i < links.length; ++i) {
+			const link = links[i];
+			link.addEventListener('click', (event) => {
+				event.preventDefault();
+				this.setActive(event.target.hash);
+				Router.setRoute(Router.getPath() + event.target.hash);
+
+				if (typeof handler == 'function') {
+					handler(event.target.hash);
+				}
+			});
 		}
 	}
 }

@@ -53,7 +53,7 @@
 	button {
 		@include themify($themes) {
 			color: themed('color-text-active');
-			background-color: $color-accent;
+			background-color: themed('color-accent');
 		}
 
 		cursor: pointer;
@@ -62,7 +62,7 @@
 
 		&:hover {
 			@include themify($themes) {
-				background-color: $color-accent-darker;
+				background-color: themed('color-accent-darker');
 			}
 		}
 	}

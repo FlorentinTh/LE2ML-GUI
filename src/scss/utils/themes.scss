@@ -6,6 +6,9 @@ $themes: (
 			color-text-active: #f9f9f9,
 			color-text-primary: #2b2b2b,
 			color-text-secondary: #808e9b,
+			color-accent: #68bd45,
+			color-accent-darker: #54923c,
+			color-accent-hover: #7fc559,
 			box-shadow: rgba(221, 217, 217, 0.65)
 		),
 	dark:
@@ -15,12 +18,11 @@ $themes: (
 			color-text-active: #f9f9f9,
 			color-text-primary: #f9f9f9,
 			color-text-secondary: #717379,
+			color-accent: #68bd45,
+			color-accent-darker: #54923c,
 			box-shadow: rgba(43, 41, 41, 0.65)
 		)
 );
-
-$color-accent: #68bd45;
-$color-accent-darker: #54923c;
 
 @mixin themify($themes: $themes) {
 	@each $theme, $map in $themes {
@@ -121,7 +123,7 @@ $color-accent-darker: #54923c;
 
 	.toggle {
 		@include themify($themes) {
-			background-color: $color-accent;
+			background-color: themed('color-accent');
 		}
 
 		border-radius: 50%;

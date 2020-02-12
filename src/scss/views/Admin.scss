@@ -6,7 +6,7 @@ main {
 .menu {
 	@include themify($themes) {
 		background-color: themed('color-secondary');
-		border-right: 3px solid $color-accent;
+		border-right: 3px solid themed('color-accent');
 	}
 
 	height: 100vh;
@@ -52,7 +52,7 @@ main {
 
 			&.active {
 				@include themify($themes) {
-					background-color: $color-accent;
+					background-color: themed('color-accent');
 					color: 3px solid themed('color-text-active');
 				}
 			}
@@ -83,6 +83,12 @@ main {
 			}
 		}
 	}
+}
+
+.main-content {
+	position: relative;
+	margin: 50px 50px 50px $menu-width-desktop + 50px;
+	text-align: center;
 }
 
 @media screen and (max-width: 900px) {
@@ -130,7 +136,7 @@ main {
 					}
 				}
 
-				span:not(.toggle) {
+				a {
 					opacity: 0;
 					position: absolute;
 					background: rgba(0, 0, 0, 0.5);
@@ -163,5 +169,9 @@ main {
 				}
 			}
 		}
+	}
+
+	.main-content {
+		margin: 25px 25px 25px $menu-width-tablet + 25px;
 	}
 }
