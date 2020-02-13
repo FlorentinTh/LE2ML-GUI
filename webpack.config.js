@@ -67,7 +67,8 @@ module.exports = (env, options) => {
 						limit: 2048,
 						name: '[name].[ext]',
 						useRelativePath: true,
-						outputPath: 'assets/'
+						outputPath: 'assets/',
+						esModule: false
 					}
 				},
 				{
@@ -76,7 +77,8 @@ module.exports = (env, options) => {
 						{
 							loader: 'html-loader',
 							options: {
-								minimize: false
+								minimize: false,
+								esModule: false
 							}
 						}
 					]
@@ -195,7 +197,6 @@ module.exports = (env, options) => {
 					parallel: true,
 					sourceMap: false
 				}),
-
 				new OptimizeCSSAssetsPlugin({
 					cssProcessor: require('cssnano'),
 					cssProcessorPluginOptions: {

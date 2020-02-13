@@ -1,0 +1,162 @@
+.menu {
+	@include themify($themes) {
+		background-color: themed('color-secondary');
+		border-right: 3px solid themed('color-accent');
+	}
+
+	height: 100vh;
+	width: $menu-width-desktop;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 5;
+	outline: none;
+
+	.logo {
+		padding: 2em .5em .5em .5em;
+		text-align: center;
+
+		img {
+			width: 240px;
+			content: url($logo-large);
+			overflow: hidden;
+			transition: all 0.05s linear;
+		}
+
+		h2 {
+			margin: .75em 0 0 0;
+			font-weight: normal;
+		}
+	}
+
+	ul {
+		list-style: none;
+		margin: 0;
+
+		li {
+			padding: 1em 1em 1em 1em;
+			font-size: 1.05em;
+			font-weight: regular;
+			transition: all 0.10s linear;
+			cursor: pointer;
+			font-size: 1.25em;
+
+			& > *:not(i) {
+				padding-left: 1em;
+			}
+
+			&.active {
+				@include themify($themes) {
+					background-color: themed('color-accent');
+					color: 3px solid themed('color-text-active');
+				}
+			}
+
+			&.active:hover {
+				cursor: initial;
+			}
+
+			&:not(:first-of-type):not(.active):hover {
+				@include themify($themes) {
+					background-color: themed('color-primary');
+				}
+			}
+
+			&:focus {
+				outline: none;
+			}
+
+			.switch-theme {
+				height: 19px;
+				position: relative;
+				width: 47px;
+				margin: 0 auto 30px auto;
+
+				i {
+					font-size: .85em;
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 900px) {
+	.menu {
+		width: $menu-width-tablet;
+
+		.logo {
+			padding: 0.5em 0.5em 3em 0.5em;
+			position: relative;
+
+			img {
+				width: $menu-width-tablet - 30px;
+				content: url($logo-small);
+			}
+
+			h2 {
+				opacity: 0;
+				position: absolute;
+				top: 35%;
+				left: $menu-width-tablet + 10px;
+				margin: 0;
+				min-width: 200px;
+				border-radius: 4px;
+				background: rgba(0, 0, 0, 0.4);
+				transform: translate3d(-20px, -50%, 0);
+				transition: all 0.10s ease-in-out;
+			}
+
+			&:hover {
+				h2 {
+					opacity: 1;
+					transform: translate3d(0px, -50%, 0);
+				}
+			}
+		}
+
+		ul {
+			li {
+				height: $menu-width-tablet/1.5;
+				position: relative;
+
+				&:not(:first-of-type) {
+					i {
+						padding: .45em 0 0 1.2em;
+					}
+				}
+
+				a {
+					opacity: 0;
+					position: absolute;
+					background: rgba(0, 0, 0, 0.5);
+					padding: 0.2em 0.5em;
+					border-radius: 4px;
+					top: 50%;
+					left: $menu-width-tablet - 10px;
+					transform: translate3d(-15px, -50%, 0);
+					transition: all 0.15s ease-in-out;
+
+					&:before {
+						content: '';
+						width: 0;
+						height: 0;
+						position: absolute;
+						top: 50%;
+						left: -5px;
+						border-top: 5px solid transparent;
+						border-bottom: 5px solid transparent;
+						border-right: 5px solid rgba(0, 0, 0, 0.5);
+						transform: translateY(-50%);
+					}
+				}
+
+				&:hover {
+					span:not(.toggle) {
+						opacity: 1;
+						transform: translate3d(0px, -50%, 0);
+					}
+				}
+			}
+		}
+	}
+}
