@@ -4,14 +4,35 @@ const merge = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const HtmlWebPackPlugin = require('html-webpack-plugin');
+// const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const HTMLWebPackPlugin = require('html-webpack-plugin');
 const postcssNormalize = require('postcss-normalize');
+const fs = require('fs');
 
 const PATHS = {
 	src: path.resolve(__dirname, 'src'),
 	build: path.resolve(__dirname, 'build')
 };
+
+function generateHTMLPlugin(directory) {
+	const HTMLFileLocation = fs.readdirSync(path.resolve(__dirname, directory));
+	return HTMLFileLocation.filter((file) => {
+		return (file = file.includes('.html'));
+	}).map((file) => {
+		const parts = file.split('.');
+		const name = parts[0];
+		const ext = parts[1];
+
+		return new HTMLWebPackPlugin({
+			filename: `${name}.html`,
+			inject: true,
+			template: path.join(PATHS.src, `${name}.${ext}`)
+		});
+	});
+}
+
+const HTMLPlugin = generateHTMLPlugin(path.resolve(__dirname, 'src'));
 
 module.exports = (env, options) => {
 	const isProd = options.mode === 'production';
@@ -65,22 +86,12 @@ module.exports = (env, options) => {
 		plugins: [
 			new CleanWebpackPlugin({
 				verbose: true
-			}),
-			new HtmlWebPackPlugin({
-				filename: 'index.html',
-				inject: true,
-				template: path.join(PATHS.src, 'index.html')
-			}),
-			new HtmlWebPackPlugin({
-				filename: 'admin.html',
-				inject: true,
-				template: path.join(PATHS.src, 'admin.html')
-			})
+			}) //,
 			// new webpack.ProvidePlugin({
 			// 	$: 'jquery',
 			// 	jQuery: 'jquery'
 			// })
-		]
+		].concat(HTMLPlugin)
 	};
 
 	const DEV = {
@@ -152,7 +163,7 @@ module.exports = (env, options) => {
 									enabled: false
 								},
 								pngquant: {
-									quality: '75-90',
+									quality: [ 0.65, 0.9 ],
 									speed: 4
 								},
 								gifsicle: {

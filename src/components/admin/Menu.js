@@ -24,7 +24,15 @@ export class Menu {
 
 	_init() {
 		this._build();
-		this.setActive(URL.getHash());
+		let hash = URL.getHash();
+
+		if (hash === null) {
+			hash = URL.toSlug(this.items[0].label);
+			Router.setRoute(URL.getPage() + URL.toAnchor(hash));
+		}
+
+		Router.route(hash);
+		this.setActive(hash);
 
 		window.onhashchange = (event) => {
 			Router.route();
