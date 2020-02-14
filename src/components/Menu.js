@@ -8,9 +8,17 @@ const defaultContext = document.querySelector('nav.menu');
 const defaultItems = [
 	{ label: 'Home', icon: 'fas fa-home', url: null },
 	{ label: 'Running Jobs', icon: 'fas fa-tasks', url: null },
-	{ label: 'Cluster Management', icon: 'fab fa-docker', url: 'https://www.portainer.io/' },
-	{ label: 'Proxy Management', icon: 'fas fa-network-wired', url: 'https://containo.us/traefik/' },
-	{ label: 'Logout', icon: 'fas fa-sign-out-alt', url: '#logout' }
+	{
+		label: 'Cluster Management',
+		icon: 'fab fa-docker',
+		url: 'https://www.portainer.io/',
+	},
+	{
+		label: 'Proxy Management',
+		icon: 'fas fa-network-wired',
+		url: 'https://containo.us/traefik/',
+	},
+	{ label: 'Logout', icon: 'fas fa-sign-out-alt', url: '#logout' },
 ];
 const defaultLogoURL = URL.toAnchor(URL.toSlug(defaultItems[0].label));
 
@@ -20,7 +28,7 @@ export class Menu {
 			context: defaultContext,
 			items: defaultItems,
 			theme: true,
-			logoURL: defaultLogoURL
+			logoURL: defaultLogoURL,
 		}
 	) {
 		this.options = options;
@@ -44,7 +52,7 @@ export class Menu {
 
 		this.setActive(hash);
 
-		window.onhashchange = (event) => {
+		window.onhashchange = () => {
 			this.setActive(URL.getHash());
 		};
 	}
@@ -52,22 +60,29 @@ export class Menu {
 	_build() {
 		this.options.context.insertAdjacentHTML('beforeend', menu);
 		const logo = this.options.context.getElementsByClassName('logo')[0];
-		logo.getElementsByTagName('a')[0].setAttribute('href', this.options.logoURL);
+		logo.getElementsByTagName('a')[0].setAttribute(
+			'href',
+			this.options.logoURL
+		);
 
 		let content = '';
 
-		Array.from(this.options.items, (item) => {
+		Array.from(this.options.items, item => {
 			content += `<li>
 							<i class="${item.icon}"></i>`;
 			if (item.url === null) {
-				content += `<a href="${URL.toAnchor(URL.toSlug(item.label))}">${item.label}</a>`;
+				content += `<a href="${URL.toAnchor(URL.toSlug(item.label))}">${
+					item.label
+				}</a>`;
 			} else {
 				content += `<a href="${item.url}">${item.label}</a>`;
 			}
 			content += '</li>';
 		});
 
-		this.options.context.querySelector('ul').insertAdjacentHTML('beforeend', content);
+		this.options.context
+			.querySelector('ul')
+			.insertAdjacentHTML('beforeend', content);
 	}
 
 	_enableTheme() {
@@ -101,9 +116,13 @@ export class Menu {
 		let list = null;
 
 		if (this.options.theme) {
-			list = [].slice.call(this.options.context.querySelectorAll('ul > li')).slice(1);
+			list = [].slice
+				.call(this.options.context.querySelectorAll('ul > li'))
+				.slice(1);
 		} else {
-			list = [].slice.call(this.options.context.querySelectorAll('ul > li'));
+			list = [].slice.call(
+				this.options.context.querySelectorAll('ul > li')
+			);
 		}
 
 		for (let i = 0; i < list.length; ++i) {
@@ -126,7 +145,7 @@ export class Menu {
 		const logo = this.options.context.querySelector('header > a > img');
 		const list = this.options.context.querySelectorAll('ul > li');
 
-		logo.addEventListener('click', (event) => {
+		logo.addEventListener('click', event => {
 			event.preventDefault();
 			event.stopImmediatePropagation();
 
@@ -144,7 +163,7 @@ export class Menu {
 		for (let i = 1; i < list.length; ++i) {
 			const li = list[i];
 
-			li.addEventListener('click', (event) => {
+			li.addEventListener('click', event => {
 				event.preventDefault();
 				event.stopImmediatePropagation();
 				const href = li.children[1].getAttribute('href');
