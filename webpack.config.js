@@ -12,14 +12,14 @@ const fs = require('fs');
 const config = {
 	sourceFolder: path.resolve(__dirname, 'src'),
 	destinationFolder: path.resolve(__dirname, 'build'),
-	enableJQuery: false,
+	enableJQuery: false
 };
 
 function generateHTMLPlugin(directory) {
 	const HTMLFileLocation = fs.readdirSync(path.resolve(__dirname, directory));
-	return HTMLFileLocation.filter(file => {
+	return HTMLFileLocation.filter((file) => {
 		return (file = file.includes('.html'));
-	}).map(file => {
+	}).map((file) => {
 		const parts = file.split('.');
 		const name = parts[0];
 		const ext = parts[1];
@@ -27,7 +27,7 @@ function generateHTMLPlugin(directory) {
 		return new HTMLWebPackPlugin({
 			filename: `${name}.html`,
 			inject: true,
-			template: path.join(config.sourceFolder, `${name}.${ext}`),
+			template: path.join(config.sourceFolder, `${name}.${ext}`)
 		});
 	});
 }
@@ -42,28 +42,28 @@ module.exports = (env, options) => {
 		entry: path.join(config.sourceFolder, 'main.js'),
 		output: {
 			path: config.destinationFolder,
-			filename: 'scripts/bundle' + (isProd ? '.[hash:12].min.js' : '.js'),
+			filename: 'scripts/bundle' + (isProd ? '.[hash:12].min.js' : '.js')
 		},
 		module: {
 			rules: [
-				{
-					enforce: 'pre',
-					test: /\.js$/,
-					exclude: /node_modules/,
-					loader: 'eslint-loader',
-				},
+				// {
+				// 	enforce: 'pre',
+				// 	test: /\.js$/,
+				// 	exclude: /node_modules/,
+				// 	loader: 'eslint-loader'
+				// },
 				{
 					test: /\.js$/,
 					exclude: /node_modules/,
 					use: {
-						loader: 'babel-loader',
-					},
+						loader: 'babel-loader'
+					}
 				},
 				{
 					enforce: 'pre',
 					test: /\.(js|s?[ca]ss)$/,
 					include: config.sourceFolder,
-					loader: 'import-glob',
+					loader: 'import-glob'
 				},
 				{
 					test: /\.(ttf|otf|eot|woff2?|png|jpe?g|gif|svg|ico)$/,
@@ -74,8 +74,8 @@ module.exports = (env, options) => {
 						name: '[name].[hash:12].[ext]',
 						useRelativePath: true,
 						outputPath: 'img/',
-						esModule: false,
-					},
+						esModule: false
+					}
 				},
 				{
 					test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
@@ -84,10 +84,10 @@ module.exports = (env, options) => {
 							loader: 'file-loader',
 							options: {
 								name: '[name].[ext]',
-								outputPath: 'fonts/',
-							},
-						},
-					],
+								outputPath: 'fonts/'
+							}
+						}
+					]
 				},
 				{
 					test: /\.html$/,
@@ -96,25 +96,25 @@ module.exports = (env, options) => {
 							loader: 'html-loader',
 							options: {
 								minimize: false,
-								esModule: false,
-							},
-						},
-					],
-				},
-			],
+								esModule: false
+							}
+						}
+					]
+				}
+			]
 		},
 		plugins: [
 			new CleanWebpackPlugin({
-				verbose: true,
-			}),
-		].concat(HTMLPlugin),
+				verbose: true
+			})
+		].concat(HTMLPlugin)
 	};
 
 	if (config.enableJQuery) {
 		COMMON.plugins.push(
 			new webpack.ProvidePlugin({
 				$: 'jquery',
-				jQuery: 'jquery',
+				jQuery: 'jquery'
 			})
 		);
 	}
@@ -124,17 +124,17 @@ module.exports = (env, options) => {
 			rules: [
 				{
 					test: /\.(sa|sc|c)ss$/,
-					use: ['style-loader', 'css-loader', 'sass-loader'],
-				},
-			],
+					use: [ 'style-loader', 'css-loader', 'sass-loader' ]
+				}
+			]
 		},
-		plugins: [new webpack.HotModuleReplacementPlugin()],
+		plugins: [ new webpack.HotModuleReplacementPlugin() ],
 		devtool: 'source-map',
 		devServer: {
 			hot: true,
 			compress: true,
-			port: 8080,
-		},
+			port: 8080
+		}
 	};
 
 	const PROD = {
@@ -146,11 +146,11 @@ module.exports = (env, options) => {
 						{
 							loader: MiniCssExtractPlugin.loader,
 							options: {
-								publicPath: '../',
-							},
+								publicPath: '../'
+							}
 						},
 						{
-							loader: 'css-loader',
+							loader: 'css-loader'
 						},
 						{
 							loader: 'postcss-loader',
@@ -161,17 +161,17 @@ module.exports = (env, options) => {
 									require('postcss-preset-env')({
 										autoprefixer: {
 											grid: 'true',
-											flexbox: 'no-2009',
+											flexbox: 'no-2009'
 										},
-										stage: 3,
+										stage: 3
 									}),
-									postcssNormalize(),
+									postcssNormalize()
 								],
-								sourceMap: true,
-							},
+								sourceMap: true
+							}
 						},
-						'sass-loader',
-					],
+						'sass-loader'
+					]
 				},
 				{
 					test: /\.(gif|png|jpe?g|svg)$/i,
@@ -182,26 +182,26 @@ module.exports = (env, options) => {
 							options: {
 								mozjpeg: {
 									progressive: true,
-									quality: 75,
+									quality: 75
 								},
 								optipng: {
-									enabled: false,
+									enabled: false
 								},
 								pngquant: {
-									quality: [0.65, 0.9],
-									speed: 4,
+									quality: [ 0.65, 0.9 ],
+									speed: 4
 								},
 								gifsicle: {
-									interlaced: false,
+									interlaced: false
 								},
 								webp: {
-									quality: 75,
-								},
-							},
-						},
-					],
-				},
-			],
+									quality: 75
+								}
+							}
+						}
+					]
+				}
+			]
 		},
 		optimization: {
 			minimize: true,
@@ -210,33 +210,29 @@ module.exports = (env, options) => {
 					terserOptions: {
 						compress: {
 							warnings: true,
-							drop_console: true,
+							drop_console: true
 						},
 						output: {
-							comments: false,
-						},
+							comments: false
+						}
 					},
 					cache: true,
 					parallel: true,
-					sourceMap: false,
+					sourceMap: false
 				}),
 				new OptimizeCSSAssetsPlugin({
 					cssProcessor: require('cssnano'),
 					cssProcessorPluginOptions: {
-						preset: [
-							'default',
-							{ discardComments: { removeAll: true } },
-						],
-					},
-				}),
-			],
+						preset: [ 'default', { discardComments: { removeAll: true } } ]
+					}
+				})
+			]
 		},
 		plugins: [
 			new MiniCssExtractPlugin({
-				filename:
-					'styles/main' + (isProd ? '.[hash:12].min.css' : '.css'),
-			}),
-		],
+				filename: 'styles/main' + (isProd ? '.[hash:12].min.css' : '.css')
+			})
+		]
 	};
 
 	return isProd ? merge(COMMON, PROD) : merge(COMMON, DEV);

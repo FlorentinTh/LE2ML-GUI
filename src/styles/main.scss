@@ -3,8 +3,9 @@
 @import './utils/assets.scss';
 
 @import './pages/Login.scss';
-@import './components/Menu.scss';
 @import './pages/Admin.scss';
+@import './pages/Errors.scss';
+@import './components/Menu.scss';
 
 * {
 	margin: 0;
@@ -37,6 +38,10 @@ input[type="radio"] {
 	width: 100%;
 	height: 100%;
 	position: fixed;
+}
+
+.center {
+	text-align: center;
 }
 
 main.content {

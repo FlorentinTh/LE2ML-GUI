@@ -1,6 +1,8 @@
 import { Theme } from '../components/Theme';
 import { URL } from '../utils/URL';
 import routes from './routes';
+import { Error404 } from '../components/errors/Error404';
+import { Menu } from './../components/Menu';
 
 export class Router {
 	static _loadPage(page) {
@@ -24,14 +26,24 @@ export class Router {
 			});
 
 			if (route !== null) {
-				const component = new route.component();
-				component.build();
+				new route.component().build();
 			} else {
-				throw new Error(`No component found for: ${hash}`);
+				new Error404().trigger();
 			}
 		} else {
-			throw new Error('Parameter hash must be a string.');
+			throw new Error('expected type for argument hash is string.');
 		}
+	}
+
+	static onHashChange(menu = null) {
+		if (menu !== null) {
+			if (menu instanceof Menu) {
+				menu.setActive(URL.getHash());
+			} else {
+				throw new Error('argument menu should be an instance of object Menu');
+			}
+		}
+		Router.route(URL.getHash());
 	}
 
 	static route(hash = null) {
@@ -48,13 +60,18 @@ export class Router {
 			this._loadPage(page);
 			this._loadComponent(hash);
 		}
+
+		window.addEventListener('hashchange', (event) => {
+			event.stopImmediatePropagation();
+			this.onHashChange();
+		});
 	}
 
 	static follow(link) {
 		if (typeof link === 'string') {
 			link === '' ? (location.href = '#') : (location.href = link);
 		} else {
-			throw new Error('Parameter link must be a string.');
+			throw new Error('expected type for argument link is string.');
 		}
 	}
 
@@ -62,7 +79,7 @@ export class Router {
 		if (URL.isRouteValid(route)) {
 			window.location.replace(decodeURI(route));
 		} else {
-			throw new Error('Specified route is not valid.');
+			throw new Error('specified route is not valid.');
 		}
 	}
 }

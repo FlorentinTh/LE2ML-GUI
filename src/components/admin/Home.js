@@ -1,17 +1,15 @@
-import { PageComponent } from './../PageComponent';
+import { Component } from './../Component';
 
-import home from '../../pages/fragment/admin/home.html';
+import homeHTMLComponent from '../../pages/fragment/admin/home.html';
 
-export class Home extends PageComponent {
-	constructor() {
-		super();
-		this.context;
+export class Home extends Component {
+	constructor(context = null) {
+		super(context);
 	}
 
 	build() {
-		this.context = document.querySelector('main.content');
-		super.clearContent(this.context);
-		super.makeTitle(this.context, 'Home');
-		super.injectHTMLPage(this.context, home);
+		super.clearContent();
+		super.makeTitle('Home');
+		super.injectHTMLPage(homeHTMLComponent);
 	}
 }

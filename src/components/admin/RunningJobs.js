@@ -1,15 +1,12 @@
-import { PageComponent } from './../PageComponent';
+import { Component } from './../Component';
 
-export class RunningJobs extends PageComponent {
-	constructor() {
-		super();
+export class RunningJobs extends Component {
+	constructor(context = null) {
+		super(context);
 	}
 
 	build() {
-		this.makeTitle('Running Jobs');
-	}
-
-	makeTitle(title) {
-		document.querySelector('main.content').innerHTML = `<h1>${title}</h1>`;
+		super.clearContent();
+		super.makeTitle('Running Jobs');
 	}
 }
