@@ -9,18 +9,21 @@
 <body>
 	<div id="root" class="theme-dark">
 		<div class="wrap">
-			<div class="sign-in">
+			<div class="register">
 				<header class="logo">
 						<img src="assets/logo-liara-large.png" />
-					<h2>Login</h2>
+					<h2>Register</h2>
 				</header>
 				<div class="form">
 					<form action="">
-						<input type="text" id="user" placeholder="Username"/>
-						<input type="password" id="password" placeholder="Password" autocomplete="current-password" />
-						<button type="submit">Sign In</button>
+						<input type="text" id="lastname" placeholder="Lastname"/>
+						<input type="text" id="firstname" placeholder="Firstname"/>
+						<input type="email" id="email" placeholder="Email"/>
+						<input type="text" id="user" placeholder="Username"  autocomplete="new-password"/>
+						<input type="password" id="password" placeholder="Password"/>
+						<button type="submit">Register</button>
 					</form>
-					<button id="register" class="link">Register</button>
+					<button id="cancel" class="link">Cancel</button>
 				</div>
 				<footer class="links">
 					<div class="switch-theme">

@@ -1,8 +1,9 @@
-.login {
+.sign-in,
+.register {
 	position: relative;
 	width: 25%;
 	padding: 10px 25px;
-	margin: 10vh auto;
+	margin: 5vh auto 0vh auto;
 
 	.logo {
 		margin-bottom: 4vh;
@@ -20,22 +21,41 @@
 
 	.form {
 		width: 100%;
-		height: 100%;
+
+		input {
+			width: 100%;
+			height: 45px;
+			border: none;
+			font-size: 20px;
+			font-weight: lighter;
+			margin-bottom: 30px;
+		}
+
+		button {
+			width: 100%;
+			height: 45px;
+			border: none;
+			font-size: 20px;
+			font-weight: lighter;
+
+			&.link {
+				@include themify($themes) {
+					background-color: themed('color-primary');
+					border: 1px solid themed('color-accent');
+					color: themed('color-accent');
+				}
+
+				&:hover {
+					@include themify($themes) {
+						border: 1px solid themed('color-accent-darker');
+						color: themed('color-accent-darker');
+					}
+				}
+			}
+		}
 	}
 
-	.user,
-	.password,
-	button {
-		width: 100%;
-		height: 45px;
-		border: none;
-		font-size: 20px;
-		font-weight: lighter;
-		margin-bottom: 30px;
-	}
-
-	.user,
-	.password {
+	input {
 		@include themify($themes) {
 			background-color: themed('color-secondary');
 			color: themed('color-text-primary');
@@ -46,23 +66,6 @@
 		&::placeholder {
 			@include themify($themes) {
 				color: themed('color-text-secondary');
-			}
-		}
-	}
-
-	button {
-		@include themify($themes) {
-			color: themed('color-text-active');
-			background-color: themed('color-accent');
-		}
-
-		cursor: pointer;
-		margin-top: 20px;
-		transition: background 0.4s ease;
-
-		&:hover {
-			@include themify($themes) {
-				background-color: themed('color-accent-darker');
 			}
 		}
 	}

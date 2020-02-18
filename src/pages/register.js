@@ -5,10 +5,10 @@ const ctx = document.querySelector('*[class^="theme-"]');
 const theme = new Theme(ctx);
 theme.toggle();
 
-const registerButton = document.getElementById('register');
+const cancelButton = document.getElementById('cancel');
 
-registerButton.addEventListener('click', (event) => {
+cancelButton.addEventListener('click', (event) => {
 	event.preventDefault();
 	event.stopImmediatePropagation();
-	Router.setRoute('/register.html');
+	Router.setRoute('/index.html');
 });

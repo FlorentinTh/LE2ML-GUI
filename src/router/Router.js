@@ -1,17 +1,9 @@
-import { Theme } from '../components/Theme';
 import { URL } from '../utils/URL';
 import routes from './routes';
 import { Error404 } from '../components/errors/Error404';
 import { Menu } from './../components/Menu';
-
 export class Router {
 	static _loadPage(page) {
-		if (page === 'index') {
-			const ctx = document.querySelector('*[class^="theme-"]');
-			const theme = new Theme(ctx);
-			theme.toggle();
-		}
-
 		require(`../pages/${page}.js`);
 	}
 
@@ -43,22 +35,36 @@ export class Router {
 				throw new Error('argument menu should be an instance of object Menu');
 			}
 		}
-		Router.route(URL.getHash());
+
+		if (URL.getHash() === null) {
+			this.setRoute(URL.getPage());
+		} else {
+			Router.route({ hash: URL.getHash() });
+		}
 	}
 
-	static route(hash = null) {
-		hash === null && URL.getHash() !== '' ? (hash = URL.getHash()) : null;
-		const page = URL.getPageName();
+	static route(
+		options = {
+			page: null,
+			hash: null
+		}
+	) {
+		(options.hash === null || options.hash === undefined) && URL.getHash() !== ''
+			? (options.hash = URL.getHash())
+			: null;
+		(options.page === null || options.page === undefined) && URL.getPage() !== ''
+			? (options.page = URL.getPageName())
+			: null;
 
-		if (hash === null) {
-			if (URL.getPage() === '') {
+		if (options.hash === null) {
+			if (options.page === null) {
 				this._loadPage('index');
 			} else {
-				this._loadPage(page);
+				this._loadPage(options.page);
 			}
 		} else {
-			this._loadPage(page);
-			this._loadComponent(hash);
+			this._loadPage(options.page);
+			this._loadComponent(options.hash);
 		}
 
 		window.addEventListener('hashchange', (event) => {
@@ -77,6 +83,7 @@ export class Router {
 
 	static setRoute(route) {
 		if (URL.isRouteValid(route)) {
+			window.history.pushState('', '', window.location.href);
 			window.location.replace(decodeURI(route));
 		} else {
 			throw new Error('specified route is not valid.');

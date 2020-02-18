@@ -2,10 +2,10 @@
 @import './utils/sizes.scss';
 @import './utils/assets.scss';
 
-@import './pages/Login.scss';
-@import './pages/Admin.scss';
-@import './pages/Errors.scss';
-@import './components/Menu.scss';
+@import './pages/account.scss';
+@import './pages/admin.scss';
+@import './pages/errors.scss';
+@import './components/menu.scss';
 
 * {
 	margin: 0;
@@ -25,9 +25,34 @@ a {
 	}
 }
 
+input:not([type="checkbox"]),
+input:not([type="radio"]) {
+	border-radius: 3px;
+}
+
 input[type="radio"] {
 	box-sizing: border-box;
 	padding: 0;
+}
+
+button[type="submit"] {
+	@include themify($themes) {
+		color: themed('color-text-active');
+		background-color: themed('color-accent');
+	}
+
+	&:hover {
+		@include themify($themes) {
+			background-color: themed('color-accent-darker');
+		}
+	}
+}
+
+button {
+	border-radius: 3px;
+	margin-top: 20px;
+	cursor: pointer;
+	transition: background 0.4s ease;
 }
 
 .wrap {
@@ -36,8 +61,8 @@ input[type="radio"] {
 		color: themed('color-text-primary');
 	}
 	width: 100%;
-	height: 100%;
-	position: fixed;
+	min-height: 100vh;
+	display: flex;
 }
 
 .center {
@@ -46,8 +71,9 @@ input[type="radio"] {
 
 main.content {
 	position: relative;
-	margin: 50px 50px 50px $menu-width-desktop + 50px;
+	padding: 50px 50px 50px $menu-width-desktop + 50px;
 	text-align: center;
+	width: 100%;
 }
 
 @media screen and (max-width: 900px) {

@@ -18,7 +18,7 @@ const defaultItems = [
 		icon: 'fas fa-network-wired',
 		url: 'https://containo.us/traefik/'
 	},
-	{ label: 'Logout', icon: 'fas fa-sign-out-alt', url: '#logout' }
+	{ label: 'Sign Out', icon: 'fas fa-sign-out-alt', url: '#logout' }
 ];
 const defaultLogoURL = URL.toAnchor(URL.toSlug(defaultItems[0].label));
 
