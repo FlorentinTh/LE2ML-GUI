@@ -79,5 +79,12 @@ main.content {
 @media screen and (max-width: 900px) {
 	main.content {
 		margin: 25px 25px 25px $menu-width-tablet + 25px;
+		padding: 0;
+	}
+}
+
+@media screen and (max-width: 320px) {
+	main.content {
+		padding: 0;
 	}
 }

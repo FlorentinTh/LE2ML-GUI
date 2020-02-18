@@ -18,7 +18,9 @@
 
 		img {
 			width: 240px;
-			content: url($logo-large);
+			@include themify($themes) {
+				content: url(themed('logo-liara-large'));
+			}
 			overflow: hidden;
 			transition: all 0.05s linear;
 		}
@@ -48,7 +50,10 @@
 			&.active {
 				@include themify($themes) {
 					background-color: themed('color-accent');
-					color: 3px solid themed('color-text-active');
+					color: themed('color-text-active');
+					a {
+						color: themed('color-text-active');
+					}
 				}
 			}
 
@@ -90,7 +95,9 @@
 
 			img {
 				width: $menu-width-tablet - 30px;
-				content: url($logo-small);
+				@include themify($themes) {
+					content: url(themed('logo-liara-small'));
+				}
 			}
 
 			h2 {

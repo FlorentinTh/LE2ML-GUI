@@ -2,8 +2,9 @@
 .register {
 	position: relative;
 	width: 25%;
-	padding: 10px 25px;
+	padding: 10px 25px 0px 25px;
 	margin: 5vh auto 0vh auto;
+	min-width: 320px;
 
 	.logo {
 		margin-bottom: 4vh;
@@ -12,6 +13,9 @@
 		img {
 			width: 250px;
 			margin-bottom: 3vh;
+			@include themify($themes) {
+				content: url(themed('logo-liara-large'));
+			}
 		}
 
 		h2 {
@@ -76,7 +80,7 @@
 		}
 
 		text-align: center;
-		margin-top: 10vh;
+		margin-top: 9vh;
 
 		.switch-theme {
 			height: 19px;

@@ -12,3 +12,12 @@ registerButton.addEventListener('click', (event) => {
 	event.stopImmediatePropagation();
 	Router.setRoute('/register.html');
 });
+
+const signinForm = document.querySelector('form');
+
+signinForm.addEventListener('submit', (event) => {
+	event.preventDefault();
+	event.stopImmediatePropagation();
+	const data = serializeArray(signinForm);
+	console.log(data);
+});
