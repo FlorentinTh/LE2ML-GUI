@@ -46,12 +46,6 @@ module.exports = (env, options) => {
 		},
 		module: {
 			rules: [
-				// {
-				// 	enforce: 'pre',
-				// 	test: /\.js$/,
-				// 	exclude: /node_modules/,
-				// 	loader: 'eslint-loader'
-				// },
 				{
 					test: /\.js$/,
 					exclude: /node_modules/,
@@ -140,6 +134,12 @@ module.exports = (env, options) => {
 	const PROD = {
 		module: {
 			rules: [
+				{
+					enforce: 'pre',
+					test: /\.js$/,
+					exclude: /node_modules/,
+					loader: 'eslint-loader'
+				},
 				{
 					test: /\.(sa|sc|c)ss$/,
 					use: [
