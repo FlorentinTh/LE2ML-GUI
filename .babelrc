@@ -1,7 +1,4 @@
 {
 	"presets": ["@babel/preset-env"],
-	// "presets": [
-	// 	'@quasar/babel-preset-app'
-	// ],
-	// "sourceType": "unambiguous"
+	"plugins": ["@babel/transform-runtime"]
 }

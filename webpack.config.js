@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
@@ -27,19 +28,19 @@ function generateHTMLPlugin(directory) {
 		return new HTMLWebPackPlugin({
 			filename: `${name}.html`,
 			inject: true,
-			template: path.join(config.sourceFolder, `${name}.${ext}`)
+			template: path.join(config.sourceFolder, 'public', `${name}.${ext}`)
 		});
 	});
 }
 
-const HTMLPlugin = generateHTMLPlugin(path.resolve(__dirname, 'src'));
+const HTMLPlugin = generateHTMLPlugin(path.resolve(config.sourceFolder, 'public'));
 
 module.exports = (env, options) => {
 	const isProd = options.mode === 'production';
 
 	const COMMON = {
 		mode: isProd ? 'production' : 'development',
-		entry: path.join(config.sourceFolder, 'main.js'),
+		entry: path.join(config.sourceFolder, 'public', 'main.js'),
 		output: {
 			path: config.destinationFolder,
 			filename: 'scripts/bundle' + (isProd ? '.[hash:12].min.js' : '.js')
@@ -126,8 +127,8 @@ module.exports = (env, options) => {
 		devtool: 'source-map',
 		devServer: {
 			hot: true,
-			compress: true,
-			port: 8080
+			compress: false,
+			port: 8000
 		}
 	};
 
@@ -205,8 +206,24 @@ module.exports = (env, options) => {
 		},
 		optimization: {
 			minimize: true,
+			runtimeChunk: 'single',
+			splitChunks: {
+				chunks: 'all',
+				maxInitialRequests: Infinity,
+				minSize: 0,
+				cacheGroups: {
+					vendor: {
+						test: /[\\/]node_modules[\\/]/,
+						name(module) {
+							const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+							return `npm.${packageName.replace('@', '')}`;
+						}
+					}
+				}
+			},
 			minimizer: [
 				new TerserPlugin({
+					extractComments: false,
 					terserOptions: {
 						compress: {
 							warnings: true,
@@ -223,7 +240,7 @@ module.exports = (env, options) => {
 				new OptimizeCSSAssetsPlugin({
 					cssProcessor: require('cssnano'),
 					cssProcessorPluginOptions: {
-						preset: [ 'default', { discardComments: { removeAll: true } } ]
+						preset: [ 'advanced', { discardComments: { removeAll: true } } ]
 					}
 				})
 			]

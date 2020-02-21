@@ -1,12 +1,12 @@
 import { Router } from '../router/Router';
 import { Theme } from './Theme';
-import { URL } from '../utils/URL';
 
-let menu = require('../pages/fragment/menu.html');
+import menu from '../pages/fragment/menu.html';
+import { URL } from './../helpers/utils';
 
 const defaultContext = document.querySelector('nav.menu');
 const defaultItems = [
-	{ label: 'Home', icon: 'fas fa-home', url: null },
+	{ label: 'Home', icon: 'fas fa-home', url: null, selected: true },
 	{ label: 'Running Jobs', icon: 'fas fa-tasks', url: null },
 	{
 		label: 'Cluster Management',
@@ -46,8 +46,21 @@ export class Menu {
 		let hash = URL.getHash();
 
 		if (hash === null) {
-			hash = URL.toSlug(this.options.items[0].label);
-			Router.setRoute(URL.getPage() + URL.toAnchor(hash));
+			const items = this.options.items;
+			let selected;
+
+			for (let i = 0; i < items.length; ++i) {
+				// eslint-disable-next-line no-prototype-builtins
+				if (items[i].hasOwnProperty('selected')) {
+					if (items[i].selected) {
+						selected = items[i].label;
+						break;
+					}
+				}
+			}
+
+			hash = URL.toSlug(selected);
+			Router.setRoute(URL.getPage() + URL.toAnchor(hash), true);
 		}
 
 		this.setActive(hash);
@@ -143,10 +156,12 @@ export class Menu {
 			const href = logo.parentElement.getAttribute('href');
 
 			this._switch(href, (hash, link) => {
-				if (typeof handler === 'function') {
-					handler(hash, link);
-				} else {
-					throw new Error('handler must be a function.');
+				if (handler !== undefined) {
+					if (typeof handler === 'function') {
+						handler(hash, link);
+					} else {
+						throw new Error('handler must be a function.');
+					}
 				}
 			});
 		});

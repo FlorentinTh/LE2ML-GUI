@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export class URL {
 	static getURL() {
 		return window.location.href;
@@ -47,12 +49,37 @@ export class URL {
 	}
 
 	static isRouteValid(route) {
-		let regexp = new RegExp('^\\/[a-zA-Z0-9-_]+.html+#*[a-zA-Z0-9-_]*$', 'g');
+		const regexp = new RegExp('^\\/[a-zA-Z0-9-_]+.html+#*[a-zA-Z0-9-_]*$', 'g');
 
 		if (regexp.test(route)) {
 			return true;
 		}
 
 		return false;
+	}
+}
+
+export class API {
+	static setBaseURL(url, proxy = false) {
+		if (typeof url !== 'string' && url !== '') {
+			throw new Error('expected type for argument url is string.');
+		} else if (typeof proxy !== 'boolean') {
+			throw new Error('expected type for argument url is boolean.');
+		} else {
+			if (proxy) {
+				const proxyURL = 'https://cors-anywhere.herokuapp.com/';
+				axios.defaults.baseURL = proxyURL + url;
+			} else {
+				axios.defaults.baseURL = url;
+			}
+		}
+	}
+
+	static setAuthorization(token) {
+		if (typeof token === 'string' && token !== '') {
+			axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+		} else {
+			throw new Error('expected type for argument token is string.');
+		}
 	}
 }

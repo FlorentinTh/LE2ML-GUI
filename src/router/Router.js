@@ -1,24 +1,42 @@
-import { URL } from '../utils/URL';
 import routes from './routes';
 import { Error404 } from '../components/errors/Error404';
 import { Menu } from './../components/Menu';
+import { URL } from './../helpers/utils';
 export class Router {
 	static _loadPage(page) {
-		require(`../pages/${page}.js`);
-	}
-
-	static _loadComponent(hash) {
-		if (typeof hash === 'string') {
+		if (typeof page === 'string') {
 			let route = null;
 
 			routes.forEach((r) => {
-				if (r.name === hash) {
+				if (r.name === page) {
 					route = r;
 				}
 			});
 
 			if (route !== null) {
-				new route.component().build();
+				new route.controller();
+			} else {
+				new Error404().trigger();
+			}
+		}
+	}
+
+	static _loadComponent(page, hash) {
+		if (typeof hash === 'string') {
+			let route = null;
+
+			routes.forEach((r) => {
+				if (r.name === page && r.components.length > 0) {
+					r.components.forEach((c) => {
+						if (c.name === hash) {
+							route = c;
+						}
+					});
+				}
+			});
+
+			if (route !== null) {
+				new route.component();
 			} else {
 				new Error404().trigger();
 			}
@@ -64,7 +82,7 @@ export class Router {
 			}
 		} else {
 			this._loadPage(options.page);
-			this._loadComponent(options.hash);
+			this._loadComponent(options.page, options.hash);
 		}
 
 		window.addEventListener('hashchange', (event) => {
@@ -81,9 +99,12 @@ export class Router {
 		}
 	}
 
-	static setRoute(route) {
+	static setRoute(route, redirect = false) {
 		if (URL.isRouteValid(route)) {
-			window.history.pushState('', '', window.location.href);
+			if (!redirect) {
+				window.history.pushState('', '', window.location.href);
+			}
+
 			window.location.replace(decodeURI(route));
 		} else {
 			throw new Error('specified route is not valid.');

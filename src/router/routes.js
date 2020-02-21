@@ -1,14 +1,33 @@
 import { Home } from './../components/admin/Home';
 import { RunningJobs } from './../components/admin/RunningJobs';
+import { Admin } from '../pages/Admin';
+import { Register } from '../pages/Register';
+import { Index } from '../pages/Index';
 
 const routes = [
 	{
-		name: 'home',
-		component: Home
+		name: 'index',
+		controller: Index,
+		components: []
 	},
 	{
-		name: 'running-jobs',
-		component: RunningJobs
+		name: 'register',
+		controller: Register,
+		components: []
+	},
+	{
+		name: 'admin',
+		controller: Admin,
+		components: [
+			{
+				name: 'home',
+				component: Home
+			},
+			{
+				name: 'running-jobs',
+				component: RunningJobs
+			}
+		]
 	}
 ];
 
