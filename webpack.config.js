@@ -7,13 +7,17 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HTMLWebPackPlugin = require('html-webpack-plugin');
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 const postcssNormalize = require('postcss-normalize');
 const fs = require('fs');
 
 const config = {
 	sourceFolder: path.resolve(__dirname, 'src'),
 	destinationFolder: path.resolve(__dirname, 'build'),
-	enableJQuery: false
+	enableJQuery: false,
+	enableCompression: false
 };
 
 function generateHTMLPlugin(directory) {
@@ -28,6 +32,7 @@ function generateHTMLPlugin(directory) {
 		return new HTMLWebPackPlugin({
 			filename: `${name}.html`,
 			inject: true,
+			favicon: path.join(config.sourceFolder, 'public', 'favicon.ico'),
 			template: path.join(config.sourceFolder, 'public', `${name}.${ext}`)
 		});
 	});
@@ -98,11 +103,9 @@ module.exports = (env, options) => {
 				}
 			]
 		},
-		plugins: [
-			new CleanWebpackPlugin({
-				verbose: true
-			})
-		].concat(HTMLPlugin)
+		plugins: [ new ProgressBarPlugin(), new FriendlyErrorsWebpackPlugin(), new CleanWebpackPlugin() ].concat(
+			HTMLPlugin
+		)
 	};
 
 	if (config.enableJQuery) {
@@ -128,7 +131,12 @@ module.exports = (env, options) => {
 		devServer: {
 			hot: true,
 			compress: false,
-			port: 8000
+			port: 8000,
+			quiet: true,
+			open: true
+		},
+		stats: {
+			modules: false
 		}
 	};
 
@@ -204,6 +212,10 @@ module.exports = (env, options) => {
 				}
 			]
 		},
+		stats: 'none',
+		performance: {
+			hints: false
+		},
 		optimization: {
 			minimize: true,
 			runtimeChunk: 'single',
@@ -251,6 +263,16 @@ module.exports = (env, options) => {
 			})
 		]
 	};
+
+	if (config.enableCompression) {
+		PROD.plugins.push(
+			new CompressionPlugin({
+				test: /\.(js|css|svg)$/,
+				algorithm: 'gzip',
+				deleteOriginalAssets: false
+			})
+		);
+	}
 
 	return isProd ? merge(COMMON, PROD) : merge(COMMON, DEV);
 };
