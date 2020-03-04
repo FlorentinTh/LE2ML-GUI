@@ -5,30 +5,30 @@ import { Register } from '../pages/Register';
 import { Index } from '../pages/Index';
 
 const routes = [
-	{
-		name: 'index',
-		controller: Index,
-		components: []
-	},
-	{
-		name: 'register',
-		controller: Register,
-		components: []
-	},
-	{
-		name: 'admin',
-		controller: Admin,
-		components: [
-			{
-				name: 'home',
-				component: Home
-			},
-			{
-				name: 'running-jobs',
-				component: RunningJobs
-			}
-		]
-	}
+  {
+    name: 'index',
+    Controller: Index,
+    Components: []
+  },
+  {
+    name: 'register',
+    Controller: Register,
+    Components: []
+  },
+  {
+    name: 'admin',
+    Controller: Admin,
+    Components: [
+      {
+        name: 'home',
+        Component: Home
+      },
+      {
+        name: 'running-jobs',
+        Component: RunningJobs
+      }
+    ]
+  }
 ];
 
 export default routes;

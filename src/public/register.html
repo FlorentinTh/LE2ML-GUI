@@ -1,26 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>SmartHome</title>
 </head>
+
 <body>
 	<div id="root" class="theme-dark">
 		<div class="wrap">
 			<div class="register">
 				<header class="logo">
-						<img src="#" />
+					<img src="#" />
 					<h2>Create a New Account</h2>
 				</header>
 				<div class="form">
 					<form action="">
-						<input type="text" id="lastname" placeholder="Lastname" />
-						<input type="text" id="firstname" placeholder="Firstname" />
-						<input type="email" id="email" placeholder="Email" />
-						<input type="text" id="user" placeholder="Username" autocomplete="username" />
+						<input type="text" id="lastname" placeholder="Lastname" autocomplete="family-name" />
+						<input type="text" id="firstname" placeholder="Firstname" autocomplete="given-name" />
+						<input type="email" id="email" placeholder="Email" autocomplete="email" />
 						<input type="password" id="password" placeholder="Password" autocomplete="new-password" />
+						<input type="password" id="password-confirm" placeholder="Password Confirmation"
+							autocomplete="new-password" />
 						<button type="submit">Register</button>
 					</form>
 					<button id="cancel" class="link">Cancel</button>
@@ -40,4 +43,5 @@
 		</div>
 	</div>
 </body>
+
 </html>

@@ -1,3 +1,1 @@
-export class PageController {
-	constructor() {}
-}
+export class PageController {}
