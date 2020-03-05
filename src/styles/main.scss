@@ -6,6 +6,7 @@
 @import './pages/admin.scss';
 @import './pages/errors.scss';
 @import './components/menu.scss';
+@import './components/admin/settings.scss';
 
 * {
 	margin: 0;
@@ -15,7 +16,7 @@
 }
 
 body {
-	font-family: "Open Sans", Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-family: "Open Sans", Helvetica Neue, Helvetica, Arial, sans-serif;
 }
 
 a {

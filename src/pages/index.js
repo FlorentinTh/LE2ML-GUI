@@ -5,15 +5,15 @@ import * as GrowlNotification from 'growl-notification/dist/growl-notification.m
 import 'growl-notification/dist/colored-theme.min.css';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { User } from '../helpers/utils';
+import { User, API } from '../helpers/utils';
 
 export class Index extends PageController {
   constructor() {
     super();
-    if (!User.isConnected()) {
-      this.run();
-    } else {
+    if (User.isConnected()) {
       Router.setRoute('/admin.html');
+    } else {
+      this.run();
     }
   }
 
@@ -42,7 +42,8 @@ export class Index extends PageController {
       signIn('/login', jsonData).then(response => {
         if (response) {
           const user = response.data.user;
-          Cookies.set('uid', user.token, { expires: 7, path: '/' });
+          Cookies.set('uid', user._id, { expires: 7, path: '/' });
+          Cookies.set('token', user.token, { expires: 7, path: '/' });
           Router.setRoute('/admin.html');
         }
       });
@@ -55,25 +56,35 @@ async function signIn(url, data) {
     const response = await axios.post(url, data, {});
     return response.data;
   } catch (error) {
-    switch (error.response.status) {
-      case 401:
-        GrowlNotification.notify({
-          title: 'Sign In failed',
-          description: 'Please verify you are using the right credentials',
-          position: 'bottom-center',
-          type: 'error',
-          closeTimeout: 3000
-        });
-        break;
-      case 422:
-        GrowlNotification.notify({
-          title: 'Sign In failed !',
-          description: 'Invalid inputs',
-          position: 'bottom-center',
-          type: 'error',
-          closeTimeout: 3000
-        });
-        break;
+    if (error.response) {
+      switch (error.response.status) {
+        case 401:
+          GrowlNotification.notify({
+            title: 'Sign In failed',
+            description: 'Please verify you are using the right credentials',
+            position: 'top-right',
+            type: 'error',
+            closeTimeout: 5000
+          });
+          break;
+        case 422:
+          GrowlNotification.notify({
+            title: 'Sign In failed !',
+            description: 'Please check that your inputs are correctly formed',
+            position: 'top-right',
+            type: 'error',
+            closeTimeout: 5000
+          });
+          break;
+      }
+    } else {
+      GrowlNotification.notify({
+        title: 'Oops!',
+        description: 'An unexpected error occurs',
+        position: 'top-right',
+        type: 'error',
+        closeTimeout: 5000
+      });
     }
   }
 }

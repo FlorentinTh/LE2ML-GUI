@@ -1,0 +1,32 @@
+.grid{
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-auto-rows: minmax(210px, auto);
+    grid-gap: 1em;
+
+    max-width: 900px;
+    margin: 50px auto 0 auto;
+
+    .grid-item {
+        @include themify($themes) {
+            color: themed('color-text-primary');
+            background: themed('color-secondary');
+            border-bottom: 2px solid themed('color-accent');
+        }
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+        margin-left: 5px;
+        margin-right: 5px;
+        flex: 1 1 200px;
+    }
+}
+
+@supports (display: grid) {
+    .grid-item {
+        margin: 0;
+    }
+}

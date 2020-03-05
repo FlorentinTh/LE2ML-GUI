@@ -3,6 +3,7 @@ import { RunningJobs } from './../components/admin/RunningJobs';
 import { Admin } from '../pages/Admin';
 import { Register } from '../pages/Register';
 import { Index } from '../pages/Index';
+import { Settings } from '../components/admin/MyAccount';
 
 const routes = [
   {
@@ -26,6 +27,10 @@ const routes = [
       {
         name: 'running-jobs',
         Component: RunningJobs
+      },
+      {
+        name: 'my-account',
+        Component: Settings
       }
     ]
   }

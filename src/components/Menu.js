@@ -6,24 +6,12 @@ import { URL } from './../helpers/utils';
 
 const defaultContext = document.querySelector('nav.menu');
 const defaultItems = [
-  { label: 'Home', icon: 'fas fa-home', url: null, selected: true },
-  { label: 'Running Jobs', icon: 'fas fa-tasks', url: null },
   {
-    label: 'Cluster Management',
-    icon: 'fab fa-docker',
-    url: 'https://www.portainer.io/'
-  },
-  {
-    label: 'Proxy Management',
-    icon: 'fas fa-network-wired',
-    url: 'https://containo.us/traefik/'
-  },
-  {
-    label: 'Settings',
-    icon: 'fas fa-cog',
-    url: null
-  },
-  { label: 'Sign Out', icon: 'fas fa-sign-out-alt', url: '#logout' }
+    label: 'Home',
+    icon: 'fas fa-home',
+    url: null,
+    selected: true
+  }
 ];
 const defaultLogoURL = URL.toAnchor(URL.toSlug(defaultItems[0].label));
 
@@ -93,7 +81,6 @@ export class Menu {
       }
       content += '</li>';
     });
-
     this.options.context.querySelector('ul').insertAdjacentHTML('beforeend', content);
   }
 
@@ -143,11 +130,6 @@ export class Menu {
         item.setAttribute('class', 'active');
       }
     }
-  }
-
-  addItem(position, label, icon) {
-    this.options.items.splice(position, 0, { label: label, icon: icon });
-    this._init();
   }
 
   listen(handler) {

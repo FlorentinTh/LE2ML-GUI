@@ -79,12 +79,11 @@ export class API {
     }
   }
 
-  static setAuthorization(token) {
-    if (typeof token === 'string' && token !== '') {
-      axios.defaults.headers.common.Authorization = 'JWT ' + token;
-    } else {
-      throw new Error('expected type for argument token is string.');
-    }
+  static setAuthHeader() {
+    const token = Cookies.get('token');
+    return {
+      Authorization: `JWT ${token}`
+    };
   }
 }
 
@@ -100,7 +99,22 @@ export class String {
 
 export class User {
   static isConnected() {
-    const token = Cookies.get('uid');
-    return token !== null && token !== undefined;
+    const uid = Cookies.get('uid');
+    const token = Cookies.get('token');
+    return (
+      token !== null && token !== undefined && uid !== undefined && uid !== undefined
+    );
+  }
+
+  static async getSignedUser() {
+    const uid = Cookies.get('uid');
+    try {
+      const response = await axios.get(`/user/${uid}`, {
+        headers: API.setAuthHeader()
+      });
+      return response.data;
+    } catch (error) {
+      return error;
+    }
   }
 }
