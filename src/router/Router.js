@@ -1,8 +1,8 @@
-import routes from './routes';
-import { Error404 } from '../components/errors/Error404';
-import { Menu } from './../components/Menu';
-import { URL } from './../helpers/utils';
-export class Router {
+import routes from '@Routes';
+import Error404 from '@Error404';
+import Menu from '@Menu/Menu.js';
+import URLHelper from '@URLHelper';
+class Router {
   static _loadPage(page) {
     if (typeof page === 'string') {
       let route = null;
@@ -22,9 +22,10 @@ export class Router {
     }
   }
 
-  static _loadComponent(page, hash) {
+  static _loadComponent(page, hash, menu) {
     if (typeof hash === 'string') {
       let route = null;
+      let parent = null;
 
       routes.forEach(r => {
         if (r.name === page && r.Components.length > 0) {
@@ -38,43 +39,78 @@ export class Router {
 
       if (route !== null) {
         // eslint-disable-next-line no-new
-        new route.Component();
+        new route.Controller();
       } else {
-        new Error404().trigger();
+        routes.forEach(r => {
+          if (r.name === page && r.Components.length > 0) {
+            r.Components.forEach(c => {
+              if (!(c.SubComponents === undefined)) {
+                c.SubComponents.forEach(sc => {
+                  if (sc.name === hash) {
+                    parent = c;
+                    route = sc;
+                  }
+                });
+              }
+            });
+          }
+        });
+
+        if (!(route === null)) {
+          // eslint-disable-next-line no-new
+          new route.Controller();
+
+          if (!(menu === null)) {
+            menu.setActive(parent.name);
+          }
+        } else {
+          new Error404().trigger();
+        }
       }
     } else {
       throw new Error('expected type for argument hash is string.');
     }
   }
 
-  static onHashChange(menu = null) {
-    if (menu !== null) {
+  static onHashChangeHandler(menu = null) {
+    if (!(menu === null)) {
       if (menu instanceof Menu) {
-        menu.setActive(URL.getHash());
+        menu.setActive(URLHelper.getHash());
       } else {
         throw new Error('argument menu should be an instance of object Menu');
       }
     }
 
-    if (URL.getHash() === null) {
-      this.setRoute(URL.getPage());
+    if (URLHelper.getHash() === null) {
+      this.setRoute(URLHelper.getPage());
     } else {
-      Router.route({ hash: URL.getHash() });
+      if (!(menu === null)) {
+        Router.route({ hash: URLHelper.getHash(), menu: menu });
+      } else {
+        Router.route({ hash: URLHelper.getHash() });
+      }
     }
   }
 
   static route(
     options = {
       page: null,
-      hash: null
+      hash: null,
+      menu: null
     }
   ) {
-    if ((options.hash === null || options.hash === undefined) && URL.getHash() !== '') {
-      options.hash = URL.getHash();
+    if (
+      (options.hash === null || options.hash === undefined) &&
+      URLHelper.getHash() !== ''
+    ) {
+      options.hash = URLHelper.getHash();
     }
 
-    if ((options.page === null || options.page === undefined) && URL.getPage() !== '') {
-      options.page = URL.getPageName();
+    if (
+      (options.page === null || options.page === undefined) &&
+      URLHelper.getPage() !== ''
+    ) {
+      options.page = URLHelper.getPageName();
     }
 
     if (options.hash === null) {
@@ -85,13 +121,10 @@ export class Router {
       }
     } else {
       this._loadPage(options.page);
-      this._loadComponent(options.page, options.hash);
+      this._loadComponent(options.page, options.hash, options.menu);
     }
 
-    window.addEventListener('hashchange', event => {
-      event.stopImmediatePropagation();
-      this.onHashChange();
-    });
+    window.addEventListener('hashchange', this.onHashChangeHandler, true);
   }
 
   static follow(link) {
@@ -103,7 +136,7 @@ export class Router {
   }
 
   static setRoute(route, redirect = false) {
-    if (URL.isRouteValid(route)) {
+    if (URLHelper.isRouteValid(route)) {
       if (!redirect) {
         window.history.pushState('', '', window.location.href);
       }
@@ -114,3 +147,5 @@ export class Router {
     }
   }
 }
+
+export default Router;

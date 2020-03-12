@@ -1,5 +1,11 @@
 {
-  "extends": ["standard", "plugin:prettier/recommended", "plugin:json/recommended"],
+  "extends": [
+    "standard",
+    "plugin:prettier/recommended",
+    "plugin:json/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings"
+  ],
   "env": {
     "browser": true,
     "es6": true,
@@ -10,7 +16,7 @@
     "SharedArrayBuffer": "readonly"
   },
   "parserOptions": {
-    "ecmaVersion": 2020,
+    "ecmaVersion": 2017,
     "sourceType": "module"
   },
   "rules": {
@@ -33,5 +39,10 @@
             "ignoreRegExpLiterals": true
         }
     ]
+  },
+  "settings": {
+    "import/resolver": {
+      "babel-module": {}
+    }
   }
 }

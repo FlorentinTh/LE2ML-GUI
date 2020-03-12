@@ -1,21 +1,21 @@
-import { Router } from '../router/Router';
-import { Theme } from './Theme';
+import Router from '@Router';
+import Theme from '@Theme';
 
-import menu from '../pages/fragment/menu.html';
-import { URL } from './../helpers/utils';
+import menuHTML from '@Menu/menu.html';
+import URLHelper from '@URLHelper';
 
 const defaultContext = document.querySelector('nav.menu');
 const defaultItems = [
   {
-    label: 'Home',
+    name: 'Home',
     icon: 'fas fa-home',
     url: null,
     selected: true
   }
 ];
-const defaultLogoURL = URL.toAnchor(URL.toSlug(defaultItems[0].label));
+const defaultLogoURL = URLHelper.toAnchor(URLHelper.toSlug(defaultItems[0].name));
 
-export class Menu {
+class Menu {
   constructor(
     options = {
       context: defaultContext,
@@ -36,7 +36,7 @@ export class Menu {
     this._build();
     this._enableTheme();
 
-    let hash = URL.getHash();
+    let hash = URLHelper.getHash();
 
     if (hash === null) {
       const items = this.options.items;
@@ -46,26 +46,32 @@ export class Menu {
         // eslint-disable-next-line no-prototype-builtins
         if (items[i].hasOwnProperty('selected')) {
           if (items[i].selected) {
-            selected = items[i].label;
+            selected = items[i].name;
             break;
           }
         }
       }
 
-      hash = URL.toSlug(selected);
-      Router.setRoute(URL.getPage() + URL.toAnchor(hash), true);
+      hash = URLHelper.toSlug(selected);
+      Router.setRoute(URLHelper.getPage() + URLHelper.toAnchor(hash), true);
     }
 
     this.setActive(hash);
 
-    window.addEventListener('hashchange', event => {
-      event.stopImmediatePropagation();
-      Router.onHashChange(this);
-    });
+    window.removeEventListener('hashchange', Router.onHashChangeHandler, true);
+    window.addEventListener(
+      'hashchange',
+      event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        Router.onHashChangeHandler(this);
+      },
+      true
+    );
   }
 
   _build() {
-    this.options.context.insertAdjacentHTML('beforeend', menu);
+    this.options.context.insertAdjacentHTML('beforeend', menuHTML);
     const logo = this.options.context.getElementsByClassName('logo')[0];
     logo.getElementsByTagName('a')[0].setAttribute('href', this.options.logoURL);
 
@@ -74,10 +80,14 @@ export class Menu {
     Array.from(this.options.items, item => {
       content += `<li>
                     <i class="${item.icon}"></i>`;
+      // eslint-disable-next-line no-prototype-builtins
+      const label = item.hasOwnProperty('label') ? item.label : item.name;
       if (item.url === null) {
-        content += `<a href="${URL.toAnchor(URL.toSlug(item.label))}">${item.label}</a>`;
+        content += `<a href="${URLHelper.toAnchor(
+          URLHelper.toSlug(item.name)
+        )}">${label}</a>`;
       } else {
-        content += `<a href="${item.url}">${item.label}</a>`;
+        content += `<a href="${item.url}">${item.name}</a>`;
       }
       content += '</li>';
     });
@@ -94,8 +104,8 @@ export class Menu {
 
   _switch(href, callback) {
     if (href.startsWith('#')) {
-      this.setActive(URL.getHashName(href));
-      Router.setRoute(URL.getPage() + href);
+      this.setActive(URLHelper.getHashName(href));
+      Router.setRoute(URLHelper.getPage() + href);
 
       if (typeof callback === 'function') {
         callback(href);
@@ -126,7 +136,7 @@ export class Menu {
       item.removeAttribute('class');
       const hashAttr = item.children[1].hash;
 
-      if (URL.getHashName(hashAttr) === hash && hashAttr !== '') {
+      if (URLHelper.getHashName(hashAttr) === hash && hashAttr !== '') {
         item.setAttribute('class', 'active');
       }
     }
@@ -173,3 +183,5 @@ export class Menu {
     }
   }
 }
+
+export default Menu;

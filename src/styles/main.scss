@@ -1,12 +1,6 @@
-@import './utils/themes.scss';
-@import './utils/sizes.scss';
-@import './utils/assets.scss';
-
-@import './pages/account.scss';
-@import './pages/admin.scss';
-@import './pages/errors.scss';
-@import './components/menu.scss';
-@import './components/admin/settings.scss';
+@import './utils/*.scss';
+@import '../theme/*.scss';
+@import '../components/**/*.scss';
 
 * {
 	margin: 0;
@@ -34,6 +28,13 @@ input:not([type="radio"]) {
 input[type="radio"] {
 	box-sizing: border-box;
 	padding: 0;
+}
+
+input:read-only {
+    cursor: unset;
+    @include themify($themes) {
+		color: themed('color-text-primary');
+	}
 }
 
 button[type="submit"] {

@@ -1,6 +1,6 @@
-import { Component } from './../Component';
+import Component from '@Component';
 
-export class RunningJobs extends Component {
+class Jobs extends Component {
   constructor(context = null) {
     super(context);
     super.clearContent();
@@ -14,3 +14,5 @@ export class RunningJobs extends Component {
      */
   }
 }
+
+export default Jobs;

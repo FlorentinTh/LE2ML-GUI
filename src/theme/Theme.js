@@ -1,4 +1,4 @@
-export class Theme {
+class Theme {
   constructor(context) {
     this.context = context;
     this.switchLight = this.context.querySelector('div.switch-theme input#switch-light');
@@ -44,3 +44,5 @@ export class Theme {
     }
   }
 }
+
+export default Theme;

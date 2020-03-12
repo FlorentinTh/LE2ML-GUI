@@ -10,8 +10,8 @@ $themes: (
 			color-accent-darker: #264616,
 			color-accent-hover: #7fc559,
 			box-shadow: rgba(184, 177, 177, 0.65),
-			logo-liara-small: '../assets/logo-liara-small-dark.png',
-			logo-liara-large: '../assets/logo-liara-large-dark.png'
+			logo-liara-small: $logo-liara-small-dark,
+			logo-liara-large: $logo-liara-large-dark
 		),
 	dark:
 		(
@@ -23,8 +23,8 @@ $themes: (
 			color-accent: #68bd45,
 			color-accent-darker: #54923c,
 			box-shadow: rgba(43, 41, 41, 0.65),
-			logo-liara-small: '../assets/logo-liara-small-light.png',
-			logo-liara-large: '../assets/logo-liara-large-light.png'
+			logo-liara-small: $logo-liara-small-light,
+			logo-liara-large: $logo-liara-large-light
 		)
 );
 

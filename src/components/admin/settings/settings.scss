@@ -1,0 +1,63 @@
+.grid{
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-auto-rows: minmax(210px, auto);
+    grid-gap: 1em;
+
+    max-width: 900px;
+    margin: 0 auto;
+
+    .grid-item {
+        @include themify($themes) {
+            color: themed('color-text-primary');
+            background: themed('color-secondary');
+            border-bottom: 2px solid themed('color-accent');
+        }
+
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+        margin-left: 5px;
+        margin-right: 5px;
+        flex: 1 1 200px;
+
+        &:hover{
+            @include themify($themes) {
+                color: themed('color-text-active');
+                background: themed('color-accent');
+                transition: background .5s linear;
+                cursor: pointer;
+            }
+
+            a {
+                @include themify($themes) {
+                    color: themed('color-text-active');
+                }
+            }
+        }
+
+        i {
+            font-size: 3.5em;
+            margin-bottom: 25px;
+        }
+
+        a::before {
+            content: '\A';
+            white-space: pre;
+        }
+
+        a {
+            font-size: 1em;
+            font-weight: bold;
+        }
+    }
+}
+
+@supports (display: grid) {
+    .grid-item {
+        margin: 0;
+    }
+}

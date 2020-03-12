@@ -1,9 +1,10 @@
-import { Home } from './../components/admin/Home';
-import { RunningJobs } from './../components/admin/RunningJobs';
-import { Admin } from '../pages/Admin';
-import { Register } from '../pages/Register';
-import { Index } from '../pages/Index';
-import { Settings } from '../components/admin/MyAccount';
+import Index from '@Components/authentication/Index';
+import Register from '@Components/authentication/Register';
+import Admin from '@Components/admin/Admin';
+import Home from '@Components/admin/home/Home';
+import Jobs from '@Components/admin/jobs/Jobs';
+import Settings from '@Components/admin/settings/Settings';
+import UserPassword from '@Components/admin/settings/user-password/UserPassword';
 
 const routes = [
   {
@@ -22,15 +23,21 @@ const routes = [
     Components: [
       {
         name: 'home',
-        Component: Home
+        Controller: Home
       },
       {
         name: 'running-jobs',
-        Component: RunningJobs
+        Controller: Jobs
       },
       {
         name: 'my-account',
-        Component: Settings
+        Controller: Settings,
+        SubComponents: [
+          {
+            name: 'user-password',
+            Controller: UserPassword
+          }
+        ]
       }
     ]
   }

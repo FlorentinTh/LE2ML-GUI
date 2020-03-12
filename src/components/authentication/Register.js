@@ -1,15 +1,16 @@
-import { Router } from '../router/Router';
-import { Theme } from '../components/Theme';
-import { PageController } from './PageController';
-import { User } from '../helpers/utils';
+import Router from '@Router';
+import Theme from '@Theme';
+import Controller from '@Controller';
+import APIHelper from '@APIHelper';
+
 import * as GrowlNotification from 'growl-notification/dist/growl-notification.min.js';
 import 'growl-notification/dist/colored-theme.min.css';
 import axios from 'axios';
 
-export class Register extends PageController {
+class Register extends Controller {
   constructor() {
     super();
-    if (User.isConnected()) {
+    if (APIHelper.isUserConnected()) {
       Router.setRoute('/admin.html');
     } else {
       this.run();
@@ -60,34 +61,17 @@ export class Register extends PageController {
 
 async function register(url, data) {
   try {
-    const response = await axios.post(url, data, {});
+    const response = await axios.put(url, data, {});
     return response.data;
   } catch (error) {
-    if (error.response) {
-      switch (error.response.status) {
-        case 500:
-          GrowlNotification.notify({
-            title: 'Registration failed !',
-            description: 'Please retry register a new account',
-            position: 'top-right',
-            type: 'error',
-            closeTimeout: 5000
-          });
-          break;
-        case 422:
-          GrowlNotification.notify({
-            title: 'Registration failed !',
-            description: 'Please check that your inputs are correctly formed',
-            position: 'top-right',
-            type: 'error',
-            closeTimeout: 5000
-          });
-          break;
-      }
-    } else {
+    if (error.response.data) {
+      const err = error.response.data;
       GrowlNotification.notify({
-        title: 'Oops!',
-        description: 'An unexpected error occurs',
+        title: `Error: ${err.code}`,
+        description:
+          err.code === 422
+            ? 'Please check that your inputs are correctly formed'
+            : err.message,
         position: 'top-right',
         type: 'error',
         closeTimeout: 5000
@@ -95,3 +79,5 @@ async function register(url, data) {
     }
   }
 }
+
+export default Register;

@@ -1,4 +1,36 @@
 {
 	"presets": ["@babel/preset-env"],
-	"plugins": ["@babel/transform-runtime"]
+	"plugins": [["@babel/transform-runtime"], [
+        "module-resolver",
+        {
+            "root": [
+                "."
+            ],
+            "alias": {
+                "@Assets": "./src/public/assets",
+                "@Styles": "./src/styles/main.scss",
+                "@Theme": "./src/theme/Theme.js",
+                "@Store": "./src/store/Store.js",
+                "@Router": "./src/router/Router.js",
+                "@Routes": "./src/router/routes.js",
+                "@Menu": "./src/components/menu",
+                "@Controller": "./src/components/Controller.js",
+                "@Components": "./src/components",
+                "@Component": "./src/components/Component.js",
+                "@Errors": "./src/components/errors",
+                "@Error404": "./src/components/errors/Error404.js",
+                "@Error500": "./src/components/errors/Error500.js",
+                "@APIHelper": "./src/helpers/APIHelper.js",
+                "@ListHelper": "./src/helpers/ListHelper.js",
+                "@StringHelper": "./src/helpers/StringHelper.js",
+                "@URLHelper": "./src/helpers/URLHelper.js"
+            },
+            "extensions": [
+                ".js",
+                ".scss",
+                ".html",
+                ".json"
+            ]
+        }
+    ]]
 }

@@ -1,8 +1,8 @@
-import { Component } from '../Component';
+import Component from '../Component';
 
-import errorHTMLComponent from '../../pages/fragment/errors/error.html';
+import errorHTML from '@Errors/error.html';
 
-export class ErrorComponent extends Component {
+class ErrorComponent extends Component {
   constructor(context = null, code, message) {
     super(context);
 
@@ -20,8 +20,10 @@ export class ErrorComponent extends Component {
 
   trigger() {
     super.clearContent();
-    super.injectHTMLPage(errorHTMLComponent);
+    super.injectHTMLPage(errorHTML);
     this.setCode();
     this.setMessage();
   }
 }
+
+export default ErrorComponent;

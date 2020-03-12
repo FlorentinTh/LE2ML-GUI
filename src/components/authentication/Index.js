@@ -1,16 +1,17 @@
-import { PageController } from './PageController';
-import { Router } from '../router/Router';
-import { Theme } from '../components/Theme';
+import Controller from '@Controller';
+import Router from '@Router';
+import Theme from '@Theme';
+import APIHelper from '@APIHelper';
+
 import * as GrowlNotification from 'growl-notification/dist/growl-notification.min.js';
 import 'growl-notification/dist/colored-theme.min.css';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { User, API } from '../helpers/utils';
 
-export class Index extends PageController {
+class Index extends Controller {
   constructor() {
     super();
-    if (User.isConnected()) {
+    if (APIHelper.isUserConnected()) {
       Router.setRoute('/admin.html');
     } else {
       this.run();
@@ -41,9 +42,8 @@ export class Index extends PageController {
 
       signIn('/login', jsonData).then(response => {
         if (response) {
-          const user = response.data.user;
-          Cookies.set('uid', user._id, { expires: 7, path: '/' });
-          Cookies.set('token', user.token, { expires: 7, path: '/' });
+          const userData = response.data.user;
+          Cookies.set('uuid', userData.token, { path: '/' });
           Router.setRoute('/admin.html');
         }
       });
@@ -56,31 +56,14 @@ async function signIn(url, data) {
     const response = await axios.post(url, data, {});
     return response.data;
   } catch (error) {
-    if (error.response) {
-      switch (error.response.status) {
-        case 401:
-          GrowlNotification.notify({
-            title: 'Sign In failed',
-            description: 'Please verify you are using the right credentials',
-            position: 'top-right',
-            type: 'error',
-            closeTimeout: 5000
-          });
-          break;
-        case 422:
-          GrowlNotification.notify({
-            title: 'Sign In failed !',
-            description: 'Please check that your inputs are correctly formed',
-            position: 'top-right',
-            type: 'error',
-            closeTimeout: 5000
-          });
-          break;
-      }
-    } else {
+    if (error.response.data) {
+      const err = error.response.data;
       GrowlNotification.notify({
-        title: 'Oops!',
-        description: 'An unexpected error occurs',
+        title: `Error: ${err.code}`,
+        description:
+          err.code === 422
+            ? 'Please check that your inputs are correctly formed'
+            : err.message,
         position: 'top-right',
         type: 'error',
         closeTimeout: 5000
@@ -88,3 +71,5 @@ async function signIn(url, data) {
     }
   }
 }
+
+export default Index;

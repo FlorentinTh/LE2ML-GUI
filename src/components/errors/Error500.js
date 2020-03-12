@@ -1,6 +1,6 @@
-import { ErrorComponent } from './ErrorComponent';
+import ErrorComponent from '@Errors/ErrorComponent';
 
-export class Error500 extends ErrorComponent {
+class Error500 extends ErrorComponent {
   constructor(context = null) {
     // eslint-disable-next-line quotes
     super(context, 500, `Internal server error. Try again later.`);
@@ -10,3 +10,5 @@ export class Error500 extends ErrorComponent {
     super.trigger();
   }
 }
+
+export default Error500;

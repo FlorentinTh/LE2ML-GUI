@@ -1,4 +1,4 @@
-export class Component {
+class Component {
   constructor(context) {
     if (context === null) {
       let ctx = document.querySelector('main.content');
@@ -38,3 +38,5 @@ export class Component {
     }
   }
 }
+
+export default Component;
