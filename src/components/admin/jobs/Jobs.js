@@ -4,7 +4,7 @@ class Jobs extends Component {
   constructor(context = null) {
     super(context);
     super.clearContent();
-    super.makeTitle('Running Jobs');
+    super.makeTitle('Jobs');
     this.run();
   }
 

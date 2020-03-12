@@ -78,6 +78,17 @@ main.content {
 	width: 100%;
 }
 
+@media screen and (max-height: 750px) and (min-width: 900px) {
+
+	main.content {
+        font-size: .85em;
+    }
+
+    button {
+        font-size: .85em;
+    }
+}
+
 @media screen and (max-width: 900px) {
 	main.content {
 		margin: 25px 25px 25px $menu-width-tablet + 25px;

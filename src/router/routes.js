@@ -26,7 +26,7 @@ const routes = [
         Controller: Home
       },
       {
-        name: 'running-jobs',
+        name: 'jobs',
         Controller: Jobs
       },
       {

@@ -29,7 +29,8 @@
 		}
 
 		text-align: center;
-		margin-top: 9vh;
+        margin-top: 7vh;
+        margin-bottom: 2vh;
 
 		.switch-theme {
 			height: 19px;
@@ -69,7 +70,7 @@
 		width: 100%;
 		height: 45px;
 		border: none;
-		font-size: 20px;
+		font-size: 1.25em;
 		font-weight: lighter;
 		margin-bottom: 30px;
 	}
@@ -111,6 +112,28 @@ input {
 			color: themed('color-text-secondary');
 		}
 	}
+}
+
+@media screen and (max-height: 750px) and (min-width: 900px) {
+
+    .sign-in,
+    .register {
+        .logo {
+            h2 {
+                font-size: 1.5em;
+            }
+        }
+    }
+
+    .form  {
+        input {
+            font-size: 1em;
+        }
+
+        button {
+            font-size: 1em;
+        }
+    }
 }
 
 @media only screen and (min-width: 280px) {

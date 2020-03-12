@@ -17,7 +17,7 @@
 		text-align: center;
 
 		img {
-			width: 240px;
+			width: 264px;
 			@include themify($themes) {
 				content: url(themed('logo-liara-large'));
 			}
@@ -78,11 +78,27 @@
 				margin: 0 auto 30px auto;
 
 				i {
-					font-size: .85em;
+					font-size: .95em;
 				}
 			}
 		}
 	}
+}
+
+@media screen and (max-height: 750px) and (min-width: 900px) {
+	.menu {
+        .logo{
+            img {
+                width: 220px;
+                height: 77px;
+            }
+        }
+        ul {
+            li {
+                font-size: .95em;
+            }
+        }
+    }
 }
 
 @media screen and (max-width: 900px) {

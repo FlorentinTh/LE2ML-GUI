@@ -18,7 +18,7 @@ const items = [
     selected: true
   },
   {
-    name: 'Running Jobs',
+    name: 'Jobs',
     icon: 'fas fa-tasks',
     url: null
   },
@@ -43,12 +43,10 @@ class Admin extends Controller {
 
         menu = this.createMenu(user);
 
-        const item = {
+        Store.add({
           id: 'menu-admin',
           data: menu
-        };
-
-        Store.add(item);
+        });
 
         this.run();
       }

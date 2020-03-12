@@ -2,10 +2,12 @@ import Component from '@Component';
 import userPasswordHTML from './user-password.html';
 import Store from '@Store';
 import APIHelper from '@APIHelper';
+import Router from '@Router';
 
 import axios from 'axios';
 import * as GrowlNotification from 'growl-notification/dist/growl-notification.min.js';
 import 'growl-notification/dist/colored-theme.min.css';
+import URLHelper from '../../../../helpers/URLHelper';
 
 class UserPassword extends Component {
   constructor(context = null) {
@@ -49,6 +51,14 @@ class UserPassword extends Component {
           });
         }
       });
+    });
+
+    const cancelButton = document.getElementById('cancel');
+
+    cancelButton.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      Router.setRoute(`${URLHelper.getPage()}#my-account`);
     });
   }
 }
