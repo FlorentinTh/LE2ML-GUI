@@ -21,23 +21,20 @@
   },
   "rules": {
     "no-console": "warn",
-    "semi": [
-        "error",
-        "always"
-    ],
+    "semi": ["error", "always"],
     "max-len": [
-        "warn",
-        {
-            "code": 90,
-            "tabWidth": 2,
-            "comments": 110,
-            "ignoreComments": false,
-            "ignoreTrailingComments": true,
-            "ignoreUrls": true,
-            "ignoreStrings": false,
-            "ignoreTemplateLiterals": true,
-            "ignoreRegExpLiterals": true
-        }
+      "warn",
+      {
+        "code": 90,
+        "tabWidth": 2,
+        "comments": 110,
+        "ignoreComments": false,
+        "ignoreTrailingComments": true,
+        "ignoreUrls": true,
+        "ignoreStrings": false,
+        "ignoreTemplateLiterals": true,
+        "ignoreRegExpLiterals": true
+      }
     ]
   },
   "settings": {

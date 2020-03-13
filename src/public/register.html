@@ -1,46 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>SmartHome</title>
+  </head>
 
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>SmartHome</title>
-</head>
-
-<body>
-	<div id="root" class="theme-dark">
-		<div class="wrap">
-			<div class="register">
-				<header class="logo">
-					<img src="#" />
-					<h2>Create a New Account</h2>
-				</header>
-				<div class="form">
-					<form action="#">
-						<input type="text" id="lastname" name="lastname" placeholder="Lastname" autocomplete="family-name" required />
-						<input type="text" id="firstname" name="firstname" placeholder="Firstname" autocomplete="given-name" required />
-						<input type="email" id="email" name="email" placeholder="Email" autocomplete="email" required />
-						<input type="password" id="password" name="password" placeholder="Password" autocomplete="new-password" minLength="8" required />
-						<input type="password" id="password-confirm" name="passwordConfirm" placeholder="Password Confirmation"
-							autocomplete="new-password" minLength="8" required />
-						<button type="submit">Register</button>
-					</form>
-					<button id="cancel" class="link">Cancel</button>
-				</div>
-				<footer class="links">
-					<div class="switch-theme">
-						<input type="radio" name="switch" id="switch-light">
-						<input type="radio" name="switch" id="switch-dark">
-						<label for="switch-light"><i class="fas fa-sun"></i></label>
-						<label for="switch-dark"><i class="fas fa-moon"></i></label>
-						<span class="toggle"></span>
-					</div>
-					<a href="https://containo.us/traefik/">Cluster Management</a>
-					<a href="https://www.portainer.io/">Proxy Management</a>
-				</footer>
-			</div>
-		</div>
+  <body>
+    <div id="root" class="theme-dark">
+      <div class="wrap">
+        <div class="register">
+          <header class="logo">
+            <img src="#" />
+            <h2>Create a New Account</h2>
+          </header>
+          <div class="form">
+            <form action="#">
+              <input
+                type="text"
+                id="lastname"
+                name="lastname"
+                placeholder="Lastname"
+                autocomplete="family-name"
+                required
+              />
+              <input
+                type="text"
+                id="firstname"
+                name="firstname"
+                placeholder="Firstname"
+                autocomplete="given-name"
+                required
+              />
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Email"
+                autocomplete="email"
+                required
+              />
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Password"
+                autocomplete="new-password"
+                minlength="8"
+                required
+              />
+              <input
+                type="password"
+                id="password-confirm"
+                name="passwordConfirm"
+                placeholder="Password Confirmation"
+                autocomplete="new-password"
+                minlength="8"
+                required
+              />
+              <button type="submit">Register</button>
+            </form>
+            <button id="cancel" class="link">Cancel</button>
+          </div>
+          <footer class="links">
+            <div class="switch-theme">
+              <input type="radio" name="switch" id="switch-light" />
+              <input type="radio" name="switch" id="switch-dark" />
+              <label for="switch-light"><i class="fas fa-sun"></i></label>
+              <label for="switch-dark"><i class="fas fa-moon"></i></label>
+              <span class="toggle"></span>
+            </div>
+            <a href="https://containo.us/traefik/">Cluster Management</a>
+            <a href="https://www.portainer.io/">Proxy Management</a>
+          </footer>
+        </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>

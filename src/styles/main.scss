@@ -3,101 +3,100 @@
 @import '../components/**/*.scss';
 
 * {
-	margin: 0;
-	padding: 0;
-	outline: none;
-	box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: "Open Sans", Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-family: 'Open Sans', Helvetica Neue, Helvetica, Arial, sans-serif;
 }
 
 a {
-	text-decoration: none;
-	@include themify($themes) {
-		color: themed('color-text-primary');
-	}
+  text-decoration: none;
+  @include themify($themes) {
+    color: themed('color-text-primary');
+  }
 }
 
-input:not([type="checkbox"]),
-input:not([type="radio"]) {
-	border-radius: 3px;
+input:not([type='checkbox']),
+input:not([type='radio']) {
+  border-radius: 3px;
 }
 
-input[type="radio"] {
-	box-sizing: border-box;
-	padding: 0;
+input[type='radio'] {
+  box-sizing: border-box;
+  padding: 0;
 }
 
 input:read-only {
-    cursor: unset;
-    @include themify($themes) {
-		color: themed('color-text-primary');
-	}
+  cursor: unset;
+  @include themify($themes) {
+    color: themed('color-text-primary');
+  }
 }
 
-button[type="submit"] {
-	@include themify($themes) {
-		color: themed('color-text-active');
-		background-color: themed('color-accent');
-	}
+button[type='submit'] {
+  @include themify($themes) {
+    color: themed('color-text-active');
+    background-color: themed('color-accent');
+  }
 
-	&:hover {
-		@include themify($themes) {
-			background-color: themed('color-accent-darker');
-		}
-	}
+  &:hover {
+    @include themify($themes) {
+      background-color: themed('color-accent-darker');
+    }
+  }
 }
 
 button {
-	border-radius: 3px;
-	margin-top: 20px;
-	cursor: pointer;
-	transition: background 0.4s ease;
+  border-radius: 3px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: background 0.4s ease;
 }
 
 .wrap {
-	@include themify($themes) {
-		background: themed('color-primary');
-		color: themed('color-text-primary');
-	}
-	width: 100%;
-	min-height: 100vh;
-	display: flex;
+  @include themify($themes) {
+    background: themed('color-primary');
+    color: themed('color-text-primary');
+  }
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
 }
 
 .center {
-	text-align: center;
+  text-align: center;
 }
 
 main.content {
-	position: relative;
-	padding: 50px 50px 50px $menu-width-desktop + 50px;
-	text-align: center;
-	width: 100%;
+  position: relative;
+  padding: 50px 50px 50px $menu-width-desktop + 50px;
+  text-align: center;
+  width: 100%;
 }
 
 @media screen and (max-height: 750px) and (min-width: 900px) {
+  main.content {
+    font-size: 0.85em;
+  }
 
-	main.content {
-        font-size: .85em;
-    }
-
-    button {
-        font-size: .85em;
-    }
+  button {
+    font-size: 0.85em;
+  }
 }
 
 @media screen and (max-width: 900px) {
-	main.content {
-		margin: 25px 25px 25px $menu-width-tablet + 25px;
-		padding: 0;
-	}
+  main.content {
+    margin: 25px 25px 25px $menu-width-tablet + 25px;
+    padding: 0;
+  }
 }
 
 @media screen and (max-width: 320px) {
-	main.content {
-		padding: 0;
-	}
+  main.content {
+    padding: 0;
+  }
 }

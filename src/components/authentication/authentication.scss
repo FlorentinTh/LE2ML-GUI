@@ -1,161 +1,160 @@
 .sign-in,
 .register {
-	position: relative;
-	width: 25%;
-	padding: 10px 25px 0px 25px;
-	margin: 5vh auto 0vh auto;
-	min-width: 320px;
+  position: relative;
+  width: 25%;
+  padding: 10px 25px 0px 25px;
+  margin: 5vh auto 0vh auto;
+  min-width: 320px;
 
-	.logo {
-		margin-bottom: 4vh;
-		text-align: center;
+  .logo {
+    margin-bottom: 4vh;
+    text-align: center;
 
-		img {
-			width: 250px;
-			margin-bottom: 3vh;
-			@include themify($themes) {
-				content: url(themed('logo-liara-large'));
-			}
-		}
+    img {
+      width: 250px;
+      margin-bottom: 3vh;
+      @include themify($themes) {
+        content: url(themed('logo-liara-large'));
+      }
+    }
 
-		h2 {
-			font-size: 2em;
-		}
-	}
+    h2 {
+      font-size: 2em;
+    }
+  }
 
-	.links {
-		@include themify($themes) {
-			border-top: 1px solid themed('color-text-primary');
-		}
+  .links {
+    @include themify($themes) {
+      border-top: 1px solid themed('color-text-primary');
+    }
 
-		text-align: center;
-        margin-top: 7vh;
-        margin-bottom: 2vh;
+    text-align: center;
+    margin-top: 7vh;
+    margin-bottom: 2vh;
 
-		.switch-theme {
-			height: 19px;
-			position: relative;
-			width: 47px;
-			margin: 20px auto 10px auto;
-		}
+    .switch-theme {
+      height: 19px;
+      position: relative;
+      width: 47px;
+      margin: 20px auto 10px auto;
+    }
 
-		a {
-			@include themify($themes) {
-				color: themed('color-text-primary');
-			}
+    a {
+      @include themify($themes) {
+        color: themed('color-text-primary');
+      }
 
-			padding-top: 2em;
-			font-size: .75em;
-			display: inline-block;
-			cursor: pointer;
-			text-decoration: none;
+      padding-top: 2em;
+      font-size: 0.75em;
+      display: inline-block;
+      cursor: pointer;
+      text-decoration: none;
 
-			&:not(:first-child) {
-				padding-left: 5%;
-			}
+      &:not(:first-child) {
+        padding-left: 5%;
+      }
 
-			&:hover {
-				@include themify($themes) {
-					color: themed('color-text-secondary');
-				}
-			}
-		}
-	}
+      &:hover {
+        @include themify($themes) {
+          color: themed('color-text-secondary');
+        }
+      }
+    }
+  }
 }
 
 .form {
-	width: 100%;
+  width: 100%;
 
-	input {
-		width: 100%;
-		height: 45px;
-		border: none;
-		font-size: 1.25em;
-		font-weight: lighter;
-		margin-bottom: 30px;
-	}
+  input {
+    width: 100%;
+    height: 45px;
+    border: none;
+    font-size: 1.25em;
+    font-weight: lighter;
+    margin-bottom: 30px;
+  }
 
-	button {
-		width: 100%;
-		height: 45px;
-		border: none;
-		font-size: 20px;
-		font-weight: lighter;
+  button {
+    width: 100%;
+    height: 45px;
+    border: none;
+    font-size: 20px;
+    font-weight: lighter;
 
-		&.link {
-			@include themify($themes) {
-				background-color: themed('color-primary');
-				border: 1px solid themed('color-accent');
-				color: themed('color-accent');
-			}
+    &.link {
+      @include themify($themes) {
+        background-color: themed('color-primary');
+        border: 1px solid themed('color-accent');
+        color: themed('color-accent');
+      }
 
-			&:hover {
-				@include themify($themes) {
-					border: 1px solid themed('color-accent-darker');
-					color: themed('color-accent-darker');
-				}
-			}
-		}
-	}
+      &:hover {
+        @include themify($themes) {
+          border: 1px solid themed('color-accent-darker');
+          color: themed('color-accent-darker');
+        }
+      }
+    }
+  }
 }
 
 input {
-	@include themify($themes) {
-		background-color: themed('color-secondary');
-		color: themed('color-text-primary');
-		box-shadow: inset 1px 2px 6px themed('box-shadow');
-	}
+  @include themify($themes) {
+    background-color: themed('color-secondary');
+    color: themed('color-text-primary');
+    box-shadow: inset 1px 2px 6px themed('box-shadow');
+  }
 
-	padding: 0 1em;
-	&::placeholder {
-		@include themify($themes) {
-			color: themed('color-text-secondary');
-		}
-	}
+  padding: 0 1em;
+  &::placeholder {
+    @include themify($themes) {
+      color: themed('color-text-secondary');
+    }
+  }
 }
 
 @media screen and (max-height: 750px) and (min-width: 900px) {
+  .sign-in,
+  .register {
+    .logo {
+      h2 {
+        font-size: 1.5em;
+      }
+    }
+  }
 
-    .sign-in,
-    .register {
-        .logo {
-            h2 {
-                font-size: 1.5em;
-            }
-        }
+  .form {
+    input {
+      font-size: 1em;
     }
 
-    .form  {
-        input {
-            font-size: 1em;
-        }
-
-        button {
-            font-size: 1em;
-        }
+    button {
+      font-size: 1em;
     }
+  }
 }
 
 @media only screen and (min-width: 280px) {
-	.login {
-		width: 90%;
-	}
+  .login {
+    width: 90%;
+  }
 }
 
 @media only screen and (min-width: 480px) {
-	.login {
-		width: 60%;
-	}
+  .login {
+    width: 60%;
+  }
 }
 
 @media only screen and (min-width: 768px) {
-	.login {
-		width: 40%;
-	}
+  .login {
+    width: 40%;
+  }
 }
 
 @media only screen and (min-width: 992px) {
-	.login {
-		width: 30%;
-	}
+  .login {
+    width: 30%;
+  }
 }

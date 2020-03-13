@@ -1,178 +1,178 @@
 .menu {
-	@include themify($themes) {
-		background-color: themed('color-secondary');
-		border-right: 3px solid themed('color-accent');
-	}
+  @include themify($themes) {
+    background-color: themed('color-secondary');
+    border-right: 3px solid themed('color-accent');
+  }
 
-	height: 100vh;
-	width: $menu-width-desktop;
-	position: fixed;
-	top: 0;
-	left: 0;
-	z-index: 5;
-	outline: none;
+  height: 100vh;
+  width: $menu-width-desktop;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  outline: none;
 
-	.logo {
-		padding: 2em .5em .5em .5em;
-		text-align: center;
+  .logo {
+    padding: 2em 0.5em 0.5em 0.5em;
+    text-align: center;
 
-		img {
-			width: 264px;
-			@include themify($themes) {
-				content: url(themed('logo-liara-large'));
-			}
-			overflow: hidden;
-			transition: all 0.05s linear;
-		}
+    img {
+      width: 264px;
+      @include themify($themes) {
+        content: url(themed('logo-liara-large'));
+      }
+      overflow: hidden;
+      transition: all 0.05s linear;
+    }
 
-		h2 {
-			margin: .75em 0 0 0;
-			font-weight: normal;
-		}
-	}
+    h2 {
+      margin: 0.75em 0 0 0;
+      font-weight: normal;
+    }
+  }
 
-	ul {
-		list-style: none;
-		margin: 0;
+  ul {
+    list-style: none;
+    margin: 0;
 
-		li {
-			padding: 1em 1em 1em 1em;
-			font-size: 1.05em;
-			font-weight: regular;
-			transition: all 0.10s linear;
-			cursor: pointer;
-			font-size: 1.25em;
+    li {
+      padding: 1em 1em 1em 1em;
+      font-size: 1.05em;
+      font-weight: regular;
+      transition: all 0.1s linear;
+      cursor: pointer;
+      font-size: 1.25em;
 
-			& > *:not(i) {
-				padding-left: 1em;
-			}
+      & > *:not(i) {
+        padding-left: 1em;
+      }
 
-			&.active {
-				@include themify($themes) {
-					background-color: themed('color-accent');
-					color: themed('color-text-active');
-					a {
-						color: themed('color-text-active');
-					}
-				}
-			}
+      &.active {
+        @include themify($themes) {
+          background-color: themed('color-accent');
+          color: themed('color-text-active');
+          a {
+            color: themed('color-text-active');
+          }
+        }
+      }
 
-			&.active:hover {
-				cursor: initial;
-			}
+      &.active:hover {
+        cursor: initial;
+      }
 
-			&:not(:first-of-type):not(.active):hover {
-				@include themify($themes) {
-					background-color: themed('color-primary');
-				}
-			}
+      &:not(:first-of-type):not(.active):hover {
+        @include themify($themes) {
+          background-color: themed('color-primary');
+        }
+      }
 
-			&:focus {
-				outline: none;
-			}
+      &:focus {
+        outline: none;
+      }
 
-			.switch-theme {
-				height: 19px;
-				position: relative;
-				width: 47px;
-				margin: 0 auto 30px auto;
+      .switch-theme {
+        height: 19px;
+        position: relative;
+        width: 47px;
+        margin: 0 auto 30px auto;
 
-				i {
-					font-size: .95em;
-				}
-			}
-		}
-	}
+        i {
+          font-size: 0.95em;
+        }
+      }
+    }
+  }
 }
 
 @media screen and (max-height: 750px) and (min-width: 900px) {
-	.menu {
-        .logo{
-            img {
-                width: 220px;
-                height: 77px;
-            }
-        }
-        ul {
-            li {
-                font-size: .95em;
-            }
-        }
+  .menu {
+    .logo {
+      img {
+        width: 220px;
+        height: 77px;
+      }
     }
+    ul {
+      li {
+        font-size: 0.95em;
+      }
+    }
+  }
 }
 
 @media screen and (max-width: 900px) {
-	.menu {
-		width: $menu-width-tablet;
+  .menu {
+    width: $menu-width-tablet;
 
-		.logo {
-			padding: 0.5em 0.5em 3em 0.5em;
-			position: relative;
+    .logo {
+      padding: 0.5em 0.5em 3em 0.5em;
+      position: relative;
 
-			img {
-				width: $menu-width-tablet - 30px;
-				@include themify($themes) {
-					content: url(themed('logo-liara-small'));
-				}
-			}
+      img {
+        width: $menu-width-tablet - 30px;
+        @include themify($themes) {
+          content: url(themed('logo-liara-small'));
+        }
+      }
 
-			h2 {
-				opacity: 0;
-				position: absolute;
-				top: 35%;
-				left: $menu-width-tablet + 10px;
-				margin: 0;
-				min-width: 200px;
-				border-radius: 4px;
-				background: rgba(0, 0, 0, 0.4);
-				transform: translate3d(-20px, -50%, 0);
-				transition: all 0.10s ease-in-out;
-			}
-		}
+      h2 {
+        opacity: 0;
+        position: absolute;
+        top: 35%;
+        left: $menu-width-tablet + 10px;
+        margin: 0;
+        min-width: 200px;
+        border-radius: 4px;
+        background: rgba(0, 0, 0, 0.4);
+        transform: translate3d(-20px, -50%, 0);
+        transition: all 0.1s ease-in-out;
+      }
+    }
 
-		ul {
-			li {
-				height: $menu-width-tablet/1.5;
-				position: relative;
+    ul {
+      li {
+        height: $menu-width-tablet/1.5;
+        position: relative;
 
-				&:not(:first-of-type) {
-					i {
-						padding: .45em 0 0 1.2em;
-					}
-				}
+        &:not(:first-of-type) {
+          i {
+            padding: 0.45em 0 0 1.2em;
+          }
+        }
 
-				a {
-					opacity: 0;
-					position: absolute;
-					background: rgba(0, 0, 0, 0.5);
-					padding: 0.2em 0.5em;
-					border-radius: 4px;
-					top: 50%;
-					left: $menu-width-tablet - 10px;
-					transform: translate3d(-15px, -50%, 0);
-					transition: all 0.15s ease-in-out;
+        a {
+          opacity: 0;
+          position: absolute;
+          background: rgba(0, 0, 0, 0.5);
+          padding: 0.2em 0.5em;
+          border-radius: 4px;
+          top: 50%;
+          left: $menu-width-tablet - 10px;
+          transform: translate3d(-15px, -50%, 0);
+          transition: all 0.15s ease-in-out;
 
-					&:before {
-						content: '';
-						width: 0;
-						height: 0;
-						position: absolute;
-						top: 50%;
-						left: -5px;
-						border-top: 5px solid transparent;
-						border-bottom: 5px solid transparent;
-						border-right: 5px solid rgba(0, 0, 0, 0.5);
-						transform: translateY(-50%);
-					}
-				}
+          &:before {
+            content: '';
+            width: 0;
+            height: 0;
+            position: absolute;
+            top: 50%;
+            left: -5px;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-right: 5px solid rgba(0, 0, 0, 0.5);
+            transform: translateY(-50%);
+          }
+        }
 
-				&:hover {
-					a {
-						opacity: 1;
-						transform: translate3d(0px, -50%, 0);
-					}
-				}
-			}
-		}
-	}
+        &:hover {
+          a {
+            opacity: 1;
+            transform: translate3d(0px, -50%, 0);
+          }
+        }
+      }
+    }
+  }
 }
