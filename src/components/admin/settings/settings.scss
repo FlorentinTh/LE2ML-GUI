@@ -56,6 +56,12 @@
   }
 }
 
+.change-password,
+.user-infos {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
 @supports (display: grid) {
   .grid-item {
     margin: 0;

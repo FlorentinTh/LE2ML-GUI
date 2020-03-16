@@ -70,7 +70,7 @@ async function register(url, data) {
         title: `Error: ${err.code}`,
         description:
           err.code === 422
-            ? 'Please check that your inputs are correctly formed'
+            ? 'Please check that your inputs are correctly formed.'
             : err.message,
         position: 'top-right',
         type: 'error',

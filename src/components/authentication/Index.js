@@ -44,6 +44,7 @@ class Index extends Controller {
         if (response) {
           const userData = response.data.user;
           Cookies.set('uuid', userData.token, { path: '/' });
+          Cookies.set('isLogged', true, { path: '/' });
           Router.setRoute('/admin.html');
         }
       });
@@ -62,7 +63,7 @@ async function signIn(url, data) {
         title: `Error: ${err.code}`,
         description:
           err.code === 422
-            ? 'Please check that your inputs are correctly formed'
+            ? 'Please check that your inputs are correctly formed.'
             : err.message,
         position: 'top-right',
         type: 'error',

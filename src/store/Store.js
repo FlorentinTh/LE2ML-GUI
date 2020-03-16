@@ -8,6 +8,10 @@ class StoreInstance {
     return StoreInstance.instance;
   }
 
+  getAll() {
+    return this._data;
+  }
+
   get(id) {
     return this._data.find(elem => elem.id === id);
   }

@@ -8,6 +8,9 @@ import StringHelper from '@StringHelper';
 import URLHelper from '@URLHelper';
 import Cookies from 'js-cookie';
 
+import * as GrowlNotification from 'growl-notification/dist/growl-notification.min.js';
+import 'growl-notification/dist/colored-theme.min.css';
+
 const context = document.querySelector('nav.menu');
 
 const items = [
@@ -38,9 +41,21 @@ class Admin extends Controller {
     if (!APIHelper.isUserConnected()) {
       Router.setRoute('/index.html');
     } else {
-      if (menu === null) {
-        const user = APIHelper.getConnectedUser();
+      const isLogged = Cookies.get('isLogged');
+      const user = APIHelper.getConnectedUser();
 
+      if (isLogged === 'true') {
+        GrowlNotification.notify({
+          title: 'Sign in successful:',
+          description: `Welcome ${StringHelper.capitalizeFirst(user.firstname)}`,
+          position: 'top-right',
+          type: 'success',
+          closeTimeout: 3000
+        });
+        Cookies.remove('isLogged', { path: '/' });
+      }
+
+      if (Store.get('menu-admin') === undefined) {
         menu = this.createMenu(user);
 
         Store.add({

@@ -2,12 +2,12 @@ import Component from '@Component';
 import userPasswordHTML from './user-password.html';
 import Store from '@Store';
 import APIHelper from '@APIHelper';
+import URLHelper from '@URLHelper';
 import Router from '@Router';
 
 import axios from 'axios';
 import * as GrowlNotification from 'growl-notification/dist/growl-notification.min.js';
 import 'growl-notification/dist/colored-theme.min.css';
-import URLHelper from '../../../../helpers/URLHelper';
 
 class UserPassword extends Component {
   constructor(context = null) {
@@ -24,7 +24,7 @@ class UserPassword extends Component {
 
     const emailInput = this.context.querySelector('input[type="email"]');
     const user = APIHelper.getConnectedUser();
-    emailInput.value = user.email;
+    emailInput.value = user.email.toLowerCase();
 
     const changePasswordForm = document.querySelector('form');
 
@@ -32,10 +32,16 @@ class UserPassword extends Component {
       event.preventDefault();
       event.stopImmediatePropagation();
 
-      const formData = new FormData(changePasswordForm);
-      const jsonData = Object.fromEntries(formData);
+      const jsonData = Object.fromEntries(new FormData(changePasswordForm));
 
-      changePassword(`/user/password/${user._id}`, jsonData).then(response => {
+      const data = {
+        email: jsonData.email.toLowerCase(),
+        currentPassword: jsonData.currentPassword.trim(),
+        newPassword: jsonData.newPassword.trim(),
+        newPasswordConfirm: jsonData.newPasswordConfirm.trim()
+      };
+
+      changePassword(`/user/password/${user._id}`, data).then(response => {
         if (response) {
           const inputs = changePasswordForm.querySelectorAll('input:not([type=email])');
           inputs.forEach(input => {
@@ -44,7 +50,7 @@ class UserPassword extends Component {
 
           GrowlNotification.notify({
             title: 'Password successfully changed',
-            description: 'You can now use this password in order to sign in',
+            description: 'You can now use this password in order to sign in.',
             position: 'top-right',
             type: 'success',
             closeTimeout: 3000
@@ -76,7 +82,7 @@ async function changePassword(url, data) {
         title: `Error: ${err.code}`,
         description:
           err.code === 422
-            ? 'Please check that your inputs are correctly formed'
+            ? 'Please check that your inputs are correctly formed.'
             : err.message,
         position: 'top-right',
         type: 'error',
