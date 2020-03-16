@@ -31,7 +31,7 @@
         "ignoreComments": false,
         "ignoreTrailingComments": true,
         "ignoreUrls": true,
-        "ignoreStrings": false,
+        "ignoreStrings": true,
         "ignoreTemplateLiterals": true,
         "ignoreRegExpLiterals": true
       }

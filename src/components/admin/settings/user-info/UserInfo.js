@@ -48,6 +48,22 @@ class UserInfos extends Component {
 
     const changeInfoForm = document.querySelector('form');
 
+    lastnameInput.addEventListener('focusout', event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      lastnameInput.value = StringHelper.capitalizeFirst(
+        lastnameInput.value.toLowerCase()
+      );
+    });
+
+    firstnameInput.addEventListener('focusout', event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      firstnameInput.value = StringHelper.capitalizeFirst(
+        firstnameInput.value.toLowerCase()
+      );
+    });
+
     changeInfoForm.addEventListener('submit', event => {
       event.preventDefault();
       event.stopImmediatePropagation();
