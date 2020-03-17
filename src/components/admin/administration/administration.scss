@@ -1,0 +1,220 @@
+.grid-container {
+  margin-top: 25px;
+  margin-bottom: 50px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  h2,
+  .filters {
+    text-align: left;
+    margin: 0 auto;
+    max-width: 900px;
+  }
+
+  .filters {
+    user-select: none;
+    margin-top: 25px;
+
+    .filter {
+      font-size: 1.25em;
+      margin-right: 20px;
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      &:last-of-type {
+        margin-right: 0;
+      }
+
+      i:last-of-type {
+        visibility: hidden;
+        padding: 0;
+        margin: -3px;
+      }
+    }
+
+    .filter-active {
+      i {
+        @include themify($themes) {
+          color: themed('color-accent');
+        }
+      }
+
+      i:last-of-type {
+        visibility: visible;
+      }
+    }
+  }
+
+  button {
+    height: 45px;
+    border: none;
+    font-size: 0.95em;
+    font-weight: lighter;
+    width: 300px;
+
+    @include themify($themes) {
+      color: themed('color-text-active');
+      background-color: themed('color-accent');
+    }
+
+    &:hover {
+      @include themify($themes) {
+        background-color: themed('color-accent-darker');
+      }
+    }
+  }
+}
+
+.grid-users,
+.grid-jobs {
+  display: grid;
+  width: 100%;
+  grid-auto-rows: minmax(150px, auto);
+  grid-gap: 1em;
+  max-width: 900px;
+  margin: 0 auto;
+  padding-top: 25px;
+
+  .grid-item {
+    @include themify($themes) {
+      color: themed('color-text-primary');
+      background: themed('color-secondary');
+      border-bottom: 2px solid themed('color-accent');
+    }
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    height: 150px;
+    padding-left: 35px;
+    flex: 1 1 150px;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .head {
+      margin-right: 25px;
+
+      i {
+        font-size: 4.5em;
+        margin-bottom: 15px;
+      }
+
+      span::before {
+        content: '\A';
+        white-space: pre;
+      }
+
+      span {
+        font-size: 1em;
+        font-weight: bold;
+      }
+    }
+
+    .infos {
+      padding-left: 5%;
+      min-width: 250px;
+      @include themify($themes) {
+        border-left: 1px solid themed('color-text-primary');
+      }
+
+      p.info {
+        &:first-of-type {
+          display: none;
+        }
+
+        text-align: left;
+        padding-bottom: 15px;
+
+        &:last-of-type {
+          padding-bottom: 0;
+        }
+      }
+    }
+
+    .actions {
+      padding-right: 35px;
+
+      p.action {
+        padding-bottom: 8px;
+
+        &:last-of-type {
+          padding-bottom: 0;
+        }
+
+        &:first-child {
+          button {
+            margin-top: 0;
+          }
+        }
+
+        button {
+          height: 25px;
+          margin-top: 5px;
+          width: 150px;
+          background-color: transparent;
+
+          @include themify($themes) {
+            border: 1px solid themed('color-accent');
+            color: themed('color-accent');
+          }
+
+          transition: all 0.5s ease-in-out;
+
+          &:hover {
+            @include themify($themes) {
+              background-color: themed('color-accent');
+              border: 1px solid themed('color-accent');
+              color: themed('color-text-primary');
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1295px) {
+  .infos {
+    width: 60%;
+  }
+}
+
+@media screen and (min-width: 1195px) and (max-width: 1294px) {
+  .infos {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 1064px) {
+  .head {
+    display: none;
+  }
+
+  .grid-users,
+  .grid-jobs {
+    .grid-item {
+      .infos {
+        @include themify($themes) {
+          border-left: none;
+        }
+
+        padding-left: 0;
+        min-width: unset;
+
+        p.info {
+          &:first-of-type {
+            display: block;
+            font-size: 1.2em;
+          }
+        }
+      }
+    }
+  }
+}

@@ -16,7 +16,7 @@
     padding: 2em 0.5em 0.5em 0.5em;
     text-align: center;
 
-    img {
+    a {
       width: 264px;
       @include themify($themes) {
         content: url(themed('logo-liara-large'));
@@ -88,7 +88,7 @@
 @media screen and (max-height: 750px) and (min-width: 900px) {
   .menu {
     .logo {
-      img {
+      a {
         width: 220px;
         height: 77px;
       }
@@ -109,7 +109,7 @@
       padding: 0.5em 0.5em 3em 0.5em;
       position: relative;
 
-      img {
+      a {
         width: $menu-width-tablet - 30px;
         @include themify($themes) {
           content: url(themed('logo-liara-small'));

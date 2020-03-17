@@ -22,14 +22,11 @@ class Register extends Controller {
     const theme = new Theme(ctx);
     theme.toggle();
 
-    const cancelButton = document.getElementById('cancel');
+    this.submitForm();
+    this.cancelListener();
+  }
 
-    cancelButton.addEventListener('click', event => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      Router.setRoute('/index.html');
-    });
-
+  submitForm() {
     const registerForm = document.querySelector('form');
 
     registerForm.addEventListener('submit', event => {
@@ -55,6 +52,16 @@ class Register extends Controller {
           }, 2500);
         }
       });
+    });
+  }
+
+  cancelListener() {
+    const cancelButton = document.getElementById('cancel');
+
+    cancelButton.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      Router.setRoute('/index.html');
     });
   }
 }

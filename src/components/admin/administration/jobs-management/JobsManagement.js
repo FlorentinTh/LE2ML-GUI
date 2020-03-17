@@ -1,5 +1,6 @@
 import Component from '@Component';
 import jobsManagementHTML from './jobs-management.html';
+import Store from '@Store';
 
 class JobsManagement extends Component {
   constructor(context = null) {
@@ -10,7 +11,10 @@ class JobsManagement extends Component {
     this.mount();
   }
 
-  mount() {}
+  mount() {
+    const menu = Store.get('menu-admin').data;
+    menu.setActive('administration');
+  }
 }
 
 export default JobsManagement;

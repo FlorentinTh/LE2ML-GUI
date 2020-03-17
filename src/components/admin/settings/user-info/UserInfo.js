@@ -21,6 +21,19 @@ class UserInfos extends Component {
   }
 
   mount() {
+    this.notify();
+
+    const menu = Store.get('menu-admin').data;
+    menu.setActive('my-account');
+
+    const user = APIHelper.getConnectedUser();
+
+    this.initInputs(user);
+    this.submitForm(user);
+    this.cancelListener();
+  }
+
+  notify() {
     const isChanged = Cookies.get('isChanged');
     if (isChanged === 'true') {
       GrowlNotification.notify({
@@ -32,37 +45,31 @@ class UserInfos extends Component {
       });
       Cookies.remove('isChanged', { path: '/' });
     }
+  }
 
-    const menu = Store.get('menu-admin').data;
-    menu.setActive('my-account');
-
+  initInputs(user) {
     const emailInput = this.context.querySelector('input#email');
     const lastnameInput = this.context.querySelector('input#lastname');
     const firstnameInput = this.context.querySelector('input#firstname');
-
-    const user = APIHelper.getConnectedUser();
 
     emailInput.value = user.email.toLowerCase();
     lastnameInput.value = StringHelper.capitalizeFirst(user.lastname);
     firstnameInput.value = StringHelper.capitalizeFirst(user.firstname);
 
+    this.inputListener(lastnameInput);
+    this.inputListener(firstnameInput);
+  }
+
+  inputListener(input) {
+    input.addEventListener('focusout', event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      input.value = StringHelper.capitalizeFirst(input.value.toLowerCase());
+    });
+  }
+
+  submitForm(user) {
     const changeInfoForm = document.querySelector('form');
-
-    lastnameInput.addEventListener('focusout', event => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      lastnameInput.value = StringHelper.capitalizeFirst(
-        lastnameInput.value.toLowerCase()
-      );
-    });
-
-    firstnameInput.addEventListener('focusout', event => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      firstnameInput.value = StringHelper.capitalizeFirst(
-        firstnameInput.value.toLowerCase()
-      );
-    });
 
     changeInfoForm.addEventListener('submit', event => {
       event.preventDefault();
@@ -78,7 +85,7 @@ class UserInfos extends Component {
         passwordConfirm: jsonData.passwordConfirm.trim()
       };
 
-      changeUserInfo(`/user/${user._id}`, data).then(response => {
+      changeUserInfo(`/users/${user._id}`, data).then(response => {
         if (response) {
           const userData = response.data.user;
           Cookies.remove('uuid', { path: '/' });
@@ -88,7 +95,9 @@ class UserInfos extends Component {
         }
       });
     });
+  }
 
+  cancelListener() {
     const cancelButton = document.getElementById('cancel');
 
     cancelButton.addEventListener('click', event => {

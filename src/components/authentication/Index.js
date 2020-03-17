@@ -23,14 +23,11 @@ class Index extends Controller {
     const theme = new Theme(ctx);
     theme.toggle();
 
-    const registerButton = document.getElementById('register');
+    this.submitForm();
+    this.registerButtonListener();
+  }
 
-    registerButton.addEventListener('click', event => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      Router.setRoute('/register.html');
-    });
-
+  submitForm() {
     const signInForm = document.querySelector('form');
 
     signInForm.addEventListener('submit', event => {
@@ -48,6 +45,16 @@ class Index extends Controller {
           Router.setRoute('/admin.html');
         }
       });
+    });
+  }
+
+  registerButtonListener() {
+    const registerButton = document.getElementById('register');
+
+    registerButton.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      Router.setRoute('/register.html');
     });
   }
 }

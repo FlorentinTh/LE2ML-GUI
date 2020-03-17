@@ -22,10 +22,19 @@ class UserPassword extends Component {
     const menu = Store.get('menu-admin').data;
     menu.setActive('my-account');
 
-    const emailInput = this.context.querySelector('input[type="email"]');
     const user = APIHelper.getConnectedUser();
-    emailInput.value = user.email.toLowerCase();
 
+    this.initInputs(user);
+    this.submitForm(user);
+    this.cancelListener();
+  }
+
+  initInputs(user) {
+    const emailInput = this.context.querySelector('input[type="email"]');
+    emailInput.value = user.email.toLowerCase();
+  }
+
+  submitForm(user) {
     const changePasswordForm = document.querySelector('form');
 
     changePasswordForm.addEventListener('submit', event => {
@@ -41,7 +50,7 @@ class UserPassword extends Component {
         newPasswordConfirm: jsonData.newPasswordConfirm.trim()
       };
 
-      changePassword(`/user/password/${user._id}`, data).then(response => {
+      changePassword(`/users/password/${user._id}`, data).then(response => {
         if (response) {
           const inputs = changePasswordForm.querySelectorAll('input:not([type=email])');
           inputs.forEach(input => {
@@ -58,7 +67,9 @@ class UserPassword extends Component {
         }
       });
     });
+  }
 
+  cancelListener() {
     const cancelButton = document.getElementById('cancel');
 
     cancelButton.addEventListener('click', event => {

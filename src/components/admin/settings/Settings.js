@@ -14,7 +14,10 @@ class Settings extends Component {
 
   run() {
     const items = this.context.querySelectorAll('div.grid-item');
+    this.onItemClickListener(items);
+  }
 
+  onItemClickListener(items) {
     for (let i = 0; i < items.length; ++i) {
       const item = items[i];
       item.addEventListener('click', event => {

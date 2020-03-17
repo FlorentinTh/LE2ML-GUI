@@ -143,14 +143,14 @@ class Menu {
   }
 
   listen(handler) {
-    const logo = this.options.context.querySelector('header > a > img');
+    const logo = this.options.context.querySelector('header > a');
     const list = this.options.context.querySelectorAll('ul > li');
 
     logo.addEventListener('click', event => {
       event.preventDefault();
       event.stopImmediatePropagation();
 
-      const href = logo.parentElement.getAttribute('href');
+      const href = logo.getAttribute('href');
 
       this._switch(href, (hash, link) => {
         if (handler !== undefined) {
