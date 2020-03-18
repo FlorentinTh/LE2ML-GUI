@@ -6,6 +6,7 @@ import APIHelper from '@APIHelper';
 import * as GrowlNotification from 'growl-notification/dist/growl-notification.min.js';
 import 'growl-notification/dist/colored-theme.min.css';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 class Register extends Controller {
   constructor() {
@@ -38,18 +39,8 @@ class Register extends Controller {
 
       register('/register', jsonData).then(response => {
         if (response) {
-          GrowlNotification.notify({
-            title: 'Registration succeed',
-            description:
-              'You can now be redirected to the login page and use your credentials',
-            position: 'top-right',
-            type: 'success',
-            closeTimeout: 3000
-          });
-
-          setInterval(() => {
-            Router.setRoute('/index.html');
-          }, 2500);
+          Cookies.set('isRegistered', true, { path: '/' });
+          Router.setRoute('/index.html');
         }
       });
     });

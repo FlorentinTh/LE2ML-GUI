@@ -19,12 +19,28 @@ class Index extends Controller {
   }
 
   run() {
+    this.notify();
+
     const ctx = document.querySelector('*[class^="theme-"]');
     const theme = new Theme(ctx);
     theme.toggle();
 
     this.submitForm();
     this.registerButtonListener();
+  }
+
+  notify() {
+    const isRegistered = Cookies.get('isRegistered');
+    if (isRegistered === 'true') {
+      GrowlNotification.notify({
+        title: 'Registration succeed',
+        description: 'You can now sign in with your credentials.',
+        position: 'top-right',
+        type: 'success',
+        closeTimeout: 3000
+      });
+      Cookies.remove('isRegistered', { path: '/' });
+    }
   }
 
   submitForm() {

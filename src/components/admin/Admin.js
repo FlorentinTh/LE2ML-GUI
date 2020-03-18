@@ -70,7 +70,7 @@ class Admin extends Controller {
 
   buildItemList(user) {
     if (!(typeof user === 'object')) {
-      throw new Error('expected type for argument user is object.');
+      throw new Error('Expected type for argument user is Object.');
     }
 
     if (user.role === 'admin') {
@@ -110,7 +110,7 @@ class Admin extends Controller {
 
   createMenu(user) {
     if (!(typeof user === 'object')) {
-      throw new Error('expected type for argument user is object.');
+      throw new Error('Expected type for argument user is Object.');
     }
 
     const itemList = this.buildItemList(user);

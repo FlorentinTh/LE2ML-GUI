@@ -4,8 +4,15 @@ class Component {
       let ctx = document.querySelector('main.content');
       if (ctx === null) {
         ctx = document.querySelector('div.wrap');
-        ctx.innerHTML = '';
-        ctx.innerHTML = '<div class="center"></div>';
+
+        let child = ctx.lastElementChild;
+        while (child) {
+          ctx.removeChild(child);
+          child = ctx.lastElementChild;
+        }
+
+        const div = ctx.createElement('div');
+        div.setAttribute('class', 'center');
       }
 
       this.context = ctx;
@@ -13,20 +20,24 @@ class Component {
       if (typeof context === 'string') {
         this.context = document.querySelector(context);
       } else {
-        throw new Error('expected type for argument context is string.');
+        throw new Error('Expected type for argument context is String.');
       }
     }
   }
 
   clearContent() {
-    this.context.innerHTML = '';
+    let child = this.context.lastElementChild;
+    while (child) {
+      this.context.removeChild(child);
+      child = this.context.lastElementChild;
+    }
   }
 
   injectHTMLPage(html) {
     if (typeof html === 'string') {
       this.context.insertAdjacentHTML('beforeend', html);
     } else {
-      throw new Error('expected type for argument html is string.');
+      throw new Error('Expected type for argument html is String.');
     }
   }
 
@@ -34,7 +45,7 @@ class Component {
     if (typeof title === 'string') {
       this.context.insertAdjacentHTML('beforeend', `<h1>${title}</h1>`);
     } else {
-      throw new Error('expected type for argument title is string.');
+      throw new Error('Expected type for argument title is String.');
     }
   }
 }

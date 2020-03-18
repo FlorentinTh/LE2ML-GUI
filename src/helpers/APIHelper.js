@@ -4,9 +4,9 @@ import Cookies from 'js-cookie';
 class APIHelper {
   static setBaseURL(url, proxy = false) {
     if (typeof url !== 'string' && url !== '') {
-      throw new Error('expected type for argument url is string.');
+      throw new Error('Expected type for argument url is String.');
     } else if (typeof proxy !== 'boolean') {
-      throw new Error('expected type for argument url is boolean.');
+      throw new Error('Expected type for argument url is Boolean.');
     } else {
       if (proxy) {
         const proxyURL = 'https://cors-anywhere.herokuapp.com/';
@@ -33,7 +33,7 @@ class APIHelper {
     try {
       return JSON.parse(atob(token.split('.')[1]));
     } catch (error) {
-      throw new Error('token corrupted.');
+      throw new Error('Token corrupted.');
     }
   }
 

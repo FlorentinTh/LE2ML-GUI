@@ -110,14 +110,14 @@ class Menu {
       if (typeof callback === 'function') {
         callback(href);
       } else {
-        throw new Error('callback must be a function.');
+        throw new Error('Callback must be a function.');
       }
     } else {
       Router.follow(href);
       if (typeof callback === 'function') {
         callback(null, href);
       } else {
-        throw new Error('callback must be a function.');
+        throw new Error('Callback must be a function.');
       }
     }
   }
@@ -157,7 +157,7 @@ class Menu {
           if (typeof handler === 'function') {
             handler(hash, link);
           } else {
-            throw new Error('handler must be a function.');
+            throw new Error('Handler must be a function.');
           }
         }
       });
@@ -175,7 +175,7 @@ class Menu {
             handler(hash, link);
           } else {
             if (typeof handler !== 'undefined') {
-              throw new Error('handler must be a function.');
+              throw new Error('Handler must be a function.');
             }
           }
         });

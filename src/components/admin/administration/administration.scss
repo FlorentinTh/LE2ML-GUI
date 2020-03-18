@@ -73,7 +73,7 @@
 .grid-jobs {
   display: grid;
   width: 100%;
-  grid-auto-rows: minmax(150px, auto);
+  grid-auto-rows: minmax(175px, auto);
   grid-gap: 1em;
   max-width: 900px;
   margin: 0 auto;
@@ -86,11 +86,12 @@
       border-bottom: 2px solid themed('color-accent');
     }
 
+    animation: slide-up 0.4s linear;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    height: 150px;
+    height: 175px;
     padding-left: 35px;
     flex: 1 1 150px;
 
@@ -100,6 +101,7 @@
 
     .head {
       margin-right: 25px;
+      width: 13%;
 
       i {
         font-size: 4.5em;
@@ -134,6 +136,10 @@
 
         &:last-of-type {
           padding-bottom: 0;
+        }
+
+        i {
+          padding-right: 10px;
         }
       }
     }

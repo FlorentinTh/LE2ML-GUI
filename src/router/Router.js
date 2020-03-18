@@ -2,6 +2,7 @@ import routes from '@Routes';
 import Error404 from '@Error404';
 import Menu from '@Menu/Menu.js';
 import URLHelper from '@URLHelper';
+
 class Router {
   static _loadPage(page) {
     if (typeof page === 'string') {
@@ -68,7 +69,7 @@ class Router {
         }
       }
     } else {
-      throw new Error('expected type for argument hash is string.');
+      throw new Error('Expected type for argument hash is String.');
     }
   }
 
@@ -77,7 +78,7 @@ class Router {
       if (menu instanceof Menu) {
         menu.setActive(URLHelper.getHash());
       } else {
-        throw new Error('argument menu should be an instance of object Menu');
+        throw new Error('Argument menu should be an instance of Object Menu.');
       }
     }
 
@@ -131,7 +132,7 @@ class Router {
     if (typeof link === 'string') {
       link === '' ? (location.href = '#') : (location.href = link);
     } else {
-      throw new Error('expected type for argument link is string.');
+      throw new Error('Expected type for argument link is String.');
     }
   }
 
@@ -143,7 +144,7 @@ class Router {
 
       window.location.replace(decodeURI(route));
     } else {
-      throw new Error('specified route is not valid.');
+      throw new Error('Specified route is not valid.');
     }
   }
 }
