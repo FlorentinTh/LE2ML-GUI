@@ -138,11 +138,14 @@ class UsersManagement extends Component {
       </div>
       <div class="grid-users">
       </div>`;
-    if (total > limit) {
-      html += `<button class="link show">Show More <i class="fas fa-caret-down"></i></button>`;
-    } else {
-      html += `<button class="link show">Show Less <i class="fas fa-caret-up"></i></button>`;
+    if (total > LIMIT) {
+      if (limit > LIMIT) {
+        html += `<button class="link show">Show Less <i class="fas fa-caret-up"></i></button>`;
+      } else {
+        html += `<button class="link show">Show More <i class="fas fa-caret-down"></i></button>`;
+      }
     }
+
     html += `</div>`;
 
     this.context.insertAdjacentHTML('beforeend', html);
