@@ -39,7 +39,8 @@ class Theme {
           this.switchLight.checked = true;
         }
         this.context.className = '';
-        this.context.className = `theme-${window.localStorage.getItem('theme')}`;
+        const theme = window.localStorage.getItem('theme');
+        this.context.className = `theme-${theme}`;
       });
     }
   }

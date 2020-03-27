@@ -1,3 +1,4 @@
+import ModalHelper from '@ModalHelper';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -40,6 +41,43 @@ class APIHelper {
   static getConnectedUser() {
     const uuid = Cookies.get('uuid');
     return this.parseJWT(uuid);
+  }
+
+  static errorsHandler(error, context, replaceContent = false) {
+    let code = '';
+    let msg = '';
+
+    if (error.request) {
+      const err = error.request;
+      if (err.status === 0) {
+        msg = error.message;
+      } else {
+        code = err.status;
+        msg = JSON.parse(err.response).message;
+
+        if (code === 500) {
+          msg = err.statusText;
+        }
+
+        if (typeof msg === 'object') {
+          msg = 'Invalid input data.';
+        }
+      }
+    } else if (error.response) {
+      const err = error.response;
+      code = err.code;
+      msg = err.message;
+    } else {
+      msg = error.message;
+    }
+
+    const text = code !== '' ? code + ': ' + msg : msg;
+
+    if (replaceContent) {
+      ModalHelper.error(text);
+    } else {
+      ModalHelper.notification('error', text);
+    }
   }
 }
 

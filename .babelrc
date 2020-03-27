@@ -22,6 +22,7 @@
           "@Error500": "./src/components/errors/Error500.js",
           "@APIHelper": "./src/helpers/APIHelper.js",
           "@ListHelper": "./src/helpers/ListHelper.js",
+          "@ModalHelper": "./src/helpers/ModalHelper.js",
           "@SortHelper": "./src/helpers/SortHelper.js",
           "@StringHelper": "./src/helpers/StringHelper.js",
           "@URLHelper": "./src/helpers/URLHelper.js"

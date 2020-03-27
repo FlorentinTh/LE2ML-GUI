@@ -5,11 +5,10 @@ import APIHelper from '@APIHelper';
 import URLHelper from '@URLHelper';
 import StringHelper from '@StringHelper';
 import Router from '@Router';
+import ModalHelper from '@ModalHelper';
 
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import * as GrowlNotification from 'growl-notification/dist/growl-notification.min.js';
-import 'growl-notification/dist/colored-theme.min.css';
 
 class UserInfos extends Component {
   constructor(context = null) {
@@ -23,10 +22,10 @@ class UserInfos extends Component {
   mount() {
     this.notify();
 
+    const user = APIHelper.getConnectedUser();
+
     const menu = Store.get('menu-admin').data;
     menu.setActive('my-account');
-
-    const user = APIHelper.getConnectedUser();
 
     this.initInputs(user);
     this.submitForm(user);
@@ -36,13 +35,7 @@ class UserInfos extends Component {
   notify() {
     const isChanged = Cookies.get('isChanged');
     if (isChanged === 'true') {
-      GrowlNotification.notify({
-        title: 'Changes were made',
-        description: 'Your information were successfully changed.',
-        position: 'top-right',
-        type: 'success',
-        closeTimeout: 3000
-      });
+      ModalHelper.notification('success', 'Information successfully modified.');
       Cookies.remove('isChanged', { path: '/' });
     }
   }
@@ -85,7 +78,7 @@ class UserInfos extends Component {
         passwordConfirm: jsonData.passwordConfirm.trim()
       };
 
-      changeUserInfo(`/users/${user._id}`, data).then(response => {
+      changeUserInfo(`/users/${user._id}`, data, this.context).then(response => {
         if (response) {
           const userData = response.data.user;
           Cookies.remove('uuid', { path: '/' });
@@ -108,26 +101,14 @@ class UserInfos extends Component {
   }
 }
 
-async function changeUserInfo(url, data) {
+async function changeUserInfo(url, data, context) {
   try {
     const response = await axios.post(url, data, {
       headers: APIHelper.setAuthHeader()
     });
     return response.data;
   } catch (error) {
-    if (error.response.data) {
-      const err = error.response.data;
-      GrowlNotification.notify({
-        title: `Error: ${err.code}`,
-        description:
-          err.code === 422
-            ? 'Please check that your inputs are correctly formed.'
-            : err.message,
-        position: 'top-right',
-        type: 'error',
-        closeTimeout: 5000
-      });
-    }
+    APIHelper.errorsHandler(error, context);
   }
 }
 

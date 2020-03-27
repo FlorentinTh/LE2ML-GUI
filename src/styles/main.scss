@@ -21,8 +21,27 @@ a {
 }
 
 input:not([type='checkbox']),
-input:not([type='radio']) {
-  border-radius: 3px;
+input:not([type='radio']),
+select {
+  border-radius: 0.25rem;
+}
+
+select:-moz-focusring {
+  color: transparent;
+  @include themify($themes) {
+    text-shadow: 0 0 0 themed('color-text-primary');
+  }
+}
+
+select {
+  background: transparent;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  line-height: normal;
+  background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgNDA1LjQ1NiA0MDUuNDU2IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0MDUuNDU2IDQwNS40NTY7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4Ij4NCjxnPg0KCTxwYXRoIGQ9Ik03NC4xMzQsNjQuMTQ3Yy00Ljk4NSwwLjA3OC05LjkxMSwyLjE2My0xMy40MzgsNS42ODhsLTU1LDU1QzIuMDk2LDEyOC40MzIsMCwxMzMuNDkyLDAsMTM4LjU4MyAgIHMyLjA5NiwxMC4xNTEsNS42OTcsMTMuNzVsMTgzLjI4MSwxODMuMjgxYzMuNTk5LDMuNjAxLDguNjU5LDUuNjk3LDEzLjc1LDUuNjk3czEwLjE1MS0yLjA5NiwxMy43NS01LjY5N2wxODMuMjgxLTE4My4yODEgICBjMy42MDEtMy41OTksNS42OTctOC42NTksNS42OTctMTMuNzVzLTIuMDk2LTEwLjE1MS01LjY5Ny0xMy43NWwtNTUtNTVjLTMuNTk4LTMuNTkxLTguNjUxLTUuNjgxLTEzLjczNC01LjY4MSAgIGMtNS4wODMsMC0xMC4xMzYsMi4wOS0xMy43MzQsNS42ODFMMjAyLjcyOCwxODQuMzk3TDg4LjE2Niw2OS44MzNDODQuNDk5LDY2LjE2OSw3OS4zMTgsNjQuMDcsNzQuMTM0LDY0LjE0N0w3NC4xMzQsNjQuMTQ3eiIgZmlsbD0iIzk2OTY5NiIvPg0KPC9nPg0KPC9zdmc+DQo=);
+  background-position: right 10px top 50%;
+  background-repeat: no-repeat;
 }
 
 input[type='radio'] {
@@ -51,10 +70,30 @@ button[type='submit'] {
 }
 
 button {
-  border-radius: 3px;
-  margin-top: 20px;
+  border-radius: 0.25rem;
   cursor: pointer;
   transition: background 0.4s ease;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+button:active,
+button:focus,
+button:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+button.btn-disabled {
+  @include themify($themes) {
+    border-color: themed('color-text-secondary') !important;
+    color: themed('color-text-secondary') !important;
+
+    &:hover {
+      cursor: initial !important;
+      background-color: transparent !important;
+    }
+  }
 }
 
 .wrap {
@@ -78,6 +117,102 @@ main.content {
   width: 100%;
 }
 
+.swal2-popup {
+  @include themify($themes) {
+    background: themed('color-primary') !important;
+
+    h2 {
+      color: themed('color-text-primary') !important;
+    }
+
+    button {
+      text-transform: capitalize !important;
+    }
+
+    .swal2-content {
+      form {
+        *:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .swal2-actions {
+      margin-top: 35px !important;
+      margin-bottom: 15px !important;
+    }
+
+    button.swal2-confirm {
+      width: 90%;
+      background: themed('color-accent') !important;
+      color: themed('color-text-active') !important;
+
+      &:hover {
+        background-color: themed('color-accent-darker') !important;
+      }
+    }
+
+    button.swal2-cancel {
+      width: 90% !important;
+      background-color: themed('color-primary') !important;
+      border: 1px solid themed('color-accent') !important;
+      color: themed('color-accent') !important;
+
+      &:hover {
+        border: 1px solid themed('color-accent-darker') !important;
+        color: themed('color-accent-darker') !important;
+      }
+    }
+  }
+}
+
+.swal2-success {
+  @include themify($themes) {
+    border-color: themed('color-accent') !important;
+    color: themed('color-accent') !important;
+
+    .swal2-success-line-tip,
+    .swal2-success-line-long {
+      background-color: themed('color-accent') !important;
+    }
+
+    .swal2-success-ring {
+      border-color: themed('color-accent') !important;
+    }
+    .swal2-success-circular-line-left,
+    .swal2-success-fix,
+    .swal2-success-circular-line-right {
+      background-color: transparent !important;
+    }
+  }
+}
+
+.swal2-content {
+  @include themify($themes) {
+    color: themed('color-text-primary') !important;
+  }
+}
+
+.swal2-toast {
+  @include themify($themes) {
+    background: themed('color-secondary') !important;
+    box-shadow: 0 0 0.625em themed('color-secondary') !important;
+  }
+
+  h2 {
+    &:hover {
+      cursor: default !important;
+    }
+  }
+}
+
+div.swal2-top {
+  div.swal2-popup {
+    left: 170px !important;
+    top: 125px !important;
+  }
+}
+
 @media screen and (max-height: 750px) and (min-width: 900px) {
   main.content {
     font-size: 0.85em;
@@ -92,6 +227,12 @@ main.content {
   main.content {
     margin: 25px 25px 25px $menu-width-tablet + 25px;
     padding: 0;
+  }
+
+  div.swal2-top {
+    div.swal2-popup {
+      left: 55px !important;
+    }
   }
 }
 

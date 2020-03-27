@@ -2,9 +2,8 @@ import Router from '@Router';
 import Theme from '@Theme';
 import Controller from '@Controller';
 import APIHelper from '@APIHelper';
+import StringHelper from '@StringHelper';
 
-import * as GrowlNotification from 'growl-notification/dist/growl-notification.min.js';
-import 'growl-notification/dist/colored-theme.min.css';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -30,6 +29,14 @@ class Register extends Controller {
   submitForm() {
     const registerForm = document.querySelector('form');
 
+    const emailInput = document.querySelector('input#email');
+    const lastnameInput = document.querySelector('input#lastname');
+    const firstnameInput = document.querySelector('input#firstname');
+
+    this.inputListener(emailInput);
+    this.inputListener(lastnameInput);
+    this.inputListener(firstnameInput);
+
     registerForm.addEventListener('submit', event => {
       event.preventDefault();
       event.stopImmediatePropagation();
@@ -37,12 +44,24 @@ class Register extends Controller {
       const formData = new FormData(registerForm);
       const jsonData = Object.fromEntries(formData);
 
-      register('/register', jsonData).then(response => {
+      register('/register', jsonData, this.context).then(response => {
         if (response) {
           Cookies.set('isRegistered', true, { path: '/' });
           Router.setRoute('/index.html');
         }
       });
+    });
+  }
+
+  inputListener(input) {
+    input.addEventListener('focusout', event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (input.id === 'email') {
+        input.value = input.value.toLowerCase();
+      } else {
+        input.value = StringHelper.capitalizeFirst(input.value.toLowerCase());
+      }
     });
   }
 
@@ -57,23 +76,13 @@ class Register extends Controller {
   }
 }
 
-async function register(url, data) {
+async function register(url, data, context) {
   try {
     const response = await axios.put(url, data, {});
     return response.data;
   } catch (error) {
-    if (error.response.data) {
-      const err = error.response.data;
-      GrowlNotification.notify({
-        title: `Error: ${err.code}`,
-        description:
-          err.code === 422
-            ? 'Please check that your inputs are correctly formed.'
-            : err.message,
-        position: 'top-right',
-        type: 'error',
-        closeTimeout: 5000
-      });
+    if (error) {
+      APIHelper.errorsHandler(error, context);
     }
   }
 }

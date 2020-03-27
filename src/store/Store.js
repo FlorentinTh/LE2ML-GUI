@@ -1,7 +1,7 @@
 class StoreInstance {
   constructor() {
     if (!StoreInstance.instance) {
-      this._data = [];
+      this._data = [{ id: 'test', data: 'prout' }];
       StoreInstance.instance = this;
     }
 
@@ -20,7 +20,13 @@ class StoreInstance {
     this._data.push(item);
   }
 
-  remove(item) {}
+  remove(id) {
+    for (let i = 0; i < this._data.length; ++i) {
+      if (this._data[i].id === id) {
+        this._data.splice(i, 1);
+      }
+    }
+  }
 }
 
 const Store = new StoreInstance();

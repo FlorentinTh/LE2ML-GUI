@@ -78,8 +78,7 @@ class Menu {
     let content = '';
 
     Array.from(this.options.items, item => {
-      content += `<li>
-                    <i class="${item.icon}"></i>`;
+      content += `<li><i class="${item.icon}"></i>`;
       // eslint-disable-next-line no-prototype-builtins
       const label = item.hasOwnProperty('label') ? item.label : item.name;
       if (item.url === null) {
@@ -165,7 +164,6 @@ class Menu {
 
     for (let i = 1; i < list.length; ++i) {
       const li = list[i];
-
       li.addEventListener('click', event => {
         event.preventDefault();
         event.stopImmediatePropagation();

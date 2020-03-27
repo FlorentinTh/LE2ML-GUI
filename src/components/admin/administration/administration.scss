@@ -53,8 +53,8 @@
     height: 45px;
     border: none;
     font-size: 0.95em;
-    font-weight: lighter;
     width: 300px;
+    text-transform: uppercase;
 
     @include themify($themes) {
       color: themed('color-text-active');
@@ -161,10 +161,11 @@
         }
 
         button {
-          height: 25px;
+          height: 26px;
           margin-top: 5px;
           width: 150px;
           background-color: transparent;
+          text-transform: uppercase;
 
           @include themify($themes) {
             border: 1px solid themed('color-accent');
@@ -198,7 +199,7 @@
   }
 }
 
-@media screen and (max-width: 1064px) {
+@media screen and (max-width: 1085px) {
   .head {
     display: none;
   }

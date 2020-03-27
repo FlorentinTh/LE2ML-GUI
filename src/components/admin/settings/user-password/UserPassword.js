@@ -4,10 +4,10 @@ import Store from '@Store';
 import APIHelper from '@APIHelper';
 import URLHelper from '@URLHelper';
 import Router from '@Router';
+import ModalHelper from '@ModalHelper';
 
 import axios from 'axios';
-import * as GrowlNotification from 'growl-notification/dist/growl-notification.min.js';
-import 'growl-notification/dist/colored-theme.min.css';
+import Cookies from 'js-cookie';
 
 class UserPassword extends Component {
   constructor(context = null) {
@@ -23,6 +23,16 @@ class UserPassword extends Component {
     menu.setActive('my-account');
 
     const user = APIHelper.getConnectedUser();
+
+    const isLogged = Cookies.get('isLogged');
+    if (isLogged === 'true') {
+      ModalHelper.confirm(
+        'Temporary Password',
+        'Your password is temporary, you must change it before continue.',
+        'I understand',
+        false
+      );
+    }
 
     this.initInputs(user);
     this.submitForm(user);
@@ -50,20 +60,26 @@ class UserPassword extends Component {
         newPasswordConfirm: jsonData.newPasswordConfirm.trim()
       };
 
-      changePassword(`/users/password/${user._id}`, data).then(response => {
+      changePassword(`/users/password/${user._id}`, data, this.context).then(response => {
         if (response) {
           const inputs = changePasswordForm.querySelectorAll('input:not([type=email])');
           inputs.forEach(input => {
             input.value = '';
           });
 
-          GrowlNotification.notify({
-            title: 'Password successfully changed',
-            description: 'You can now use this password in order to sign in.',
-            position: 'top-right',
-            type: 'success',
-            closeTimeout: 3000
-          });
+          const data = response.data;
+
+          Cookies.remove('uuid', { path: '/' });
+          Cookies.set('uuid', data.user.token, { path: '/' });
+
+          ModalHelper.notification('success', 'Password successfully modified.').then(
+            () => {
+              const isLogged = Cookies.get('isLogged');
+              if (isLogged === 'true') {
+                Cookies.remove('isLogged', { path: '/' });
+              }
+            }
+          );
         }
       });
     });
@@ -80,26 +96,14 @@ class UserPassword extends Component {
   }
 }
 
-async function changePassword(url, data) {
+async function changePassword(url, data, context) {
   try {
     const response = await axios.post(url, data, {
       headers: APIHelper.setAuthHeader()
     });
     return response.data;
   } catch (error) {
-    if (error.response.data) {
-      const err = error.response.data;
-      GrowlNotification.notify({
-        title: `Error: ${err.code}`,
-        description:
-          err.code === 422
-            ? 'Please check that your inputs are correctly formed.'
-            : err.message,
-        position: 'top-right',
-        type: 'error',
-        closeTimeout: 5000
-      });
-    }
+    APIHelper.errorsHandler(error, context);
   }
 }
 

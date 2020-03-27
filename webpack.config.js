@@ -18,7 +18,7 @@ const config = {
   sourceFolder: path.resolve(__dirname, 'src'),
   destinationFolder: path.resolve(__dirname, 'build'),
   enableJQuery: false,
-  enableCompression: false
+  enableCompression: true
 };
 
 function generateHTMLPlugin(directory) {
@@ -96,8 +96,8 @@ module.exports = (env, options) => {
             {
               loader: 'html-loader',
               options: {
-                minimize: false,
-                esModule: false
+                minimize: true,
+                esModule: true
               }
             }
           ]
@@ -215,7 +215,22 @@ module.exports = (env, options) => {
         }
       ]
     },
-    stats: 'none',
+    stats: {
+      assets: true,
+      assetsSort: '!size',
+      builtAt: false,
+      cached: false,
+      cachedAssets: false,
+      children: false,
+      chunks: false,
+      chunkGroups: false,
+      chunkModules: false,
+      chunkOrigins: false,
+      colors: true,
+      entrypoints: false,
+      errorDetails: false,
+      modules: false
+    },
     performance: {
       hints: false
     },

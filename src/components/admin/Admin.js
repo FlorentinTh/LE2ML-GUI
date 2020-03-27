@@ -6,10 +6,8 @@ import APIHelper from '@APIHelper';
 import ListHelper from '@ListHelper';
 import StringHelper from '@StringHelper';
 import URLHelper from '@URLHelper';
+import ModalHelper from '@ModalHelper';
 import Cookies from 'js-cookie';
-
-import * as GrowlNotification from 'growl-notification/dist/growl-notification.min.js';
-import 'growl-notification/dist/colored-theme.min.css';
 
 const context = document.querySelector('nav.menu');
 
@@ -45,14 +43,15 @@ class Admin extends Controller {
       const user = APIHelper.getConnectedUser();
 
       if (isLogged === 'true') {
-        GrowlNotification.notify({
-          title: 'Sign in successful:',
-          description: `Welcome ${StringHelper.capitalizeFirst(user.firstname)}`,
-          position: 'top-right',
-          type: 'success',
-          closeTimeout: 3000
-        });
-        Cookies.remove('isLogged', { path: '/' });
+        if (user.tmpPassword) {
+          Router.setRoute(`${URLHelper.getPage()}#user-password`);
+        } else {
+          ModalHelper.notification(
+            'success',
+            `Welcome ${StringHelper.capitalizeFirst(user.firstname)}`
+          );
+          Cookies.remove('isLogged', { path: '/' });
+        }
       }
 
       if (Store.get('menu-admin') === undefined) {

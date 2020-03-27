@@ -9,6 +9,7 @@ import UserInfo from '@Components/admin/settings/user-info/UserInfo';
 import Administration from '@Components/admin/administration/Administration';
 import UsersManagement from '@Components/admin/administration/users-management/UsersManagement';
 import JobsManagement from '@Components/admin/administration/jobs-management/JobsManagement';
+import TempPassword from '@Components/admin/administration/temp-password/TempPassword';
 
 const routes = [
   {
@@ -58,6 +59,10 @@ const routes = [
           {
             name: 'jobs-management',
             Controller: JobsManagement
+          },
+          {
+            name: 'temp-password',
+            Controller: TempPassword
           }
         ]
       }
