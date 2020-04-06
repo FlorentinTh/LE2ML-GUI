@@ -9,6 +9,9 @@ import usersListTemplate from './users-list.hbs';
 import editUserTemplate from './edit-user.hbs';
 import axios from 'axios';
 
+let usersAdmin;
+let usersNormal;
+
 class UsersManagement extends Component {
   constructor(context = null) {
     super(context);
@@ -22,11 +25,11 @@ class UsersManagement extends Component {
 
     getUsers('/admin/users?role=admin', this.context).then(response => {
       if (response) {
-        const usersAdmin = response.data;
+        usersAdmin = response.data;
         getUsers('/admin/users', this.context).then(response => {
           if (response) {
-            const usersNormal = response.data;
-            this.render(usersAdmin, usersNormal);
+            usersNormal = response.data;
+            this.render();
           }
         });
       }
@@ -55,7 +58,7 @@ class UsersManagement extends Component {
     }
   }
 
-  addFilterListener(id, users, callback) {
+  addFilterListener(id, callback) {
     const elem = this.context.querySelector(id);
     const filters = elem.querySelectorAll('span.filter');
 
@@ -87,14 +90,12 @@ class UsersManagement extends Component {
           const className = filter.className;
           filter.className = className + ' filter-active';
         }
-
-        const sortedUsers = this.sort(filter.dataset.action, filter.dataset.order, users);
-        return callback(sortedUsers);
+        return callback(filter.dataset.action, filter.dataset.order);
       });
     });
   }
 
-  addSearchListener(id, users) {
+  addSearchListener(id) {
     let timer = null;
     const search = document.getElementById('search');
 
@@ -113,12 +114,14 @@ class UsersManagement extends Component {
               '/admin/users/search/user?q=' + search.value.trim(),
               this.context
             ).then(response => {
-              this.buildUsersList(id, response.data.users);
+              usersNormal.users = response.data.users;
+              this.buildUsersList(id, usersNormal);
             });
           } else if (query === '') {
             getUsers('/admin/users', this.context).then(response => {
               if (response) {
-                this.buildUsersList(id, response.data.users);
+                usersNormal.users = response.data.users;
+                this.buildUsersList(id, usersNormal);
               }
             });
           }
@@ -127,7 +130,14 @@ class UsersManagement extends Component {
     });
   }
 
-  buildUsersList(id, users, defaultSort = true) {
+  buildUsersList(id, defaultSort = true) {
+    let users;
+    if (id.includes('admin')) {
+      users = usersAdmin.users;
+    } else {
+      users = usersNormal.users;
+    }
+
     const container = document.querySelector(id + ' > .grid-users');
 
     if (defaultSort) {
@@ -141,8 +151,8 @@ class UsersManagement extends Component {
 
     this.setActions(users);
 
-    this.addFilterListener(id, users, sortedUsers => {
-      this.buildUsersList(id, sortedUsers, false);
+    this.addFilterListener(id, (action, order) => {
+      this.buildUsersList(id, this.sort(action, order, users), false);
     });
   }
 
@@ -152,17 +162,17 @@ class UsersManagement extends Component {
     this.deleteAction(users);
   }
 
-  render(usersAdmin, usersNormal) {
+  render() {
     this.context.innerHTML = usersManagementTemplate({
       title: 'Manage Users',
       totalAdmin: usersAdmin.total,
       totalNormal: usersNormal.total
     });
 
-    this.buildUsersList('#users-admin', usersAdmin.users);
-    this.buildUsersList('#users-normal', usersNormal.users);
+    this.buildUsersList('#users-admin');
+    this.buildUsersList('#users-normal');
 
-    this.addSearchListener('#users-normal', usersNormal);
+    this.addSearchListener('#users-normal');
   }
 
   inputListener(input) {
