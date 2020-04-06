@@ -1,7 +1,7 @@
 class StoreInstance {
   constructor() {
     if (!StoreInstance.instance) {
-      this._data = [{ id: 'test', data: 'prout' }];
+      this._data = [];
       StoreInstance.instance = this;
     }
 
