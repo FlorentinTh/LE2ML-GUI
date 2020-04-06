@@ -1,0 +1,21 @@
+<div class="user-infos user-infos-modal">
+  <div class="form">
+    <form action="#">
+      <input type="email" id="email" name="email" autocomplete="email" value="{{email}}" required />
+      <input type="text" id="lastname" name="lastname" autocomplete="family-name" placeholder="Lastname"
+        value="{{#[format/capitalize-first] lastname}}{{/[format/capitalize-first]}}" required />
+      <input type="text" id="firstname" name="firstname" autocomplete="given-name"
+        value="{{#[format/capitalize-first] firstname}}{{/[format/capitalize-first]}}" placeholder="Firstname"
+        required />
+      <select id="role">
+        {{#[utils/compare] role '===' 'admin'}}
+        <option value="admin" selected>Admin</option>
+        <option value="user">User</option>
+        {{else}}
+        <option value="admin">Admin</option>
+        <option value="user" selected>User</option>
+        {{/[utils/compare]}}
+      </select>
+    </form>
+  </div>
+</div>

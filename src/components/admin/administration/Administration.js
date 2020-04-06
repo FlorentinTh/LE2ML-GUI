@@ -1,14 +1,17 @@
 import Component from '@Component';
 import Router from '@Router';
 import URLHelper from '@URLHelper';
-import administrationHTML from './administration.html';
+import administrationTemplate from './administration.hbs';
 
 class Administration extends Component {
   constructor(context = null) {
     super(context);
     super.clearContent();
-    super.makeTitle('Administration');
-    super.injectHTMLPage(administrationHTML);
+
+    this.context.innerHTML = administrationTemplate({
+      title: 'Administration'
+    });
+
     this.run();
   }
 

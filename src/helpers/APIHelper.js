@@ -21,7 +21,7 @@ class APIHelper {
   static setAuthHeader() {
     const token = Cookies.get('uuid');
     return {
-      Authorization: `JWT ${token}`
+      Authorization: 'JWT ' + token
     };
   }
 
@@ -53,14 +53,13 @@ class APIHelper {
         msg = error.message;
       } else {
         code = err.status;
-        msg = JSON.parse(err.response).message;
 
-        if (code === 500) {
+        if (code === 500 || code === 401) {
           msg = err.statusText;
-        }
-
-        if (typeof msg === 'object') {
+        } else if (typeof msg === 'object') {
           msg = 'Invalid input data.';
+        } else {
+          msg = JSON.parse(err.response).message;
         }
       }
     } else if (error.response) {

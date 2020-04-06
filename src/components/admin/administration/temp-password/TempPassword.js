@@ -1,5 +1,5 @@
 import Component from '@Component';
-import tempPasswordHTML from './temp-password.html';
+import tempPasswordTemplate from './temp-password.hbs';
 import Store from '@Store';
 import Router from '@Router';
 import URLHelper from '@URLHelper';
@@ -14,8 +14,11 @@ class TempPassword extends Component {
   constructor(context = null) {
     super(context);
     super.clearContent();
-    super.makeTitle('Temporary Password');
-    super.injectHTMLPage(tempPasswordHTML);
+
+    this.context.innerHTML = tempPasswordTemplate({
+      title: 'Temporary Password'
+    });
+
     this.mount();
   }
 
@@ -45,7 +48,7 @@ class TempPassword extends Component {
         tempPasswordConfirm: jsonData.tempPasswordConfirm.trim()
       };
 
-      setTempPassword(`/admin/users/password/${data.email}`, data, this.context).then(
+      setTempPassword('/admin/users/password/' + data.email, data, this.context).then(
         response => {
           ModalHelper.notification('success', response.message);
         }
@@ -66,13 +69,13 @@ class TempPassword extends Component {
           if (!EmailValidator.validate(value)) {
             ModalHelper.notification('warning', 'Email input is invalid.');
           } else {
-            getUserByEmail(`/admin/users/email/${value}`, this.context).then(response => {
+            getUserByEmail('/admin/users/email/' + value, this.context).then(response => {
               const data = response.data.user;
               const userName = StringHelper.capitalizeFirst(data.firstname).concat(
                 ' ',
                 StringHelper.getFirstLetterCapitalized(data.lastname)
               );
-              ModalHelper.notification('success', `Correct email for ${userName}`);
+              ModalHelper.notification('success', 'Correct email for ' + userName);
             });
           }
         } else {
@@ -88,7 +91,7 @@ class TempPassword extends Component {
     cancelButton.addEventListener('click', event => {
       event.preventDefault();
       event.stopImmediatePropagation();
-      Router.setRoute(`${URLHelper.getPage()}#administration`);
+      Router.setRoute(URLHelper.getPage() + '#administration');
     });
   }
 }

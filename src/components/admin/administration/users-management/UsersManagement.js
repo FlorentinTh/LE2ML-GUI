@@ -4,20 +4,15 @@ import APIHelper from '@APIHelper';
 import ModalHelper from '@ModalHelper';
 import SortHelper from '@SortHelper';
 import StringHelper from '@StringHelper';
-
+import usersManagementTemplate from './users-management.hbs';
+import usersListTemplate from './users-list.hbs';
+import editUserTemplate from './edit-user.hbs';
 import axios from 'axios';
-import dayjs from 'dayjs';
-
-const LIMIT = 5;
-
-let limit = LIMIT;
-let clicked = 0;
 
 class UsersManagement extends Component {
   constructor(context = null) {
     super(context);
     super.clearContent();
-    super.makeTitle('Manage Users');
     this.mount();
   }
 
@@ -25,9 +20,15 @@ class UsersManagement extends Component {
     const menu = Store.get('menu-admin').data;
     menu.setActive('administration');
 
-    getUsers('/admin/users', this.context).then(response => {
+    getUsers('/admin/users?role=admin', this.context).then(response => {
       if (response) {
-        this.render(response.data);
+        const usersAdmin = response.data;
+        getUsers('/admin/users', this.context).then(response => {
+          if (response) {
+            const usersNormal = response.data;
+            this.render(usersAdmin, usersNormal);
+          }
+        });
       }
     });
   }
@@ -43,7 +44,7 @@ class UsersManagement extends Component {
   }
 
   setDefaultSort(id, data) {
-    const elem = this.context.querySelector(`#${id}`);
+    const elem = this.context.querySelector(id);
     const filters = elem.querySelectorAll('span.filter');
 
     for (let i = 0; i < filters.length; ++i) {
@@ -54,8 +55,8 @@ class UsersManagement extends Component {
     }
   }
 
-  addFilterListener(id, callback) {
-    const elem = this.context.querySelector(`#${id}`);
+  addFilterListener(id, users, callback) {
+    const elem = this.context.querySelector(id);
     const filters = elem.querySelectorAll('span.filter');
 
     filters.forEach(filter => {
@@ -84,196 +85,92 @@ class UsersManagement extends Component {
             }
           });
           const className = filter.className;
-          filter.className = `${className} filter-active`;
+          filter.className = className + ' filter-active';
         }
 
-        return callback(filter.dataset.action, filter.dataset.order);
+        const sortedUsers = this.sort(filter.dataset.action, filter.dataset.order, users);
+        return callback(sortedUsers);
       });
     });
   }
 
-  makeView(id, title, data) {
-    const total = data.total;
+  addSearchListener(id, users) {
+    let timer = null;
+    const search = document.getElementById('search');
 
-    let html = `<div class="grid-container" id="${id}">
-      <h2>
-        ${title}
-        <span class="badge">${total}</span>
-      </h2>
-      <div class="filters">
-        <span class="filter filter-active" data-action="alpha-sort" data-order="asc">
-          <i class="fas fa-font"></i>
-          <i class="fas fa-long-arrow-alt-up"></i>
-        </span>
-        <span class="filter" data-action="creation-sort" data-order="asc">
-          <i class="fas fa-calendar-check"></i>
-          <i class="fas fa-long-arrow-alt-up"></i>
-        </span>
-        <span class="filter" data-action="connection-sort" data-order="asc">
-          <i class="fas fa-clock"></i>
-          <i class="fas fa-long-arrow-alt-up"></i>
-        </span>
-      </div>
-      <div class="grid-users">
-      </div>`;
-    if (total > LIMIT) {
-      if (limit > LIMIT) {
-        html += `<button class="link show">Show Less <i class="fas fa-caret-up"></i></button>`;
-      } else {
-        html += `<button class="link show">Show More <i class="fas fa-caret-down"></i></button>`;
-      }
-    }
-
-    html += `</div>`;
-
-    this.context.insertAdjacentHTML('beforeend', html);
+    search.addEventListener('keydown', event => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        const inputValue = event.keyCode;
+        const query = search.value.trim();
+        if (
+          (inputValue >= 65 && inputValue <= 90) ||
+          inputValue === 8 ||
+          inputValue === 46
+        ) {
+          if (StringHelper.isAlpha(query)) {
+            searchUser(
+              '/admin/users/search/user?q=' + search.value.trim(),
+              this.context
+            ).then(response => {
+              this.buildUsersList(id, response.data.users);
+            });
+          } else if (query === '') {
+            getUsers('/admin/users', this.context).then(response => {
+              if (response) {
+                this.buildUsersList(id, response.data.users);
+              }
+            });
+          }
+        }
+      }, 200);
+    });
   }
 
-  buildList(id, data, defaultSort = false) {
-    const listHTML = this.context.querySelector(`#${id} > div.grid-users`);
-
-    let users = data;
+  buildUsersList(id, users, defaultSort = true) {
+    const container = document.querySelector(id + ' > .grid-users');
 
     if (defaultSort) {
-      users = this.setDefaultSort(id, users.users.slice(0, limit));
-    } else {
-      let child = listHTML.lastElementChild;
-      while (child) {
-        listHTML.removeChild(child);
-        child = listHTML.lastElementChild;
-      }
+      users = this.setDefaultSort(id, users);
     }
 
-    const connectedUser = APIHelper.getConnectedUser();
-
-    users.forEach(user => {
-      let item = `<div class="grid-item" id="user-infos" data-user="${user._id}">
-        <div class="head">
-          <i class="fas fa-user-circle"></i>
-          <span>
-            ${StringHelper.capitalizeFirst(user.firstname)}
-            ${StringHelper.capitalizeFirst(user.lastname)}
-          </span>
-        </div>
-        <div class="infos">
-          <p class="info">
-            <strong>${user.firstname} ${user.lastname}</strong>
-          </p>
-          <p class="info">
-            <i class="fas fa-envelope"></i>${user.email}</p>
-          <p class="info">`;
-
-      const created = dayjs(user.dateCreated).format('DD/MM/YYYY');
-
-      item += `<i class="fas fa-calendar-check"></i>created on ${created}</p>
-          <p class="info">
-            <i class="fas fa-clock"></i>`;
-
-      if (!(user.lastConnection === null)) {
-        item += `last conn. on ${dayjs(user.lastConnection).format(
-          'DD/MM/YYYY'
-        )} @ ${dayjs(user.lastConnection).format('HH:mm:ss')}`;
-      } else {
-        item += `no connection so far.`;
-      }
-
-      item += `</p>
-        </div>
-        <div class="actions">
-          <p class="action">`;
-      if (!(connectedUser._id === user._id)) {
-        item += `<button id="edit">Edit</button>`;
-      } else {
-        item += `<button class="btn-disabled" id="edit" disabled>Edit</button>`;
-      }
-
-      item += `</p>
-          <p class="action">`;
-
-      if (user.role === 'admin') {
-        if (!(connectedUser._id === user._id)) {
-          item += `<button id="edit-role">Revoke role</button>`;
-        } else {
-          item += `<button class="btn-disabled" id="edit-role" disabled>Revoke role</button>`;
-        }
-      } else {
-        item += `<button id="edit-role">Grant admin</button>`;
-      }
-
-      item += `</p>
-          <p class="action">`;
-
-      if (!(connectedUser._id === user._id)) {
-        item += `<button id="delete">Delete</button>`;
-      } else {
-        item += `<button class="btn-disabled" id="delete" disabled>Delete</button>`;
-      }
-
-      item += `</p>
-        </div>
-      </div>`;
-
-      listHTML.insertAdjacentHTML('beforeend', item);
+    container.innerHTML = '';
+    container.innerHTML = usersListTemplate({
+      users: users
     });
 
+    this.setActions(users);
+
+    this.addFilterListener(id, users, sortedUsers => {
+      this.buildUsersList(id, sortedUsers, false);
+    });
+  }
+
+  setActions(users) {
     this.editAction(users);
     this.grantOrRevokeAction(users);
     this.deleteAction(users);
   }
 
-  addLoadMoreListener(id, data) {
-    const elem = this.context.querySelector(`#${id}`);
-    const btn = elem.querySelector('button.show');
+  render(usersAdmin, usersNormal) {
+    this.context.innerHTML = usersManagementTemplate({
+      title: 'Manage Users',
+      totalAdmin: usersAdmin.total,
+      totalNormal: usersNormal.total
+    });
 
-    if (!(btn === null)) {
-      btn.addEventListener('click', event => {
-        switch (clicked) {
-          case 0:
-            this.buildList(id, this.setDefaultSort(id, data));
-            clicked++;
-            limit = data.length;
-            btn.textContent = 'Show Less ';
-            btn.insertAdjacentHTML('beforeend', `<i class="fas fa-caret-up"></i>`);
-            break;
+    this.buildUsersList('#users-admin', usersAdmin.users);
+    this.buildUsersList('#users-normal', usersNormal.users);
 
-          case 1:
-            limit = LIMIT;
-            this.buildList(id, this.setDefaultSort(id, data).slice(0, limit));
-            clicked--;
-
-            btn.textContent = 'Show More ';
-            btn.insertAdjacentHTML('beforeend', `<i class="fas fa-caret-down"></i>`);
-
-            break;
-        }
-      });
-    }
+    this.addSearchListener('#users-normal', usersNormal);
   }
 
-  render(data) {
-    if (data.admin.total > 0) {
-      this.makeView('users-admin', 'Administrator', data.admin);
-      this.buildList('users-admin', data.admin, true);
-
-      this.addFilterListener('users-admin', (action, order) => {
-        const sortedList = this.sort(action, order, data.admin.users.slice(0, limit));
-        this.buildList('users-admin', sortedList);
-      });
-
-      this.addLoadMoreListener('users-admin', data.admin.users);
-    }
-
-    if (data.normal.total > 0) {
-      this.makeView('users-normal', 'Users', data.normal);
-      this.buildList('users-normal', data.normal, true);
-
-      this.addFilterListener('users-normal', (action, order) => {
-        const sortedList = this.sort(action, order, data.normal.users.slice(0, limit));
-        this.buildList('users-normal', sortedList);
-      });
-
-      this.addLoadMoreListener('users-normal', data.normal.users);
-    }
+  inputListener(input) {
+    input.addEventListener('focusout', event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      input.value = StringHelper.capitalizeFirst(input.value.toLowerCase());
+    });
   }
 
   editAction(users) {
@@ -287,57 +184,20 @@ class UsersManagement extends Component {
         event.preventDefault();
         event.stopImmediatePropagation();
 
-        let content = `<div class="user-infos user-infos-modal">
-          <div class="form">
-            <form action="#">
-              <input
-                type="email"
-                id="email"
-                name="email"
-                autocomplete="email"
-                value="${user.email}"
-                required
-              />
-              <input
-                type="text"
-                id="lastname"
-                name="lastname"
-                autocomplete="family-name"
-                placeholder="Lastname"
-                value="${StringHelper.capitalizeFirst(user.lastname)}"
-                required
-              />
-              <input
-                type="text"
-                id="firstname"
-                name="firstname"
-                autocomplete="given-name"
-                value="${StringHelper.capitalizeFirst(user.firstname)}"
-                placeholder="Firstname"
-                required
-              />
-              <select id="role">`;
-
-        if (user.role === 'admin') {
-          content += `<option value="admin" selected>Admin</option>
-                <option value="user">User</option>`;
-        } else {
-          content += `<option value="admin">Admin</option>
-                <option value="user" selected>User</option>`;
-        }
-
-        content += `</select>
-            </form>
-          </div>
-        </div>`;
+        const content = editUserTemplate({
+          email: user.email,
+          lastname: user.lastname,
+          firstname: user.firstname,
+          role: user.role
+        });
 
         const elems = ['email', 'lastname', 'firstname', 'role'];
 
-        ModalHelper.edit(`Edit information`, content, 'update', elems).then(result => {
+        ModalHelper.edit('Edit information', content, 'update', elems).then(result => {
           if (result.value) {
             const data = result.value;
 
-            updateUser(`/admin/users/${userId}`, data, this.context).then(response => {
+            updateUser('/admin/users/' + userId, data, this.context).then(response => {
               const user = response.data.user;
 
               const userFullName = StringHelper.capitalizeFirst(user.firstname).concat(
@@ -347,7 +207,7 @@ class UsersManagement extends Component {
 
               ModalHelper.notification(
                 'success',
-                `${userFullName} successfully updated.`
+                userFullName + ' successfully updated.'
               );
               // eslint-disable-next-line no-new
               new UsersManagement();
@@ -361,14 +221,6 @@ class UsersManagement extends Component {
         this.inputListener(lastnameInput);
         this.inputListener(firstnameInput);
       });
-    });
-  }
-
-  inputListener(input) {
-    input.addEventListener('focusout', event => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      input.value = StringHelper.capitalizeFirst(input.value.toLowerCase());
     });
   }
 
@@ -392,12 +244,12 @@ class UsersManagement extends Component {
           ' ',
           StringHelper.capitalizeFirst(user.lastname)
         );
-        const askTitle = role === 'admin' ? `Revoke role ADMIN` : `Grant role ADMIN`;
+        const askTitle = role === 'admin' ? 'Revoke role Admin' : 'Grant role Admin';
 
         const askMessage =
           role === 'admin'
-            ? `${userFullName} will loose all privileges.`
-            : `${userFullName} will receive admin privileges.`;
+            ? userFullName + ' will loose all privileges.'
+            : userFullName + ' will receive admin privileges.';
 
         ModalHelper.confirm(askTitle, askMessage).then(result => {
           if (result.value) {
@@ -406,7 +258,7 @@ class UsersManagement extends Component {
                 ? 'Admin privileges revoked.'
                 : 'Admin privileges granted.';
 
-            updateRole(`/admin/users/role/${userId}`, data, this.context).then(
+            updateRole('/admin/users/role/' + userId, data, this.context).then(
               response => {
                 if (response) {
                   ModalHelper.notification('success', confirmMessage);
@@ -437,15 +289,15 @@ class UsersManagement extends Component {
           StringHelper.capitalizeFirst(user.lastname)
         );
 
-        const askTitle = `Delete ${userFullName} ?`;
-        const askMessage = `${userFullName} will be permanently deleted.`;
+        const askTitle = 'Delete ' + userFullName + ' ?';
+        const askMessage = userFullName + ' will be permanently deleted.';
 
         ModalHelper.confirm(askTitle, askMessage).then(result => {
           if (result.value) {
-            deleteUser(`/admin/users/${userId}`, this.context).then(response => {
+            deleteUser('/admin/users/' + userId, this.context).then(response => {
               ModalHelper.notification(
                 'success',
-                `${userFullName} successfully deleted.`
+                userFullName + ' successfully deleted.'
               );
               // eslint-disable-next-line no-new
               new UsersManagement();
@@ -493,6 +345,17 @@ async function updateRole(url, data, context) {
 async function deleteUser(url, context) {
   try {
     const response = await axios.delete(url, {
+      headers: APIHelper.setAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    APIHelper.errorsHandler(error, context);
+  }
+}
+
+async function searchUser(url, context) {
+  try {
+    const response = await axios.get(url, {
       headers: APIHelper.setAuthHeader()
     });
     return response.data;

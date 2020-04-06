@@ -1,8 +1,7 @@
 import Router from '@Router';
 import Theme from '@Theme';
-
-import menuHTML from '@Menu/menu.html';
 import URLHelper from '@URLHelper';
+import menuTemplate from './menu.hbs';
 
 const defaultContext = document.querySelector('nav.menu');
 const defaultItems = [
@@ -71,26 +70,13 @@ class Menu {
   }
 
   _build() {
-    this.options.context.insertAdjacentHTML('beforeend', menuHTML);
+    this.options.context.innerHTML = menuTemplate({
+      title: 'Dashboard',
+      items: this.options.items
+    });
+
     const logo = this.options.context.getElementsByClassName('logo')[0];
     logo.getElementsByTagName('a')[0].setAttribute('href', this.options.logoURL);
-
-    let content = '';
-
-    Array.from(this.options.items, item => {
-      content += `<li><i class="${item.icon}"></i>`;
-      // eslint-disable-next-line no-prototype-builtins
-      const label = item.hasOwnProperty('label') ? item.label : item.name;
-      if (item.url === null) {
-        content += `<a href="${URLHelper.toAnchor(
-          URLHelper.toSlug(item.name)
-        )}">${label}</a>`;
-      } else {
-        content += `<a href="${item.url}">${item.name}</a>`;
-      }
-      content += '</li>';
-    });
-    this.options.context.querySelector('ul').insertAdjacentHTML('beforeend', content);
   }
 
   _enableTheme() {

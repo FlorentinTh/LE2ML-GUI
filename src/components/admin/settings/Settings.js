@@ -1,14 +1,15 @@
 import Component from '@Component';
 import Router from '@Router';
 import URLHelper from '@URLHelper';
-import settingsHTML from './settings.html';
+import settingsTemplate from './settings.hbs';
 
 class Settings extends Component {
   constructor(context = null) {
     super(context);
     super.clearContent();
-    super.makeTitle('My Account');
-    super.injectHTMLPage(settingsHTML);
+    this.context.innerHTML = settingsTemplate({
+      title: 'My Account'
+    });
     this.run();
   }
 

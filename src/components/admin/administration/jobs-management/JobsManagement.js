@@ -1,13 +1,16 @@
 import Component from '@Component';
-import jobsManagementHTML from './jobs-management.html';
+import jobsManagementTemplate from './jobs-management.hbs';
 import Store from '@Store';
 
 class JobsManagement extends Component {
   constructor(context = null) {
     super(context);
     super.clearContent();
-    super.makeTitle('Manage Jobs');
-    super.injectHTMLPage(jobsManagementHTML);
+
+    this.context.innerHTML = jobsManagementTemplate({
+      title: 'Jobs Management'
+    });
+
     this.mount();
   }
 

@@ -1,12 +1,11 @@
 import Component from '@Component';
-import userInfosHTML from './user-info.html';
 import Store from '@Store';
 import APIHelper from '@APIHelper';
 import URLHelper from '@URLHelper';
 import StringHelper from '@StringHelper';
 import Router from '@Router';
 import ModalHelper from '@ModalHelper';
-
+import userInfosTemplate from './user-info.hbs';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -14,8 +13,11 @@ class UserInfos extends Component {
   constructor(context = null) {
     super(context);
     super.clearContent();
-    super.makeTitle('My Information');
-    super.injectHTMLPage(userInfosHTML);
+
+    this.context.innerHTML = userInfosTemplate({
+      title: 'My Information'
+    });
+
     this.mount();
   }
 
@@ -78,7 +80,7 @@ class UserInfos extends Component {
         passwordConfirm: jsonData.passwordConfirm.trim()
       };
 
-      changeUserInfo(`/users/${user._id}`, data, this.context).then(response => {
+      changeUserInfo('/users/' + user._id, data, this.context).then(response => {
         if (response) {
           const userData = response.data.user;
           Cookies.remove('uuid', { path: '/' });
@@ -96,7 +98,7 @@ class UserInfos extends Component {
     cancelButton.addEventListener('click', event => {
       event.preventDefault();
       event.stopImmediatePropagation();
-      Router.setRoute(`${URLHelper.getPage()}#my-account`);
+      Router.setRoute(URLHelper.getPage() + '#my-account');
     });
   }
 }

@@ -41,10 +41,17 @@ class Register extends Controller {
       event.preventDefault();
       event.stopImmediatePropagation();
 
-      const formData = new FormData(registerForm);
-      const jsonData = Object.fromEntries(formData);
+      const jsonData = Object.fromEntries(new FormData(registerForm));
 
-      register('/register', jsonData, this.context).then(response => {
+      const data = {
+        lastname: jsonData.lastname.toLowerCase(),
+        firstname: jsonData.firstname.toLowerCase(),
+        email: jsonData.email.toLowerCase(),
+        password: jsonData.password.trim(),
+        passwordConfirm: jsonData.passwordConfirm.trim()
+      };
+
+      register('/register', data, this.context).then(response => {
         if (response) {
           Cookies.set('isRegistered', true, { path: '/' });
           Router.setRoute('/index.html');

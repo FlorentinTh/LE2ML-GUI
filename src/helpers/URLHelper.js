@@ -46,7 +46,7 @@ class URLHelper {
   }
 
   static toAnchor(value) {
-    return `#${value}`;
+    return '#' + value;
   }
 
   static isRouteValid(route) {

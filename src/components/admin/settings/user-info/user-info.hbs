@@ -1,0 +1,17 @@
+<h1>{{title}}</h1>
+
+<div class="user-infos">
+  <div class="form">
+    <form action="#">
+      <input type="email" id="email" name="email" autocomplete="email" required readonly />
+      <input type="text" id="lastname" name="lastname" autocomplete="family-name" placeholder="Lastname" required />
+      <input type="text" id="firstname" name="firstname" autocomplete="given-name" placeholder="Firstname" required />
+      <input type="password" id="password" name="password" placeholder="Password" autocomplete="current-password"
+        minlength="8" required />
+      <input type="password" id="password-confirm" name="passwordConfirm" placeholder="Password Confirmation"
+        autocomplete="false" minlength="8" required />
+      <button type="submit">Change information</button>
+    </form>
+    <button id="cancel" class="link">Cancel</button>
+  </div>
+</div>

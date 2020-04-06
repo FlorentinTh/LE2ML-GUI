@@ -1,7 +1,7 @@
 <div class="smartphone-menu-trigger"></div>
 <header class="logo">
   <a href="#"></a>
-  <h2>Dashboard</h2>
+  <h2>{{title}}</h2>
 </header>
 <ul>
   <li>
@@ -15,4 +15,10 @@
       <span class="toggle"></span>
     </div>
   </li>
+  {{#each items as |item|}}
+  <li>
+    <i class="{{item.icon}}"></i>
+    {{#[menu/menu-link] item}}{{/[menu/menu-link]}}
+  </li>
+  {{/each}}
 </ul>

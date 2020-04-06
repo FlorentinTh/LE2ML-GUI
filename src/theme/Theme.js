@@ -22,7 +22,7 @@ class Theme {
       this.switchLight.checked = true;
     }
     this.context.className = '';
-    this.context.className = `theme-${theme}`;
+    this.context.className = 'theme-' + theme;
   }
 
   toggle() {
@@ -40,7 +40,7 @@ class Theme {
         }
         this.context.className = '';
         const theme = window.localStorage.getItem('theme');
-        this.context.className = `theme-${theme}`;
+        this.context.className = 'theme-' + theme;
       });
     }
   }

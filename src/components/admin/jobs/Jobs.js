@@ -1,10 +1,14 @@
 import Component from '@Component';
+import jobsTemplate from './jobs.hbs';
 
 class Jobs extends Component {
   constructor(context = null) {
     super(context);
-    super.clearContent();
-    super.makeTitle('Jobs');
+
+    this.context.innerHTML = jobsTemplate({
+      title: 'Jobs'
+    });
+
     this.run();
   }
 

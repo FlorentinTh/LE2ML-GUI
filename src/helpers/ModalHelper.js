@@ -23,7 +23,7 @@ class ModalHelper {
     cancelText = 'cancel'
   ) {
     return Swal.fire({
-      title: `<strong>${title}</strong>`,
+      title: '<strong>' + title + '</strong>',
       position: 'top',
       width: 600,
       target: document.getElementById('root'),

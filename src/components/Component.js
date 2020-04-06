@@ -40,14 +40,6 @@ class Component {
       throw new Error('Expected type for argument html is String.');
     }
   }
-
-  makeTitle(title) {
-    if (typeof title === 'string') {
-      this.context.insertAdjacentHTML('beforeend', `<h1>${title}</h1>`);
-    } else {
-      throw new Error('Expected type for argument title is String.');
-    }
-  }
 }
 
 export default Component;

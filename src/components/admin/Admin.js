@@ -44,11 +44,11 @@ class Admin extends Controller {
 
       if (isLogged === 'true') {
         if (user.tmpPassword) {
-          Router.setRoute(`${URLHelper.getPage()}#user-password`);
+          Router.setRoute(URLHelper.getPage() + '#user-password');
         } else {
           ModalHelper.notification(
             'success',
-            `Welcome ${StringHelper.capitalizeFirst(user.firstname)}`
+            'Welcome ' + StringHelper.capitalizeFirst(user.firstname)
           );
           Cookies.remove('isLogged', { path: '/' });
         }
@@ -95,9 +95,10 @@ class Admin extends Controller {
 
     const accountItem = {
       name: 'My Account',
-      label: `${StringHelper.capitalizeFirst(
-        user.firstname
-      )} ${StringHelper.capitalizeFirst(user.lastname)}`,
+      label:
+        StringHelper.capitalizeFirst(user.firstname) +
+        ' ' +
+        StringHelper.capitalizeFirst(user.lastname),
       icon: 'fas fa-user-cog',
       url: null
     };

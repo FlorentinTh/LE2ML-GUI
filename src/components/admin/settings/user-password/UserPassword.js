@@ -1,11 +1,10 @@
 import Component from '@Component';
-import userPasswordHTML from './user-password.html';
 import Store from '@Store';
 import APIHelper from '@APIHelper';
 import URLHelper from '@URLHelper';
 import Router from '@Router';
 import ModalHelper from '@ModalHelper';
-
+import userPasswordTemplate from './user-password.hbs';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -13,8 +12,9 @@ class UserPassword extends Component {
   constructor(context = null) {
     super(context);
     super.clearContent();
-    super.makeTitle('Change my password');
-    super.injectHTMLPage(userPasswordHTML);
+    this.context.innerHTML = userPasswordTemplate({
+      title: 'Change my password'
+    });
     this.mount();
   }
 
@@ -60,7 +60,7 @@ class UserPassword extends Component {
         newPasswordConfirm: jsonData.newPasswordConfirm.trim()
       };
 
-      changePassword(`/users/password/${user._id}`, data, this.context).then(response => {
+      changePassword('/users/password/' + user._id, data, this.context).then(response => {
         if (response) {
           const inputs = changePasswordForm.querySelectorAll('input:not([type=email])');
           inputs.forEach(input => {
@@ -91,7 +91,7 @@ class UserPassword extends Component {
     cancelButton.addEventListener('click', event => {
       event.preventDefault();
       event.stopImmediatePropagation();
-      Router.setRoute(`${URLHelper.getPage()}#my-account`);
+      Router.setRoute(URLHelper.getPage() + '#my-account');
     });
   }
 }

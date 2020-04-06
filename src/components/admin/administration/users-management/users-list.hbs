@@ -1,0 +1,64 @@
+{{#each users as |user|}}
+<div class="grid-item" id="user-infos" data-user="{{user._id}}">
+  <div class="head">
+    <i class="fas fa-user-circle"></i>
+    <span>
+      {{#[format/capitalize-first] user.firstname}}{{/[format/capitalize-first]}}
+      {{#[format/capitalize-first] user.lastname}}{{/[format/capitalize-first]}}
+    </span>
+  </div>
+  <div class="infos">
+    <p class="info">
+      <strong>{{user.firstname}} {{user.lastname}}</strong>
+    </p>
+    <p class="info">
+      <i class="fas fa-envelope"></i>
+      {{user.email}}
+    </p>
+    <p class="info">
+      <i class="fas fa-calendar-check"></i>
+      created on {{#[format/date] user.dateCreated 'DD/MM/YYYY'}}{{/[format/date]}}
+    </p>
+    <p class="info">
+      <i class="fas fa-clock"></i>
+      {{#[utils/compare] user.lastConnection '===' null}}
+      no connection so far.
+      {{else}}
+      last conn. on {{#[format/date] user.lastConnection 'DD/MM/YYYY'}}{{/[format/date]}} @
+      {{#[format/date] user.lastConnection 'HH:mm:ss'}}{{/[format/date]}}
+      {{/[utils/compare]}}
+    </p>
+  </div>
+  <div class="actions">
+    {{#[user/connected-user] user._id}}
+    <p class="action">
+      <button class="btn-disabled" id="edit" disabled>Edit</button>
+    </p>
+    <p class="action">
+      {{#[utils/compare] user.role '===' 'admin'}}
+      <button class="btn-disabled" id="edit-role" disabled>Revoke role</button>
+      {{else}}
+      <button class="btn-disabled" id="edit-role" disabled>Grant role</button>
+      {{/[utils/compare]}}
+    </p>
+    <p class="action">
+      <button class="btn-disabled" id="delete" disabled>Delete</button>
+    </p>
+    {{else}}
+    <p class="action">
+      <button id="edit">Edit</button>
+    </p>
+    <p class="action">
+      {{#[utils/compare] user.role '===' 'admin'}}
+      <button id="edit-role">Revoke role</button>
+      {{else}}
+      <button id="edit-role">Grant role</button>
+      {{/[utils/compare]}}
+    </p>
+    <p class="action">
+      <button id="delete">Delete</button>
+    </p>
+    {{/[user/connected-user]}}
+  </div>
+</div>
+{{/each}}

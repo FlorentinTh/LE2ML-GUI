@@ -18,7 +18,7 @@ const config = {
   sourceFolder: path.resolve(__dirname, 'src'),
   destinationFolder: path.resolve(__dirname, 'build'),
   enableJQuery: false,
-  enableCompression: true
+  enableCompression: false
 };
 
 function generateHTMLPlugin(directory) {
@@ -31,10 +31,10 @@ function generateHTMLPlugin(directory) {
     const ext = parts[1];
 
     return new HTMLWebPackPlugin({
-      filename: `${name}.html`,
+      filename: name + '.html',
       inject: true,
       favicon: path.join(config.sourceFolder, 'public', 'favicon.ico'),
-      template: path.join(config.sourceFolder, 'public', `${name}.${ext}`)
+      template: path.join(config.sourceFolder, 'public', name + '.' + ext)
     });
   });
 }
@@ -56,9 +56,7 @@ module.exports = (env, options) => {
         {
           test: /\.js$/,
           exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader'
-          }
+          use: ['babel-loader']
         },
         {
           enforce: 'pre',
@@ -89,6 +87,13 @@ module.exports = (env, options) => {
               }
             }
           ]
+        },
+        {
+          test: /\.hbs$/,
+          loader: 'handlebars-loader',
+          options: {
+            helperDirs: path.join(config.sourceFolder, '/helpers/handlebars')
+          }
         },
         {
           test: /\.html$/,
@@ -248,7 +253,7 @@ module.exports = (env, options) => {
               const packageName = module.context.match(
                 /[\\/]node_modules[\\/](.*?)([\\/]|$)/
               )[1];
-              return `npm.${packageName.replace('@', '')}`;
+              return 'npm.' + packageName.replace('@', '');
             }
           }
         }
