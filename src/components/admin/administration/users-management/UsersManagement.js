@@ -114,14 +114,17 @@ class UsersManagement extends Component {
               '/admin/users/search/user?q=' + search.value.trim(),
               this.context
             ).then(response => {
-              usersNormal.users = response.data.users;
-              this.buildUsersList(id, usersNormal);
+              const usersFilter = response.data.users.filter(t => {
+                return t.role === 'user';
+              });
+              usersNormal.users = usersFilter;
+              this.buildUsersList(id);
             });
           } else if (query === '') {
             getUsers('/admin/users', this.context).then(response => {
               if (response) {
                 usersNormal.users = response.data.users;
-                this.buildUsersList(id, usersNormal);
+                this.buildUsersList(id);
               }
             });
           }
@@ -131,14 +134,9 @@ class UsersManagement extends Component {
   }
 
   buildUsersList(id, defaultSort = true) {
-    let users;
-    if (id.includes('admin')) {
-      users = usersAdmin.users;
-    } else {
-      users = usersNormal.users;
-    }
-
     const container = document.querySelector(id + ' > .grid-users');
+
+    let users = id.includes('admin') ? usersAdmin.users : usersNormal.users;
 
     if (defaultSort) {
       users = this.setDefaultSort(id, users);
@@ -152,7 +150,9 @@ class UsersManagement extends Component {
     this.setActions(users);
 
     this.addFilterListener(id, (action, order) => {
-      this.buildUsersList(id, this.sort(action, order, users), false);
+      const sortedUsers = id.includes('admin') ? usersAdmin.users : usersNormal.users;
+      users = this.sort(action, order, sortedUsers);
+      this.buildUsersList(id, false);
     });
   }
 
