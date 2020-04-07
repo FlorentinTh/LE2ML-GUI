@@ -36,33 +36,47 @@ class UsersManagement extends Component {
     });
   }
 
-  sort(filter, order, data) {
-    if (filter === 'alpha-sort') {
-      return SortHelper.sortArrayAlpha(data, 'lastname', order);
-    } else if (filter === 'creation-sort') {
-      return SortHelper.sortArrayByDate(data, 'dateCreated', order);
-    } else if (filter === 'connection-sort') {
-      return SortHelper.sortArrayByDate(data, 'lastConnection', order);
-    }
-  }
-
-  setDefaultSort(id, data) {
+  getFiltersHandler(id, callback) {
     const elem = this.context.querySelector(id);
     const filters = elem.querySelectorAll('span.filter');
+    let index = 0;
+    filters.forEach(filter => {
+      callback(filter, index, filters);
+      ++index;
+    });
+  }
 
-    for (let i = 0; i < filters.length; ++i) {
-      const filter = filters[i];
-      if (filter.className.includes('active')) {
-        return this.sort(filter.dataset.action, filter.dataset.order, data);
+  enableFilters(id) {
+    this.getFiltersHandler(id, (filter, index) => {
+      if (filter.classList.contains('filter-disabled')) {
+        filter.classList.remove('filter-disabled');
       }
-    }
+
+      if (index === 0) {
+        filter.classList.add('filter-active');
+      }
+    });
+  }
+
+  disableClickListenerHandler(event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  disableFilters(id) {
+    this.getFiltersHandler(id, (filter, _index, filters) => {
+      if (filter.classList.contains('filter-active')) {
+        filter.classList.remove('filter-active');
+      }
+      filter.classList.add('filter-disabled');
+
+      filter.addEventListener('click', this.disableClickListenerHandler, true);
+    });
   }
 
   addFilterListener(id, callback) {
-    const elem = this.context.querySelector(id);
-    const filters = elem.querySelectorAll('span.filter');
-
-    filters.forEach(filter => {
+    this.getFiltersHandler(id, (filter, _index, filters) => {
+      filter.removeEventListener('click', this.disableClickListenerHandler, true);
       filter.addEventListener('click', event => {
         event.preventDefault();
         event.stopImmediatePropagation();
@@ -95,6 +109,65 @@ class UsersManagement extends Component {
     });
   }
 
+  setDefaultSort(id, data) {
+    const elem = this.context.querySelector(id);
+    const filters = elem.querySelectorAll('span.filter');
+
+    for (let i = 0; i < filters.length; ++i) {
+      const filter = filters[i];
+      if (filter.className.includes('active')) {
+        return this.sort(filter.dataset.action, filter.dataset.order, data);
+      }
+    }
+  }
+
+  sort(filter, order, data) {
+    if (filter === 'alpha-sort') {
+      return SortHelper.sortArrayAlpha(data, 'lastname', order);
+    } else if (filter === 'creation-sort') {
+      return SortHelper.sortArrayByDate(data, 'dateCreated', order);
+    } else if (filter === 'connection-sort') {
+      return SortHelper.sortArrayByDate(data, 'lastConnection', order);
+    }
+  }
+
+  setActions(users) {
+    this.editAction(users);
+    this.grantOrRevokeAction(users);
+    this.deleteAction(users);
+  }
+
+  buildUsersList(id, defaultSort = true, fromDisabled = false) {
+    const container = document.querySelector(id + ' > .grid-users');
+
+    let users = id.includes('admin') ? usersAdmin.users : usersNormal.users;
+
+    if (fromDisabled) {
+      this.enableFilters(id);
+    }
+
+    if (defaultSort) {
+      users = this.setDefaultSort(id, users);
+    }
+
+    container.innerHTML = '';
+    container.innerHTML = usersListTemplate({
+      users: users
+    });
+
+    this.setActions(users);
+
+    if (users.length <= 1) {
+      this.disableFilters(id);
+    } else {
+      this.addFilterListener(id, (action, order) => {
+        const sortedUsers = id.includes('admin') ? usersAdmin.users : usersNormal.users;
+        users = this.sort(action, order, sortedUsers);
+        this.buildUsersList(id, false);
+      });
+    }
+  }
+
   addSearchListener(id) {
     let timer = null;
     const search = document.getElementById('search');
@@ -118,48 +191,19 @@ class UsersManagement extends Component {
                 return t.role === 'user';
               });
               usersNormal.users = usersFilter;
-              this.buildUsersList(id);
+              this.buildUsersList(id, true, true);
             });
           } else if (query === '') {
             getUsers('/admin/users', this.context).then(response => {
               if (response) {
                 usersNormal.users = response.data.users;
-                this.buildUsersList(id);
+                this.buildUsersList(id, true, true);
               }
             });
           }
         }
       }, 200);
     });
-  }
-
-  buildUsersList(id, defaultSort = true) {
-    const container = document.querySelector(id + ' > .grid-users');
-
-    let users = id.includes('admin') ? usersAdmin.users : usersNormal.users;
-
-    if (defaultSort) {
-      users = this.setDefaultSort(id, users);
-    }
-
-    container.innerHTML = '';
-    container.innerHTML = usersListTemplate({
-      users: users
-    });
-
-    this.setActions(users);
-
-    this.addFilterListener(id, (action, order) => {
-      const sortedUsers = id.includes('admin') ? usersAdmin.users : usersNormal.users;
-      users = this.sort(action, order, sortedUsers);
-      this.buildUsersList(id, false);
-    });
-  }
-
-  setActions(users) {
-    this.editAction(users);
-    this.grantOrRevokeAction(users);
-    this.deleteAction(users);
   }
 
   render() {
