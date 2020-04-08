@@ -1,0 +1,146 @@
+.tasks-container {
+  max-width: 900px;
+  margin: 0 auto;
+
+  .tasks-nav {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    justify-content: center;
+
+    .task-nav-item {
+      flex: 1 1 auto;
+      text-align: center;
+
+      button {
+        padding: 10px 15px;
+        font-size: 1em;
+        border: 0;
+        font-weight: lighter;
+
+        @include themify($themes) {
+          background-color: themed('color-secondary');
+          color: themed('color-text-primary');
+          box-shadow: inset 1px 2px 6px themed('box-shadow');
+
+          &:hover {
+            background-color: themed('color-accent');
+            color: themed('color-text-active');
+          }
+
+          i {
+            padding-right: 10px;
+          }
+        }
+      }
+
+      .indicator {
+        display: block;
+        visibility: hidden;
+        font-size: 1.2em;
+
+        @include themify($themes) {
+          color: themed('color-text-secondary');
+        }
+      }
+    }
+
+    .item-active {
+      button {
+        @include themify($themes) {
+          background-color: themed('color-accent');
+          color: themed('color-text-active');
+        }
+
+        &:hover {
+          cursor: default;
+        }
+      }
+
+      .indicator {
+        visibility: visible;
+      }
+    }
+
+    .item-disabled {
+      .indicator {
+        visibility: hidden;
+      }
+
+      @include themify($themes) {
+        button {
+          border: none;
+          color: themed('color-text-secondary');
+
+          &:hover {
+            cursor: default;
+            color: themed('color-text-secondary');
+            background-color: themed('color-secondary');
+          }
+        }
+
+        i {
+          color: themed('color-text-secondary');
+        }
+      }
+    }
+
+    .task-nav-item-link {
+      padding-top: 10px;
+    }
+  }
+
+  .task-container {
+    margin-top: -9px;
+
+    @include themify($themes) {
+      border-top: 1px solid themed('color-text-secondary');
+      border-bottom: 1px solid themed('color-text-secondary');
+    }
+
+    .task-content {
+      margin: 25px 0;
+      text-align: left;
+
+      section:not(:last-child) {
+        margin-bottom: 35px;
+      }
+
+      section {
+        h3 {
+          margin-bottom: 10px;
+        }
+
+        input[type='text'] {
+          font-size: 1.25em;
+          padding: 0 1em;
+          height: 45px;
+          border: none;
+          font-weight: lighter;
+          width: 45%;
+
+          @include themify($themes) {
+            background-color: themed('color-secondary');
+            color: themed('color-text-primary');
+            box-shadow: inset 1px 2px 6px themed('box-shadow');
+
+            &::placeholder {
+              color: themed('color-text-secondary');
+            }
+          }
+        }
+
+        &.section-disabled {
+          @include themify($themes) {
+            color: themed('color-text-secondary');
+
+            input[type='text'] {
+              pointer-events: none;
+              color: themed('color-text-secondary');
+            }
+          }
+        }
+      }
+    }
+  }
+}
