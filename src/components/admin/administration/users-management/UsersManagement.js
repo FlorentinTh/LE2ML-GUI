@@ -12,6 +12,11 @@ import axios from 'axios';
 let usersAdmin;
 let usersNormal;
 
+let adminFilters;
+let usersFilters;
+
+let filerClickListener;
+
 class UsersManagement extends Component {
   constructor(context = null) {
     super(context);
@@ -36,50 +41,76 @@ class UsersManagement extends Component {
     });
   }
 
-  getFiltersHandler(id, callback) {
-    const elem = this.context.querySelector(id);
-    const filters = elem.querySelectorAll('span.filter');
-    let index = 0;
-    filters.forEach(filter => {
-      callback(filter, index, filters);
-      ++index;
-    });
-  }
-
   enableFilters(id) {
-    this.getFiltersHandler(id, (filter, index) => {
+    const filters = id.includes('admin') ? adminFilters : usersFilters;
+
+    for (let i = 0; i < filters.length; ++i) {
+      const filter = filters[i];
+
       if (filter.classList.contains('filter-disabled')) {
         filter.classList.remove('filter-disabled');
       }
 
-      if (index === 0) {
+      if (i === 0) {
         filter.classList.add('filter-active');
       }
-    });
-  }
 
-  disableClickListenerHandler(event) {
-    event.preventDefault();
-    event.stopPropagation();
+      filter.addEventListener(...filerClickListener);
+    }
   }
 
   disableFilters(id) {
-    this.getFiltersHandler(id, (filter, _index, filters) => {
+    const filters = id.includes('admin') ? adminFilters : usersFilters;
+
+    for (let i = 0; i < filters.length; ++i) {
+      const filter = filters[i];
       if (filter.classList.contains('filter-active')) {
         filter.classList.remove('filter-active');
       }
       filter.classList.add('filter-disabled');
-
-      filter.addEventListener('click', this.disableClickListenerHandler, true);
-    });
+      filter.removeEventListener(...filerClickListener);
+    }
   }
 
-  addFilterListener(id, callback) {
-    this.getFiltersHandler(id, (filter, _index, filters) => {
-      filter.removeEventListener('click', this.disableClickListenerHandler, true);
-      filter.addEventListener('click', event => {
+  filterClickHandler(event, filter, filters, id) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    if (filter.className.includes('active')) {
+      const sortIcon = filter.children[1].className;
+      let className = null;
+      if (sortIcon.includes('up')) {
+        className = sortIcon.replace('up', 'down');
+        filter.dataset.order = 'desc';
+      } else {
+        className = sortIcon.replace('down', 'up');
+        filter.dataset.order = 'asc';
+      }
+      filter.children[1].className = className;
+    } else {
+      filters.forEach(fil => {
+        if (fil.className.includes('active')) {
+          const className = fil.className;
+          fil.className = className.split(' ').filter(name => name !== 'filter-active');
+        }
+      });
+      const className = filter.className;
+      filter.className = className + ' filter-active';
+    }
+    this.buildUsersList(id, true);
+  }
+
+  addFilterListener(id) {
+    const filters = id.includes('admin') ? adminFilters : usersFilters;
+
+    filerClickListener = [
+      'click',
+      event => {
         event.preventDefault();
         event.stopImmediatePropagation();
+
+        const filter =
+          event.target.tagName === 'SPAN' ? event.target : event.target.parentNode;
 
         if (filter.className.includes('active')) {
           const sortIcon = filter.children[1].className;
@@ -104,9 +135,15 @@ class UsersManagement extends Component {
           const className = filter.className;
           filter.className = className + ' filter-active';
         }
-        return callback(filter.dataset.action, filter.dataset.order);
-      });
-    });
+        this.buildUsersList(id, true);
+      },
+      true
+    ];
+
+    for (let i = 0; i < filters.length; ++i) {
+      const filter = filters[i];
+      filter.addEventListener(...filerClickListener);
+    }
   }
 
   setDefaultSort(id, data) {
@@ -159,12 +196,6 @@ class UsersManagement extends Component {
 
     if (users.length <= 1) {
       this.disableFilters(id);
-    } else {
-      this.addFilterListener(id, (action, order) => {
-        const sortedUsers = id.includes('admin') ? usersAdmin.users : usersNormal.users;
-        users = this.sort(action, order, sortedUsers);
-        this.buildUsersList(id, false);
-      });
     }
   }
 
@@ -213,7 +244,16 @@ class UsersManagement extends Component {
       totalNormal: usersNormal.total
     });
 
+    const usersAdminElem = this.context.querySelector('#users-admin');
+    const usersNormalElem = this.context.querySelector('#users-normal');
+
+    adminFilters = usersAdminElem.querySelectorAll('span.filter');
+    usersFilters = usersNormalElem.querySelectorAll('span.filter');
+
+    this.addFilterListener('#users-admin');
     this.buildUsersList('#users-admin');
+
+    this.addFilterListener('#users-normal');
     this.buildUsersList('#users-normal');
 
     this.addSearchListener('#users-normal');

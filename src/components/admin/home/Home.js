@@ -56,7 +56,11 @@ class Home extends Component {
   navItemClickHandler(event) {
     event.preventDefault();
     event.stopImmediatePropagation();
-    const navItem = event.target.parentNode;
+    const navItem =
+      event.target.tagName === 'I'
+        ? event.target.parentNode.parentNode
+        : event.target.parentNode;
+
     if (
       !navItem.classList.contains('item-disabled') &&
       !navItem.classList.contains('item-active')

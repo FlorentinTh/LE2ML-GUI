@@ -6,12 +6,9 @@
     display: flex;
     flex-wrap: wrap;
     list-style: none;
-    justify-content: center;
+    justify-content: space-between;
 
     .task-nav-item {
-      flex: 1 1 auto;
-      text-align: center;
-
       button {
         padding: 10px 15px;
         font-size: 1em;
@@ -40,7 +37,7 @@
         font-size: 1.2em;
 
         @include themify($themes) {
-          color: themed('color-text-secondary');
+          color: themed('color-accent');
         }
       }
     }
@@ -92,10 +89,11 @@
 
   .task-container {
     margin-top: -9px;
+    border-radius: 0.25em;
+    padding: 0 15px;
 
     @include themify($themes) {
-      border-top: 1px solid themed('color-text-secondary');
-      border-bottom: 1px solid themed('color-text-secondary');
+      border: 1px solid themed('color-accent');
     }
 
     .task-content {
@@ -136,6 +134,38 @@
 
             input[type='text'] {
               pointer-events: none;
+              color: themed('color-text-secondary');
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1070px) {
+  .tasks-container {
+    .tasks-nav {
+      .task-nav-item {
+        button {
+          padding: 10px 0;
+          width: 50px;
+          height: 45px;
+          font-size: 1.3em;
+          color: transparent !important;
+          i {
+            padding: 0 !important;
+            @include themify($themes) {
+              color: themed('color-text-active');
+            }
+          }
+        }
+      }
+
+      .item-disabled {
+        button {
+          i {
+            @include themify($themes) {
               color: themed('color-text-secondary');
             }
           }

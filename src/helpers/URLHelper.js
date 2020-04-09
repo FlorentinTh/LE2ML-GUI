@@ -3,9 +3,14 @@ class URLHelper {
     return window.location.href;
   }
 
+  static getProtocol() {
+    return window.location.protocol;
+  }
+
   static getPath(location = null) {
     const url = location || this.getURL();
-    return url.substr(7, url.lastIndexOf('html') + 4 - 7);
+    const start = this.getProtocol().length + 2;
+    return url.substr(start, url.lastIndexOf('html') + 4 - start);
   }
 
   static getPage() {
