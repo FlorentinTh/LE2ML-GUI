@@ -3,8 +3,8 @@
   <div class="head">
     <i class="fas fa-user-circle"></i>
     <span>
-      {{#[format/capitalize-first] user.firstname}}{{/[format/capitalize-first]}}
-      {{#[format/capitalize-first] user.lastname}}{{/[format/capitalize-first]}}
+      {{~#[format/capitalize-first] user.firstname~}}{{~/[format/capitalize-first]}}
+      {{#[format/capitalize-first] user.lastname~}}{{~/[format/capitalize-first]~}}
     </span>
   </div>
   <div class="infos">
@@ -13,20 +13,20 @@
     </p>
     <p class="info">
       <i class="fas fa-envelope"></i>
-      {{user.email}}
+      {{~user.email~}}
     </p>
     <p class="info">
-      <i class="fas fa-calendar-check"></i>
-      created on {{#[format/date] user.dateCreated 'DD/MM/YYYY'}}{{/[format/date]}}
+      <i class="fas fa-calendar-check"></i>created on
+      {{#[format/date] user.dateCreated 'DD/MM/YYYY'~}}{{~/[format/date]~}}
     </p>
     <p class="info">
       <i class="fas fa-clock"></i>
-      {{#[utils/compare] user.lastConnection '===' null}}
+      {{~#[utils/compare] user.lastConnection '===' null~}}
       no connection so far.
-      {{else}}
-      last conn. on {{#[format/date] user.lastConnection 'DD/MM/YYYY'}}{{/[format/date]}} @
-      {{#[format/date] user.lastConnection 'HH:mm:ss'}}{{/[format/date]}}
-      {{/[utils/compare]}}
+      {{~else~}}
+      last conn. on {{#[format/date] user.lastConnection 'DD/MM/YYYY'~}}{{~/[format/date]~}} @
+      {{~#[format/date] user.lastConnection 'HH:mm:ss'~}}{{/[format/date]~}}
+      {{~/[utils/compare]~}}
     </p>
   </div>
   <div class="actions">

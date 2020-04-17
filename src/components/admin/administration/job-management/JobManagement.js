@@ -1,14 +1,14 @@
 import Component from '@Component';
-import jobsManagementTemplate from './jobs-management.hbs';
+import jobManagementTemplate from './job-management.hbs';
 import Store from '@Store';
 
-class JobsManagement extends Component {
+class JobManagement extends Component {
   constructor(context = null) {
     super(context);
     super.clearContent();
 
-    this.context.innerHTML = jobsManagementTemplate({
-      title: 'Jobs Management'
+    this.context.innerHTML = jobManagementTemplate({
+      title: 'Job Management'
     });
 
     this.mount();
@@ -20,4 +20,4 @@ class JobsManagement extends Component {
   }
 }
 
-export default JobsManagement;
+export default JobManagement;

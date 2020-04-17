@@ -1,0 +1,32 @@
+<div class="task-content">
+  <h2>{{title}}</h2>
+  <section id="window">
+    <div class="form-elems">
+      <div class="form-elem inline">
+        <span class="label-container">
+          <label for="window-length">Length</label>
+        </span>
+        <input type="number" id="window-length" name="length" autocomplete="false"
+          placeholder="Enter the size of the window">
+      </div>
+      <div class="form-elems">
+        <div class="form-elem inline">
+          <span class="label-container">
+            <label for="window-length">Type</label>
+          </span>
+          <select id="window-type">
+            <option value="standard" selected>No function</option>
+            <option value="rectangular" disabled>Rectangular</option>
+            <option value="triangular" disabled>Triangular</option>
+            <option value="hamming" disabled>Hamming</option>
+            <option value="hann" disabled>Hann</option>
+          </select>
+        </div>
+        <div class="form-elem block">
+          <label for="overlap">Overlap</label>
+          <input type="range" id="overlap" name="overlap" min="0" max="100" value="0">
+          <span class="range-value"></span>
+        </div>
+      </div>
+  </section>
+</div>

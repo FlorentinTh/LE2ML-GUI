@@ -1,0 +1,76 @@
+.feature-container {
+  .list-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-auto-rows: minmax(80px, auto);
+    grid-gap: 1em;
+    margin-bottom: 25px;
+
+    .feature-item {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+
+      i,
+      p {
+        animation: slide-up 0.4s linear;
+      }
+
+      i {
+        font-size: 1.8em;
+        display: none;
+      }
+
+      p {
+        width: 100%;
+        text-align: center;
+        padding: 0 0.5em;
+      }
+
+      @include themify($themes) {
+        color: themed('color-text-primary');
+        background: themed('color-secondary');
+        border-bottom: 2px solid themed('color-accent');
+
+        &:hover:not(.item-selected) {
+          background: themed('color-accent');
+          color: themed('color-text-active');
+          transition: background 0.5s linear;
+          cursor: pointer;
+          font-size: 1.2em;
+          transition: font-size 0.2s linear;
+        }
+      }
+    }
+
+    .item-selected {
+      align-items: flex-end;
+
+      @include themify($themes) {
+        color: themed('color-accent');
+
+        &:hover {
+          cursor: pointer;
+          background: themed('color-accent');
+          color: themed('color-text-active');
+          transition: background 0.5s linear;
+        }
+      }
+
+      i,
+      p {
+        animation: slide-up 0.2s linear;
+      }
+
+      i {
+        display: block;
+      }
+
+      p {
+        padding-bottom: 0.6em;
+      }
+    }
+  }
+}

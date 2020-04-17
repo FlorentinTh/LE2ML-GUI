@@ -7,8 +7,8 @@ import Settings from '@Components/admin/settings/Settings';
 import UserPassword from '@Components/admin/settings/user-password/UserPassword';
 import UserInfo from '@Components/admin/settings/user-info/UserInfo';
 import Administration from '@Components/admin/administration/Administration';
-import UsersManagement from '@Components/admin/administration/users-management/UsersManagement';
-import JobsManagement from '@Components/admin/administration/jobs-management/JobsManagement';
+import UserManagement from '@Components/admin/administration/user-management/UserManagement';
+import JobManagement from '@Components/admin/administration/job-management/JobManagement';
 import TempPassword from '@Components/admin/administration/temp-password/TempPassword';
 
 const routes = [
@@ -53,12 +53,12 @@ const routes = [
         Controller: Administration,
         SubComponents: [
           {
-            name: 'users-management',
-            Controller: UsersManagement
+            name: 'user-management',
+            Controller: UserManagement
           },
           {
-            name: 'jobs-management',
-            Controller: JobsManagement
+            name: 'job-management',
+            Controller: JobManagement
           },
           {
             name: 'temp-password',

@@ -1,0 +1,34 @@
+<div class="file-list">
+  <h3>
+    {{~title~}}
+    <span class="badge badge-right">{{files.length}}</span>
+  </h3>
+  <div class="table-container custom-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th data-action="filename" data-order="asc" data-enable="true">
+            Filename
+            <i class="fas fa-sort-up"></i>
+          </th>
+          <th class="center" data-action="format" data-order="asc" data-enable="false">
+            Type
+            <i class="fas fa-sort"></i>
+          </th>
+          <th class="center" data-action="size" data-order="asc" data-enable="false">
+            Size
+            <i class="fas fa-sort"></i>
+          </th>
+          <th data-action="date" data-order="asc" data-enable="false">
+            Date Created
+            <i class="fas fa-sort"></i>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#items}}{{> items}}{{/items}}
+      </tbody>
+    </table>
+  </div>
+</div>

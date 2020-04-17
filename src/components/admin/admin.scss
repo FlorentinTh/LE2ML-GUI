@@ -10,6 +10,7 @@ h1 {
   border-radius: 0.25rem;
   padding: 0.25em 0.4em;
   position: relative;
+  cursor: default;
   top: -3px;
   text-align: center;
   white-space: nowrap;
@@ -19,4 +20,12 @@ h1 {
     background-color: themed('color-secondary');
     color: themed('color-text-primary');
   }
+}
+
+.badge-left {
+  margin-right: 8px;
+}
+
+.badge-right {
+  margin-left: 8px;
 }

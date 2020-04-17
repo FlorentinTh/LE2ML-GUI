@@ -232,7 +232,7 @@
             @include themify($themes) {
               background-color: themed('color-accent');
               border: 1px solid themed('color-accent');
-              color: themed('color-text-primary');
+              color: themed('color-text-active');
             }
           }
         }

@@ -1,0 +1,24 @@
+<div class="import-container">
+  <input type="file" id="import-config" name="config">
+  <label for="import-config">
+    <i class="fas fa-file-upload"></i>
+  </label>
+</div>
+<div class="task-content">
+  <h2>{{title}}</h2>
+  <div class="process-selector">
+    <div class="switch-group">
+      <input type="radio" id="switch-train" name="process" value="train" checked />
+      <label for="switch-train">
+        <i class="fas fa-running"></i>
+        Train
+      </label>
+      <input type="radio" id="switch-test" name="process" value="test" />
+      <label for="switch-test">
+        Predict
+        <i class="fas fa-brain"></i>
+      </label>
+    </div>
+    <div class="process-options"></div>
+  </div>
+</div>

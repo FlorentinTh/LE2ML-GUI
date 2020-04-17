@@ -15,6 +15,7 @@
           "@Router": "./src/router/Router.js",
           "@Routes": "./src/router/routes.js",
           "@Menu": "./src/components/menu",
+          "@FileList": "./src/components/file-list/FileList.js",
           "@Controller": "./src/components/Controller.js",
           "@Components": "./src/components",
           "@Component": "./src/components/Component.js",

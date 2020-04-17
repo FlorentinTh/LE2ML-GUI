@@ -108,7 +108,7 @@
   }
 }
 
-input,
+input:not([type='range']),
 select {
   @include themify($themes) {
     background-color: themed('color-secondary');

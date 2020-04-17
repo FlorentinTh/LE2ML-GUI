@@ -1,4 +1,6 @@
+import '../styles/font-awesome.scss';
 import '@Styles';
+
 import Router from '@Router';
 import APIHelper from '@APIHelper';
 

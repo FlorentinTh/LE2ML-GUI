@@ -1,12 +1,16 @@
 <div class="user-infos user-infos-modal">
   <div class="form">
     <form action="#">
+      <label for="email"></label>
       <input type="email" id="email" name="email" autocomplete="email" value="{{email}}" required />
+      <label for="lastname"></label>
       <input type="text" id="lastname" name="lastname" autocomplete="family-name" placeholder="Lastname"
         value="{{#[format/capitalize-first] lastname}}{{/[format/capitalize-first]}}" required />
+      <label for="firstname"></label>
       <input type="text" id="firstname" name="firstname" autocomplete="given-name"
         value="{{#[format/capitalize-first] firstname}}{{/[format/capitalize-first]}}" placeholder="Firstname"
         required />
+      <label for="role"></label>
       <select id="role">
         {{#[utils/compare] role '===' 'admin'}}
         <option value="admin" selected>Admin</option>

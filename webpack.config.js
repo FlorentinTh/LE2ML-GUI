@@ -12,6 +12,7 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const postcssNormalize = require('postcss-normalize');
 const ManifestPlugin = require('webpack-manifest-plugin');
+
 const fs = require('fs');
 
 const config = {
@@ -33,6 +34,7 @@ function generateHTMLPlugin(directory) {
     return new HTMLWebPackPlugin({
       filename: name + '.html',
       inject: true,
+      scriptLoading: 'defer',
       favicon: path.join(config.sourceFolder, 'public', 'favicon.ico'),
       template: path.join(config.sourceFolder, 'public', name + '.' + ext)
     });
@@ -46,7 +48,6 @@ module.exports = (env, options) => {
 
   const COMMON = {
     mode: isProd ? 'production' : 'development',
-    entry: path.join(config.sourceFolder, 'public', 'main.js'),
     output: {
       path: config.destinationFolder,
       filename: 'scripts/bundle' + (isProd ? '.[hash:12].min.js' : '.js')
@@ -69,7 +70,7 @@ module.exports = (env, options) => {
           include: config.sourceFolder,
           loader: 'url-loader',
           options: {
-            limit: 2048,
+            limit: 1024,
             name: '[name].[hash:12].[ext]',
             useRelativePath: true,
             outputPath: 'img/',
@@ -126,11 +127,28 @@ module.exports = (env, options) => {
   }
 
   const DEV = {
+    entry: path.join(config.sourceFolder, 'public', 'main.js'),
     module: {
       rules: [
         {
           test: /\.(sa|sc|c)ss$/,
-          use: ['style-loader', 'css-loader', 'sass-loader']
+          use: [
+            {
+              loader: 'style-loader'
+            },
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true
+              }
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: true
+              }
+            }
+          ]
         }
       ]
     },
@@ -149,6 +167,10 @@ module.exports = (env, options) => {
   };
 
   const PROD = {
+    entry: {
+      main: path.join(config.sourceFolder, 'public', 'main.js'),
+      fontAwesome: path.join(config.sourceFolder, 'styles', 'font-awesome.scss')
+    },
     module: {
       rules: [
         // {
@@ -167,7 +189,10 @@ module.exports = (env, options) => {
               }
             },
             {
-              loader: 'css-loader'
+              loader: 'css-loader',
+              options: {
+                sourceMap: true
+              }
             },
             {
               loader: 'postcss-loader',
@@ -187,7 +212,12 @@ module.exports = (env, options) => {
                 sourceMap: true
               }
             },
-            'sass-loader'
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: true
+              }
+            }
           ]
         },
         {
@@ -246,6 +276,7 @@ module.exports = (env, options) => {
         chunks: 'all',
         maxInitialRequests: Infinity,
         minSize: 0,
+        maxSize: 45000,
         cacheGroups: {
           vendor: {
             test: /[\\/]node_modules[\\/]/,
@@ -284,7 +315,7 @@ module.exports = (env, options) => {
     },
     plugins: [
       new MiniCssExtractPlugin({
-        filename: 'styles/main' + (isProd ? '.[hash:12].min.css' : '.css')
+        chunkFilename: 'styles/[name]' + (isProd ? '.[hash:12].min.css' : '.css')
       }),
       new ManifestPlugin()
     ]

@@ -32,14 +32,6 @@ class Component {
       child = this.context.lastElementChild;
     }
   }
-
-  injectHTMLPage(html) {
-    if (typeof html === 'string') {
-      this.context.insertAdjacentHTML('beforeend', html);
-    } else {
-      throw new Error('Expected type for argument html is String.');
-    }
-  }
 }
 
 export default Component;

@@ -1,50 +1,6 @@
 <h1>{{title}}</h1>
-
-<div class="tasks-container">
-  <ul class="tasks-nav">
-    <li class="task-nav-item item-active" data-task="data-source">
-      <button><i class="fas fa-plus"></i>Data Source</button>
-      <span class="indicator">
-        <i class="fas fa-caret-up"></i>
-      </span>
-    </li>
-    <li class="task-nav-item-link item-disabled">
-      <i class="fas fa-minus"></i>
-    </li>
-    <li class="task-nav-item item-disabled" data-task="windowing">
-      <button><i class="fas fa-th-large"></i>Windowing</button>
-      <span class="indicator">
-        <i class="fas fa-caret-up"></i>
-      </span>
-    </li>
-    <li class="task-nav-item-link item-disabled">
-      <i class="fas fa-minus"></i>
-    </li>
-    <li class="task-nav-item item-disabled" data-task="features-extraction">
-      <button><i class=" fas fa-square-root-alt"></i>Features</button>
-      <span class="indicator">
-        <i class="fas fa-caret-up"></i>
-      </span>
-    </li>
-    <li class="task-nav-item-link item-disabled">
-      <i class="fas fa-minus"></i>
-    </li>
-    <li class="task-nav-item item-disabled" data-task="model-training">
-      <button><i class="fas fa-running"></i>Training</button>
-      <span class="indicator">
-        <i class="fas fa-caret-up"></i>
-      </span>
-    </li>
-    <li class="task-nav-item-link item-disabled" data-task="predict">
-      <i class="fas fa-minus"></i>
-    </li>
-    <li class="task-nav-item item-disabled">
-      <button><i class="fas fa-brain"></i>Predict</button>
-      <span class="indicator">
-        <i class="fas fa-caret-up"></i>
-      </span>
-    </li>
-  </ul>
+<div class="tasks">
+  {{#> task-nav}}{{/task-nav}}
   <div class="task-container">
   </div>
 </div>

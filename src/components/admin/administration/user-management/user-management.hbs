@@ -1,0 +1,32 @@
+<h1>{{title}}</h1>
+
+<div class="grid-container" id="users-admin">
+  <h2>
+    {{~#[utils/compare] totalAdmin '===' 1~}}
+    Administrator
+    {{~else~}}
+    Administrators
+    {{~/[utils/compare]~}}
+    <span class="badge badge-right">{{totalAdmin}}</span>
+  </h2>
+  {{#> user-filters}}{{/user-filters}}
+  <div class="grid-users">
+    {{#administrators}}{{> user-list}}{{/administrators}}
+  </div>
+</div>
+
+<div class="grid-container" id="users-normal">
+  <h2>
+    {{~#[utils/compare] totalNormal '===' 1~}}
+    User
+    {{~else~}}
+    Users
+    {{~/[utils/compare]~}}
+    <span class="badge badge-right">{{totalNormal}}</span>
+  </h2>
+  {{#> user-search}}{{/user-search}}
+  {{#> user-filters}}{{/user-filters}}
+  <div class="grid-users">
+    {{#users}}{{> user-list}}{{/users}}
+  </div>
+</div>

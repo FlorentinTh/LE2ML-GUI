@@ -4,8 +4,8 @@ import APIHelper from '@APIHelper';
 import ModalHelper from '@ModalHelper';
 import SortHelper from '@SortHelper';
 import StringHelper from '@StringHelper';
-import usersManagementTemplate from './users-management.hbs';
-import usersListTemplate from './users-list.hbs';
+import userManagementTemplate from './user-management.hbs';
+import userListTemplate from './user-list.hbs';
 import editUserTemplate from './edit-user.hbs';
 import axios from 'axios';
 
@@ -13,11 +13,11 @@ let usersAdmin;
 let usersNormal;
 
 let adminFilters;
-let usersFilters;
+let normalFilters;
 
 let filerClickListener;
 
-class UsersManagement extends Component {
+class UserManagement extends Component {
   constructor(context = null) {
     super(context);
     super.clearContent();
@@ -42,7 +42,7 @@ class UsersManagement extends Component {
   }
 
   enableFilters(id) {
-    const filters = id.includes('admin') ? adminFilters : usersFilters;
+    const filters = id.includes('admin') ? adminFilters : normalFilters;
 
     for (let i = 0; i < filters.length; ++i) {
       const filter = filters[i];
@@ -60,7 +60,7 @@ class UsersManagement extends Component {
   }
 
   disableFilters(id) {
-    const filters = id.includes('admin') ? adminFilters : usersFilters;
+    const filters = id.includes('admin') ? adminFilters : normalFilters;
 
     for (let i = 0; i < filters.length; ++i) {
       const filter = filters[i];
@@ -97,11 +97,11 @@ class UsersManagement extends Component {
       const className = filter.className;
       filter.className = className + ' filter-active';
     }
-    this.buildUsersList(id, true);
+    this.buildUserList(id, true);
   }
 
-  addFilterListener(id) {
-    const filters = id.includes('admin') ? adminFilters : usersFilters;
+  addFilterClickListener(id) {
+    const filters = id.includes('admin') ? adminFilters : normalFilters;
 
     filerClickListener = [
       'click',
@@ -135,7 +135,7 @@ class UsersManagement extends Component {
           const className = filter.className;
           filter.className = className + ' filter-active';
         }
-        this.buildUsersList(id, true);
+        this.buildUserList(id, true);
       },
       true
     ];
@@ -174,7 +174,7 @@ class UsersManagement extends Component {
     this.deleteAction(users);
   }
 
-  buildUsersList(id, defaultSort = true, fromDisabled = false) {
+  buildUserList(id, defaultSort = true, fromDisabled = false) {
     const container = document.querySelector(id + ' > .grid-users');
 
     let users = id.includes('admin') ? usersAdmin.users : usersNormal.users;
@@ -188,7 +188,7 @@ class UsersManagement extends Component {
     }
 
     container.innerHTML = '';
-    container.innerHTML = usersListTemplate({
+    container.innerHTML = userListTemplate({
       users: users
     });
 
@@ -222,13 +222,13 @@ class UsersManagement extends Component {
                 return t.role === 'user';
               });
               usersNormal.users = usersFilter;
-              this.buildUsersList(id, true, true);
+              this.buildUserList(id, true, true);
             });
           } else if (query === '') {
             getUsers('/admin/users', this.context).then(response => {
               if (response) {
                 usersNormal.users = response.data.users;
-                this.buildUsersList(id, true, true);
+                this.buildUserList(id, true, true);
               }
             });
           }
@@ -238,7 +238,7 @@ class UsersManagement extends Component {
   }
 
   render() {
-    this.context.innerHTML = usersManagementTemplate({
+    this.context.innerHTML = userManagementTemplate({
       title: 'Manage Users',
       totalAdmin: usersAdmin.total,
       totalNormal: usersNormal.total
@@ -248,13 +248,13 @@ class UsersManagement extends Component {
     const usersNormalElem = this.context.querySelector('#users-normal');
 
     adminFilters = usersAdminElem.querySelectorAll('span.filter');
-    usersFilters = usersNormalElem.querySelectorAll('span.filter');
+    normalFilters = usersNormalElem.querySelectorAll('span.filter');
 
-    this.addFilterListener('#users-admin');
-    this.buildUsersList('#users-admin');
+    this.addFilterClickListener('#users-admin');
+    this.buildUserList('#users-admin');
 
-    this.addFilterListener('#users-normal');
-    this.buildUsersList('#users-normal');
+    this.addFilterClickListener('#users-normal');
+    this.buildUserList('#users-normal');
 
     this.addSearchListener('#users-normal');
   }
@@ -304,7 +304,7 @@ class UsersManagement extends Component {
                 userFullName + ' successfully updated.'
               );
               // eslint-disable-next-line no-new
-              new UsersManagement();
+              new UserManagement();
             });
           }
         });
@@ -357,7 +357,7 @@ class UsersManagement extends Component {
                 if (response) {
                   ModalHelper.notification('success', confirmMessage);
                   // eslint-disable-next-line no-new
-                  new UsersManagement();
+                  new UserManagement();
                 }
               }
             );
@@ -394,7 +394,7 @@ class UsersManagement extends Component {
                 userFullName + ' successfully deleted.'
               );
               // eslint-disable-next-line no-new
-              new UsersManagement();
+              new UserManagement();
             });
           }
         });
@@ -458,4 +458,4 @@ async function searchUser(url, context) {
   }
 }
 
-export default UsersManagement;
+export default UserManagement;

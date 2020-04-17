@@ -10,7 +10,7 @@ $themes: (
     color-accent-hover: #7fc559,
     box-shadow: rgba(184, 177, 177, 0.65),
     logo-liara-small: $logo-liara-small-dark,
-    logo-liara-large: $logo-liara-large-dark
+    logo-liara-large: $logo-liara-large-dark,
   ),
   dark: (
     color-primary: #4d5057,
@@ -22,8 +22,8 @@ $themes: (
     color-accent-darker: #54923c,
     box-shadow: rgba(43, 41, 41, 0.65),
     logo-liara-small: $logo-liara-small-light,
-    logo-liara-large: $logo-liara-large-light
-  )
+    logo-liara-large: $logo-liara-large-light,
+  ),
 );
 
 @mixin themify($themes: $themes) {
@@ -35,7 +35,7 @@ $themes: (
         $theme-map: map-merge(
           $theme-map,
           (
-            $key: $value
+            $key: $value,
           )
         ) !global;
       }
@@ -82,7 +82,7 @@ $themes: (
     }
   }
 
-  input {
+  input:not([type='range']) {
     height: 19px;
     left: 0;
     opacity: 0;
