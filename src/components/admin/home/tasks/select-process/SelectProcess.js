@@ -1,93 +1,8 @@
 import Task from '../Task';
 import selectProcessTemplate from './select-process.hbs';
 import FileList from '@FileList';
-
-const files = [
-  {
-    filename: 'file-1',
-    format: 'json',
-    size: '4200',
-    dateCreated: '2020-04-13T22:57:45.367+00:00'
-  },
-  {
-    filename: 'file-0',
-    format: 'csv',
-    size: '8000',
-    dateCreated: '2020-04-02T12:29:57.493+00:00'
-  },
-  {
-    filename: 'file-3',
-    format: 'csv',
-    size: '2000',
-    dateCreated: '2020-04-03T12:45:42.567+00:00'
-  },
-  {
-    filename: 'file-3',
-    format: 'csv',
-    size: '2000',
-    dateCreated: '2020-04-03T12:45:42.567+00:00'
-  },
-  {
-    filename: 'file-3',
-    format: 'csv',
-    size: '2000',
-    dateCreated: '2020-04-03T12:45:42.567+00:00'
-  },
-  {
-    filename: 'file-3',
-    format: 'csv',
-    size: '2000',
-    dateCreated: '2020-04-03T12:45:42.567+00:00'
-  },
-  {
-    filename: 'file-3',
-    format: 'csv',
-    size: '2000',
-    dateCreated: '2020-04-03T12:45:42.567+00:00'
-  },
-  {
-    filename: 'file-3',
-    format: 'csv',
-    size: '2000',
-    dateCreated: '2020-04-03T12:45:42.567+00:00'
-  },
-  {
-    filename: 'file-3',
-    format: 'csv',
-    size: '2000',
-    dateCreated: '2020-04-03T12:45:42.567+00:00'
-  },
-  {
-    filename: 'file-3',
-    format: 'csv',
-    size: '2000',
-    dateCreated: '2020-04-03T12:45:42.567+00:00'
-  },
-  {
-    filename: 'file-3',
-    format: 'csv',
-    size: '2000',
-    dateCreated: '2020-04-03T12:45:42.567+00:00'
-  },
-  {
-    filename: 'file-3',
-    format: 'csv',
-    size: '2000',
-    dateCreated: '2020-04-03T12:45:42.567+00:00'
-  },
-  {
-    filename: 'file-3',
-    format: 'csv',
-    size: '2000',
-    dateCreated: '2020-04-03T12:45:42.567+00:00'
-  },
-  {
-    filename: 'file-3',
-    format: 'csv',
-    size: '2000',
-    dateCreated: '2020-04-03T12:45:42.567+00:00'
-  }
-];
+import axios from 'axios';
+import APIHelper from '@APIHelper';
 
 let processContainer;
 
@@ -98,12 +13,20 @@ class SelectProcess extends Task {
     this.make();
   }
 
+  makeProcessTest() {
+    getFiles('/files?type=model', this.context).then(response => {
+      if (response) {
+        // eslint-disable-next-line no-new
+        new FileList(processContainer, 'Existing trained models', response.data, 'model');
+        super.setProcessNavItem('Predict');
+      }
+    });
+  }
+
   switchProcessContent(process) {
     switch (process) {
       case 'test':
-        // eslint-disable-next-line no-new
-        new FileList(processContainer, 'Existing trained models', files, 'model');
-        super.setProcessNavItem('Predict');
+        this.makeProcessTest();
         break;
       case 'train':
         super.setProcessNavItem('Training');
@@ -146,6 +69,17 @@ class SelectProcess extends Task {
         this.switchProcessContent(radio.value);
       }
     }
+  }
+}
+
+async function getFiles(url, context) {
+  try {
+    const response = await axios.get(url, {
+      headers: APIHelper.setAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    APIHelper.errorsHandler(error, context);
   }
 }
 

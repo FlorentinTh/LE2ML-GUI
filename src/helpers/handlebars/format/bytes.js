@@ -1,7 +1,7 @@
 import StringHelper from '@StringHelper';
 
 export default function(bytes) {
-  if (!(typeof bytes === 'string')) {
+  if (!(typeof bytes === 'number')) {
     return '';
   }
 

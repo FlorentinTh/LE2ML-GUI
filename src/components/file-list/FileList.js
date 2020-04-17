@@ -121,7 +121,7 @@ class FileList {
     switch (action) {
       case 'filename':
         return SortHelper.sortArrayAlpha(data, action, order);
-      case 'format':
+      case 'type':
         return SortHelper.sortArrayAlpha(data, action, order);
       case 'size':
         return SortHelper.sortArrayNumber(data, action, order);

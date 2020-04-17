@@ -3,27 +3,8 @@ import Task from '../Task';
 import FileList from '@FileList';
 import fileUploadTemplate from './file-upload.hbs';
 import websocketTemplate from './websocket.hbs';
-
-const files = [
-  {
-    filename: 'file-1',
-    format: 'json',
-    size: '4200',
-    dateCreated: '2020-04-13T22:57:45.367+00:00'
-  },
-  {
-    filename: 'file-0',
-    format: 'csv',
-    size: '8000',
-    dateCreated: '2020-04-02T12:29:57.493+00:00'
-  },
-  {
-    filename: 'file-3',
-    format: 'csv',
-    size: '2000',
-    dateCreated: '2020-04-03T12:45:42.567+00:00'
-  }
-];
+import axios from 'axios';
+import APIHelper from '@APIHelper';
 
 class DataSource extends Task {
   constructor(context) {
@@ -38,8 +19,13 @@ class DataSource extends Task {
     });
 
     const sectionContainer = this.context.querySelector('.section-container');
-    // eslint-disable-next-line no-new
-    new FileList(sectionContainer, 'Existing Data Files', files, 'data');
+
+    getFiles('/files?type=input', this.context).then(response => {
+      if (response) {
+        // eslint-disable-next-line no-new
+        new FileList(sectionContainer, 'Existing Data Files', response.data, 'data');
+      }
+    });
 
     const parentContainer = sectionContainer.parentNode;
 
@@ -47,6 +33,17 @@ class DataSource extends Task {
     parentContainer.insertAdjacentHTML('beforeend', websocketTemplate());
 
     super.disableSection('websocket');
+  }
+}
+
+async function getFiles(url, context) {
+  try {
+    const response = await axios.get(url, {
+      headers: APIHelper.setAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    APIHelper.errorsHandler(error, context);
   }
 }
 

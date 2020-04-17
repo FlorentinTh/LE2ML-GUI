@@ -14,9 +14,10 @@ class StringHelper {
   }
 
   static convertBytesToHuman(bytes, i = true) {
-    if (!(typeof bytes === 'string')) {
-      throw new Error('Expected type for argument bytes is String.');
+    if (!(typeof bytes === 'number')) {
+      throw new Error('Expected type for argument bytes is Number.');
     }
+
     const threshold = i ? 1000 : 1024;
 
     if (Math.abs(bytes) < threshold) {

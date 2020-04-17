@@ -8,9 +8,21 @@ class SortHelper {
         ) {
           const asc = order.toUpperCase() === 'ASC';
           if (asc) {
-            return array.sort((a, b) => a[prop].localeCompare(b[prop]));
+            return array.sort((a, b) =>
+              a[prop].localeCompare(b[prop], undefined, {
+                numeric: true,
+                sensitivity: 'base'
+              })
+            );
           }
-          return array.sort((a, b) => a[prop].localeCompare(b[prop])).reverse();
+          return array
+            .sort((a, b) =>
+              a[prop].localeCompare(b[prop], undefined, {
+                numeric: true,
+                sensitivity: 'base'
+              })
+            )
+            .reverse();
         } else {
           throw new Error('Expected type for argument order is "ASC" or "DESC".');
         }
