@@ -1,7 +1,7 @@
 import util from 'handlebars-utils';
 
 export default function(a, operator, b, options) {
-  var result;
+  let result;
   switch (operator) {
     case '===':
       result = a === b;

@@ -7,8 +7,19 @@
   <td>{{~#[format/date] file.dateCreated 'DD/MM/YYYY HH:mm'~}}{{/[format/date]~}}</td>
 </tr>
 {{else}}
+
+{{#[utils/compare] loading '===' true}}
+<tr>
+  <td></td>
+  <td class="no-data" colspan="4">Loading...</td>
+</tr>
+{{else}}
 <tr>
   <td></td>
   <td class="no-data" colspan="4">No models found ☹️</td>
 </tr>
+{{/[utils/compare]}}
+
+
+
 {{/each}}

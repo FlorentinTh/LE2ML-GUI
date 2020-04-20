@@ -3,6 +3,7 @@ import selectProcessTemplate from './select-process.hbs';
 import FileList from '@FileList';
 import axios from 'axios';
 import APIHelper from '@APIHelper';
+import Store from '@Store';
 
 let processContainer;
 
@@ -14,13 +15,35 @@ class SelectProcess extends Task {
   }
 
   makeProcessTest() {
-    getFiles('/files?type=model', this.context).then(response => {
-      if (response) {
-        // eslint-disable-next-line no-new
-        new FileList(processContainer, 'Existing trained models', response.data, 'model');
-        super.setProcessNavItem('Predict');
-      }
-    });
+    let fileList;
+    const dataStore = Store.get('model-data');
+
+    if (dataStore === undefined) {
+      fileList = new FileList(processContainer, 'Existing trained models', [], 'model');
+
+      getFiles('/files?type=model', this.context).then(response => {
+        if (response) {
+          Store.add({
+            id: 'model-data',
+            data: response.data
+          });
+
+          fileList.setData(response.data);
+          fileList.make();
+        }
+      });
+    } else {
+      const context = this.context.querySelector('.process-options');
+      fileList = new FileList(
+        context,
+        'Existing trained models',
+        dataStore.data,
+        'model',
+        false
+      );
+    }
+
+    super.setProcessNavItem('Predict');
   }
 
   switchProcessContent(process) {

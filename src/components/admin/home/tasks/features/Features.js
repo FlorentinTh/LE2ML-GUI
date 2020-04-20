@@ -3,6 +3,7 @@ import featureListTemplate from './feature-list.hbs';
 import Task from '../Task';
 import axios from 'axios';
 import APIHelper from '@APIHelper';
+import Store from '@Store';
 
 let timeFeatures;
 let freqFeatures;
@@ -13,17 +14,37 @@ class Features extends Task {
     super(context);
     this.context = context;
 
-    getFeatures('/features', this.context).then(response => {
-      if (response) {
-        timeFeatures = response.data;
-        getFeatures('/features?domain=frequential', this.context).then(response => {
-          if (response) {
-            freqFeatures = response.data;
-            this.make();
-          }
-        });
-      }
-    });
+    const timeStore = Store.get('time-features');
+    const freqStore = Store.get('freq-features');
+
+    if (timeStore === undefined && freqStore === undefined) {
+      getFeatures('/features', this.context).then(response => {
+        if (response) {
+          Store.add({
+            id: 'time-features',
+            data: response.data
+          });
+
+          timeFeatures = response.data;
+
+          getFeatures('/features?domain=frequential', this.context).then(response => {
+            if (response) {
+              Store.add({
+                id: 'freq-features',
+                data: response.data
+              });
+
+              freqFeatures = response.data;
+              this.make();
+            }
+          });
+        }
+      });
+    } else {
+      timeFeatures = timeStore.data;
+      freqFeatures = freqStore.data;
+      this.make();
+    }
   }
 
   toggleSelected(toggle) {

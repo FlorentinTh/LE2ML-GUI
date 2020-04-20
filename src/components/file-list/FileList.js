@@ -7,11 +7,16 @@ let fileRows;
 let selectedFile;
 
 class FileList {
-  constructor(context, title, data, key = 'file') {
+  constructor(context, title, data, key = 'file', loading = true) {
     this.context = context;
     this.title = title;
     this.data = data;
+    this.loading = loading;
     this.make();
+  }
+
+  setData(data) {
+    this.data = data;
   }
 
   removeCurrentSelectedFile() {
@@ -24,22 +29,6 @@ class FileList {
 
       if (!(selectedFile === undefined)) {
         selectedFile = undefined;
-      }
-    }
-  }
-
-  fileDblClickListener(event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-
-    if (event.target.tagName === 'TD') {
-      const row = event.target.parentNode;
-      const filename = row.childNodes[3].textContent;
-
-      if (selectedFile === filename) {
-        if (!(selectedFile === undefined)) {
-          this.removeCurrentSelectedFile();
-        }
       }
     }
   }
@@ -62,6 +51,8 @@ class FileList {
         row.classList.add('selected-file');
         firstTd.innerHTML = '';
         firstTd.insertAdjacentHTML('afterbegin', '<i class="fas fa-check"></i>');
+      } else {
+        this.removeCurrentSelectedFile();
       }
     }
   }
@@ -134,8 +125,13 @@ class FileList {
     const body = this.context.querySelector('tbody');
     body.innerHTML = '';
     body.innerHTML = itemsTemplate({
-      files: this.data
+      files: this.data,
+      loading: this.loading
     });
+
+    if (this.loading) {
+      this.loading = !this.loading;
+    }
 
     fileRows = this.context.querySelectorAll('tbody > tr');
 
@@ -143,8 +139,6 @@ class FileList {
       const row = fileRows[i];
       row.removeEventListener('click', this.fileClickListener.bind(this), false);
       row.addEventListener('click', this.fileClickListener.bind(this), false);
-      row.removeEventListener('dblclick', this.fileDblClickListener.bind(this), false);
-      row.addEventListener('dblclick', this.fileDblClickListener.bind(this), false);
     }
   }
 

@@ -5,6 +5,7 @@ import fileUploadTemplate from './file-upload.hbs';
 import websocketTemplate from './websocket.hbs';
 import axios from 'axios';
 import APIHelper from '@APIHelper';
+import Store from '@Store';
 
 class DataSource extends Task {
   constructor(context) {
@@ -20,12 +21,32 @@ class DataSource extends Task {
 
     const sectionContainer = this.context.querySelector('.section-container');
 
-    getFiles('/files?type=input', this.context).then(response => {
-      if (response) {
-        // eslint-disable-next-line no-new
-        new FileList(sectionContainer, 'Existing Data Files', response.data, 'data');
-      }
-    });
+    let fileList;
+    const dataStore = Store.get('input-data');
+
+    if (dataStore === undefined) {
+      fileList = new FileList(sectionContainer, 'Existing Data Files', [], 'data');
+
+      getFiles('/files?type=input', this.context).then(response => {
+        if (response) {
+          Store.add({
+            id: 'input-data',
+            data: response.data
+          });
+
+          fileList.setData(response.data);
+          fileList.make();
+        }
+      });
+    } else {
+      fileList = new FileList(
+        sectionContainer,
+        'Existing Data Files',
+        dataStore.data,
+        'data',
+        false
+      );
+    }
 
     const parentContainer = sectionContainer.parentNode;
 
