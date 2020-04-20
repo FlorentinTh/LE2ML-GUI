@@ -56,6 +56,9 @@ class APIHelper {
 
         if (code === 500 || code === 401) {
           msg = err.statusText;
+          if (msg === '') {
+            msg = JSON.parse(err.response).message;
+          }
         } else if (typeof msg === 'object') {
           msg = 'Invalid input data.';
         } else {

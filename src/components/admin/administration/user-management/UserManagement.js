@@ -12,6 +12,8 @@ import axios from 'axios';
 let usersAdmin;
 let usersNormal;
 
+let usersNormalFull;
+
 let adminFilters;
 let normalFilters;
 
@@ -34,6 +36,7 @@ class UserManagement extends Component {
         getUsers('/admin/users', this.context).then(response => {
           if (response) {
             usersNormal = response.data;
+            usersNormalFull = response.data.users;
             this.render();
           }
         });
@@ -44,6 +47,8 @@ class UserManagement extends Component {
   enableFilters(id) {
     const filters = id.includes('admin') ? adminFilters : normalFilters;
 
+    const defaultFilter = filters[0];
+    let isOtherActive = false;
     for (let i = 0; i < filters.length; ++i) {
       const filter = filters[i];
 
@@ -51,11 +56,18 @@ class UserManagement extends Component {
         filter.classList.remove('filter-disabled');
       }
 
-      if (i === 0) {
-        filter.classList.add('filter-active');
+      if (filter.classList.contains('filter-active')) {
+        isOtherActive = true;
       }
 
       filter.addEventListener(...filerClickListener);
+    }
+
+    if (!isOtherActive) {
+      const className = defaultFilter.children[1].className.replace('down', 'up');
+      defaultFilter.children[1].classList = className;
+      defaultFilter.dataset.order = 'asc';
+      defaultFilter.classList.add('filter-active');
     }
   }
 
@@ -200,40 +212,45 @@ class UserManagement extends Component {
   }
 
   addSearchListener(id) {
-    let timer = null;
     const search = document.getElementById('search');
 
+    let timer = null;
+
+    let query = '';
+
     search.addEventListener('keydown', event => {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        const inputValue = event.keyCode;
-        const query = search.value.trim();
-        if (
-          (inputValue >= 65 && inputValue <= 90) ||
-          inputValue === 8 ||
-          inputValue === 46
-        ) {
+      const inputValue = event.keyCode;
+      if (
+        (inputValue >= 65 && inputValue <= 90) ||
+        inputValue === 8 ||
+        inputValue === 46
+      ) {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          query = search.value.trim();
+
           if (StringHelper.isAlpha(query)) {
-            searchUser(
-              '/admin/users/search/user?q=' + search.value.trim(),
-              this.context
-            ).then(response => {
-              const usersFilter = response.data.users.filter(t => {
-                return t.role === 'user';
-              });
-              usersNormal.users = usersFilter;
-              this.buildUserList(id, true, true);
-            });
-          } else if (query === '') {
-            getUsers('/admin/users', this.context).then(response => {
-              if (response) {
-                usersNormal.users = response.data.users;
-                this.buildUserList(id, true, true);
-              }
-            });
+            const result = usersNormalFull.filter(
+              user =>
+                user.lastname.includes(query) ||
+                user.firstname.includes(query) ||
+                user.email.includes(query)
+            );
+
+            usersNormal.users = result;
+            this.buildUserList(id, true, true);
           }
+        }, 200);
+      }
+    });
+
+    search.addEventListener('keyup', event => {
+      if (search.value.trim() === '' && !(query === '')) {
+        if (event.keyCode === 8 || event.keyCode === 46) {
+          usersNormal.users = usersNormalFull;
+          this.buildUserList(id, true, true);
         }
-      }, 200);
+      }
     });
   }
 
@@ -292,19 +309,21 @@ class UserManagement extends Component {
             const data = result.value;
 
             updateUser('/admin/users/' + userId, data, this.context).then(response => {
-              const user = response.data.user;
+              if (response) {
+                const user = response.data.user;
 
-              const userFullName = StringHelper.capitalizeFirst(user.firstname).concat(
-                ' ',
-                StringHelper.capitalizeFirst(user.lastname)
-              );
+                const userFullName = StringHelper.capitalizeFirst(user.firstname).concat(
+                  ' ',
+                  StringHelper.capitalizeFirst(user.lastname)
+                );
 
-              ModalHelper.notification(
-                'success',
-                userFullName + ' successfully updated.'
-              );
-              // eslint-disable-next-line no-new
-              new UserManagement();
+                ModalHelper.notification(
+                  'success',
+                  userFullName + ' successfully updated.'
+                );
+                // eslint-disable-next-line no-new
+                new UserManagement();
+              }
             });
           }
         });
@@ -389,12 +408,14 @@ class UserManagement extends Component {
         ModalHelper.confirm(askTitle, askMessage).then(result => {
           if (result.value) {
             deleteUser('/admin/users/' + userId, this.context).then(response => {
-              ModalHelper.notification(
-                'success',
-                userFullName + ' successfully deleted.'
-              );
-              // eslint-disable-next-line no-new
-              new UserManagement();
+              if (response) {
+                ModalHelper.notification(
+                  'success',
+                  userFullName + ' successfully deleted.'
+                );
+                // eslint-disable-next-line no-new
+                new UserManagement();
+              }
             });
           }
         });
@@ -443,18 +464,9 @@ async function deleteUser(url, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context);
-  }
-}
-
-async function searchUser(url, context) {
-  try {
-    const response = await axios.get(url, {
-      headers: APIHelper.setAuthHeader()
-    });
-    return response.data;
-  } catch (error) {
-    APIHelper.errorsHandler(error, context);
+    if (error) {
+      APIHelper.errorsHandler(error, context);
+    }
   }
 }
 
