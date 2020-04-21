@@ -1,10 +1,32 @@
 .feature-container {
+  &:not(:last-of-type) {
+    margin-bottom: 45px;
+  }
+
+  .no-data-container {
+    grid-column: 2 / 3;
+
+    .no-data-item,
+    .loading-item {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+      height: 80px;
+
+      @include themify($themes) {
+        color: themed('color-text-primary');
+        background: themed('color-secondary');
+      }
+    }
+  }
+
   .list-container {
-    display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    display: grid;
     grid-auto-rows: minmax(80px, auto);
     grid-gap: 1em;
-    margin-bottom: 25px;
 
     .feature-item {
       display: flex;

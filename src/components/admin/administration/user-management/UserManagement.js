@@ -11,67 +11,43 @@ import axios from 'axios';
 
 let usersAdmin;
 let usersNormal;
-
 let usersNormalFull;
-
 let adminFilters;
 let normalFilters;
-
 let filerClickListener;
 
 class UserManagement extends Component {
-  constructor(context = null) {
+  constructor(reload = false, context = null) {
     super(context);
     super.clearContent();
+    this.isFiltersDisabled = false;
+    this.reload = reload;
+    this.title = 'Manage Users';
     this.mount();
   }
 
   mount() {
     const menu = Store.get('menu-admin').data;
     menu.setActive('administration');
-
-    getUsers('/admin/users?role=admin', this.context).then(response => {
-      if (response) {
-        usersAdmin = response.data;
-        getUsers('/admin/users', this.context).then(response => {
-          if (response) {
-            usersNormal = response.data;
-            usersNormalFull = response.data.users;
-            this.render();
-          }
-        });
-      }
-    });
+    this.initData();
   }
 
   enableFilters(id) {
     const filters = id.includes('admin') ? adminFilters : normalFilters;
 
-    const defaultFilter = filters[0];
-    let isOtherActive = false;
+    filters[0].classList.add('filter-active');
+
     for (let i = 0; i < filters.length; ++i) {
       const filter = filters[i];
 
       if (filter.classList.contains('filter-disabled')) {
         filter.classList.remove('filter-disabled');
       }
-
-      if (filter.classList.contains('filter-active')) {
-        isOtherActive = true;
-      }
-
       filter.addEventListener(...filerClickListener);
-    }
-
-    if (!isOtherActive) {
-      const className = defaultFilter.children[1].className.replace('down', 'up');
-      defaultFilter.children[1].classList = className;
-      defaultFilter.dataset.order = 'asc';
-      defaultFilter.classList.add('filter-active');
     }
   }
 
-  disableFilters(id) {
+  disableFilters(id, isEventAdded = true) {
     const filters = id.includes('admin') ? adminFilters : normalFilters;
 
     for (let i = 0; i < filters.length; ++i) {
@@ -80,7 +56,9 @@ class UserManagement extends Component {
         filter.classList.remove('filter-active');
       }
       filter.classList.add('filter-disabled');
-      filter.removeEventListener(...filerClickListener);
+      if (isEventAdded) {
+        filter.removeEventListener(...filerClickListener);
+      }
     }
   }
 
@@ -109,7 +87,7 @@ class UserManagement extends Component {
       const className = filter.className;
       filter.className = className + ' filter-active';
     }
-    this.buildUserList(id, true);
+    this.buildUserList(id);
   }
 
   addFilterClickListener(id) {
@@ -147,7 +125,7 @@ class UserManagement extends Component {
           const className = filter.className;
           filter.className = className + ' filter-active';
         }
-        this.buildUserList(id, true);
+        this.buildUserList(id);
       },
       true
     ];
@@ -186,36 +164,49 @@ class UserManagement extends Component {
     this.deleteAction(users);
   }
 
-  buildUserList(id, defaultSort = true, fromDisabled = false) {
+  buildUserList(id, opts = { defaultSort: true, loading: false }) {
     const container = document.querySelector(id + ' > .grid-users');
 
-    let users = id.includes('admin') ? usersAdmin.users : usersNormal.users;
+    let users;
+    if (opts.loading) {
+      users = [];
+      container.innerHTML = userListTemplate({
+        users: users,
+        loading: opts.loading
+      });
 
-    if (fromDisabled) {
-      this.enableFilters(id);
-    }
+      if (!this.isFiltersDisabled) {
+        this.disableFilters(id, false);
+      }
+    } else {
+      users = id.includes('admin') ? usersAdmin.users : usersNormal.users;
 
-    if (defaultSort) {
-      users = this.setDefaultSort(id, users);
-    }
+      if (this.isFiltersDisabled) {
+        this.isFiltersDisabled = false;
+        this.enableFilters(id);
+      }
 
-    container.innerHTML = '';
-    container.innerHTML = userListTemplate({
-      users: users
-    });
+      if (opts.defaultSort) {
+        users = this.setDefaultSort(id, users);
+      }
 
-    this.setActions(users);
+      container.innerHTML = userListTemplate({
+        users: users,
+        loading: opts.loading
+      });
 
-    if (users.length <= 1) {
-      this.disableFilters(id);
+      this.setActions(users);
+
+      if (users.length <= 1) {
+        this.isFiltersDisabled = true;
+        this.disableFilters(id);
+      }
     }
   }
 
   addSearchListener(id) {
     const search = document.getElementById('search');
-
     let timer = null;
-
     let query = '';
 
     search.addEventListener('keydown', event => {
@@ -238,7 +229,7 @@ class UserManagement extends Component {
             );
 
             usersNormal.users = result;
-            this.buildUserList(id, true, true);
+            this.buildUserList(id);
           }
         }, 200);
       }
@@ -248,17 +239,57 @@ class UserManagement extends Component {
       if (search.value.trim() === '' && !(query === '')) {
         if (event.keyCode === 8 || event.keyCode === 46) {
           usersNormal.users = usersNormalFull;
-          this.buildUserList(id, true, true);
+          this.buildUserList(id);
         }
       }
     });
   }
 
-  render() {
+  initData() {
+    const usersAdminStore = Store.get('users-admin');
+    const usersNormalStore = Store.get('users-normal');
+
+    if (
+      this.reload ||
+      (usersAdminStore === undefined && usersNormalStore === undefined)
+    ) {
+      this.initView(true);
+      getUsers('/admin/users?role=admin', this.context).then(response => {
+        if (response) {
+          Store.add({
+            id: 'users-admin',
+            data: response.data
+          });
+
+          usersAdmin = response.data;
+
+          getUsers('/admin/users', this.context).then(response => {
+            if (response) {
+              Store.add({
+                id: 'users-normal',
+                data: response.data
+              });
+
+              usersNormal = response.data;
+              usersNormalFull = response.data.users;
+              this.render();
+            }
+          });
+        }
+      });
+    } else {
+      usersAdmin = usersAdminStore.data;
+      usersNormal = usersNormalStore.data;
+      usersNormal.users = usersNormalFull;
+      this.render();
+    }
+  }
+
+  initView(loading = false) {
     this.context.innerHTML = userManagementTemplate({
-      title: 'Manage Users',
-      totalAdmin: usersAdmin.total,
-      totalNormal: usersNormal.total
+      title: this.title,
+      totalAdmin: usersAdmin === undefined ? 0 : usersAdmin.total,
+      totalNormal: usersNormal === undefined ? 0 : usersNormal.total
     });
 
     const usersAdminElem = this.context.querySelector('#users-admin');
@@ -266,6 +297,15 @@ class UserManagement extends Component {
 
     adminFilters = usersAdminElem.querySelectorAll('span.filter');
     normalFilters = usersNormalElem.querySelectorAll('span.filter');
+
+    if (loading) {
+      this.buildUserList('#users-admin', { defaultSort: false, loading: loading });
+      this.buildUserList('#users-normal', { defaultSort: false, loading: loading });
+    }
+  }
+
+  render() {
+    this.initView();
 
     this.addFilterClickListener('#users-admin');
     this.buildUserList('#users-admin');
@@ -322,7 +362,7 @@ class UserManagement extends Component {
                   userFullName + ' successfully updated.'
                 );
                 // eslint-disable-next-line no-new
-                new UserManagement();
+                new UserManagement(true);
               }
             });
           }
@@ -376,7 +416,7 @@ class UserManagement extends Component {
                 if (response) {
                   ModalHelper.notification('success', confirmMessage);
                   // eslint-disable-next-line no-new
-                  new UserManagement();
+                  new UserManagement(true);
                 }
               }
             );
@@ -414,7 +454,7 @@ class UserManagement extends Component {
                   userFullName + ' successfully deleted.'
                 );
                 // eslint-disable-next-line no-new
-                new UserManagement();
+                new UserManagement(true);
               }
             });
           }

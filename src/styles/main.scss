@@ -123,6 +123,13 @@ input[type='file']::-webkit-file-upload-button {
   cursor: pointer;
 }
 
+.loading {
+  font-style: italic;
+  i {
+    animation: rotate 1s linear infinite;
+  }
+}
+
 .switch-group {
   display: flex;
   justify-content: center;

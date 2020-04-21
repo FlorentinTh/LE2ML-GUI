@@ -5,46 +5,16 @@ import axios from 'axios';
 import APIHelper from '@APIHelper';
 import Store from '@Store';
 
-let timeFeatures;
-let freqFeatures;
+let timeFeatures = [];
+let freqFeatures = [];
 let featureItems;
 
 class Features extends Task {
   constructor(context) {
     super(context);
     this.context = context;
-
-    const timeStore = Store.get('time-features');
-    const freqStore = Store.get('freq-features');
-
-    if (timeStore === undefined && freqStore === undefined) {
-      getFeatures('/features', this.context).then(response => {
-        if (response) {
-          Store.add({
-            id: 'time-features',
-            data: response.data
-          });
-
-          timeFeatures = response.data;
-
-          getFeatures('/features?domain=frequential', this.context).then(response => {
-            if (response) {
-              Store.add({
-                id: 'freq-features',
-                data: response.data
-              });
-
-              freqFeatures = response.data;
-              this.make();
-            }
-          });
-        }
-      });
-    } else {
-      timeFeatures = timeStore.data;
-      freqFeatures = freqStore.data;
-      this.make();
-    }
+    this.title = 'Feature Extraction';
+    this.initData();
   }
 
   toggleSelected(toggle) {
@@ -97,24 +67,65 @@ class Features extends Task {
     }
   }
 
-  buildFeatureList(id) {
+  buildFeatureList(id, loading = true) {
     const features = id.includes('time') ? timeFeatures.features : freqFeatures.features;
     const container = this.context.querySelector(id + ' > .list-container');
 
     container.innerHTML = featureListTemplate({
-      features: features
+      features: features,
+      loading: loading
     });
   }
 
-  make() {
+  initData() {
+    const timeStore = Store.get('time-features');
+    const freqStore = Store.get('freq-features');
+
+    if (timeStore === undefined && freqStore === undefined) {
+      this.renderView(true);
+
+      getFeatures('/features', this.context).then(response => {
+        if (response) {
+          Store.add({
+            id: 'time-features',
+            data: response.data
+          });
+
+          timeFeatures = response.data;
+
+          getFeatures('/features?domain=frequential', this.context).then(response => {
+            if (response) {
+              Store.add({
+                id: 'freq-features',
+                data: response.data
+              });
+
+              freqFeatures = response.data;
+              this.make();
+            }
+          });
+        }
+      });
+    } else {
+      timeFeatures = timeStore.data;
+      freqFeatures = freqStore.data;
+      this.make();
+    }
+  }
+
+  renderView(loading = true) {
     this.context.innerHTML = featuresTemplate({
-      title: 'Feature Extraction',
-      totalTimeFeatures: timeFeatures.total,
-      totalFreqFeatures: freqFeatures.total
+      title: this.title,
+      totalTimeFeatures: timeFeatures.total === undefined ? 0 : timeFeatures.total,
+      totalFreqFeatures: freqFeatures.total === undefined ? 0 : freqFeatures.total
     });
 
-    this.buildFeatureList('#time-features');
-    this.buildFeatureList('#freq-features');
+    this.buildFeatureList('#time-features', loading);
+    this.buildFeatureList('#freq-features', loading);
+  }
+
+  make() {
+    this.renderView(false);
 
     featureItems = this.context.querySelectorAll('.feature-item');
 

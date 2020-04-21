@@ -62,9 +62,20 @@
   </div>
 </div>
 {{else}}
+{{#[utils/compare] loading '===' true}}
+<div class="grid-item">
+  <div class="loading-item">
+    <span class="loading">
+      Fetching data...
+      <i class="fas fa-spinner"></i>
+    </span>
+  </div>
+</div>
+{{else}}
 <div class="grid-item">
   <div class="not-found">
     <p>No users found ☹️</p>
   </div>
 </div>
+{{/[utils/compare]}}
 {{/each}}
