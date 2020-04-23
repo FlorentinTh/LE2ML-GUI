@@ -25,6 +25,10 @@ class APIHelper {
     };
   }
 
+  static getUploadProgress(progress) {
+    return Math.round((progress.loaded * 100) / progress.total);
+  }
+
   static isUserConnected() {
     const uuid = Cookies.get('uuid');
     return uuid !== null && uuid !== undefined;

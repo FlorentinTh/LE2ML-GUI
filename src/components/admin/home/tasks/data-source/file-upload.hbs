@@ -1,12 +1,16 @@
 <section id="file-upload">
   <h3>Upload New Data</h3>
   <div class="file-upload-container">
-    <input type="file" id="file-input" name="fileInput">
-    <label for="file-input">
-      <div class="infos">
-        <i class="fas fa-download"></i>
-        <p>Select or drag a file here</p>
-      </div>
-    </label>
+    <form method="POST" enctype="multipart/form-data">
+      <input type="file" id="file-input" name="fileInput">
+      <label id="file-upload-label" for="file-input">
+        <div class="infos">
+          <i class="fas fa-download"></i>
+          <p>Select or drag a file here</p>
+        </div>
+        <progress class="progress" max="100"></progress>
+        <button type="submit">Upload</button>
+      </label>
+    </form>
   </div>
 </section>
