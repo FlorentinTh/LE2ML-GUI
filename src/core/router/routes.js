@@ -2,6 +2,7 @@ import Index from '@Components/authentication/Index';
 import Register from '@Components/authentication/Register';
 import Admin from '@Components/admin/Admin';
 import Home from '@Components/admin/home/Home';
+import FileUpload from '@Components/admin/file-upload/FileUpload';
 import Jobs from '@Components/admin/jobs/Jobs';
 import Settings from '@Components/admin/settings/Settings';
 import UserPassword from '@Components/admin/settings/user-password/UserPassword';
@@ -10,6 +11,7 @@ import Administration from '@Components/admin/administration/Administration';
 import UserManagement from '@Components/admin/administration/user-management/UserManagement';
 import JobManagement from '@Components/admin/administration/job-management/JobManagement';
 import TempPassword from '@Components/admin/administration/temp-password/TempPassword';
+import SignOut from '@Components/admin/sign-out/SignOut';
 
 const routes = [
   {
@@ -29,6 +31,10 @@ const routes = [
       {
         name: 'home',
         Controller: Home
+      },
+      {
+        name: 'file-upload',
+        Controller: FileUpload
       },
       {
         name: 'jobs',
@@ -65,6 +71,10 @@ const routes = [
             Controller: TempPassword
           }
         ]
+      },
+      {
+        name: 'signout',
+        Controller: SignOut
       }
     ]
   }

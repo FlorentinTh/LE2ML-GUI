@@ -21,7 +21,7 @@ class APIHelper {
   static setAuthHeader() {
     const token = Cookies.get('uuid');
     return {
-      Authorization: 'JWT ' + token
+      Authorization: 'Bearer ' + token
     };
   }
 

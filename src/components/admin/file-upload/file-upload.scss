@@ -1,0 +1,226 @@
+.upload-wrapper {
+  @include themify($themes) {
+    background-color: themed('color-secondary');
+  }
+  margin: 0 auto;
+  max-width: 900px;
+  padding: 4em 0;
+  border-radius: 0.35em;
+
+  .file-upload-container {
+    width: 75%;
+    margin: 0 auto;
+    display: block;
+    clear: both;
+    height: 35vh;
+
+    label {
+      float: left;
+      clear: both;
+      width: 100%;
+      height: 35vh;
+      user-select: none;
+      text-align: center;
+      cursor: pointer;
+      padding: 10vh 1.5rem;
+      border-radius: 0.25em;
+
+      @include themify($themes) {
+        border: 2px dashed themed('color-accent');
+        background-color: themed('color-secondary');
+      }
+
+      &.hover {
+        @include themify($themes) {
+          border: 2px solid themed('color-accent');
+        }
+      }
+
+      &:hover {
+        @include themify($themes) {
+          i {
+            animation: pulse 0.35s linear;
+            color: themed('color-accent');
+          }
+        }
+      }
+
+      button {
+        display: none;
+        height: 40px;
+        margin-top: 2em;
+        margin-bottom: 0;
+        font-size: 1em;
+      }
+
+      .progress-container {
+        width: 100%;
+        display: none;
+        margin-top: 1.5em;
+
+        p#value {
+          text-align: left;
+          padding-left: 0.3em;
+          @include themify($themes) {
+            color: themed('color-accent');
+            font-weight: bold;
+          }
+        }
+
+        p#cancel {
+          text-align: right;
+          padding-top: 0.5em;
+          padding-right: 0.3em;
+          a {
+            @include themify($themes) {
+              color: themed('color-accent');
+
+              &:hover {
+                color: themed('color-accent-darker');
+              }
+            }
+          }
+        }
+      }
+
+      @include themify($themes) {
+        progress,
+        .progress {
+          appearance: none;
+          clear: both;
+          width: 100%;
+          height: 10px;
+          border: 0;
+          border-radius: 4px;
+          overflow: hidden;
+          background-color: themed('color-primary');
+        }
+
+        .progress[value]::-webkit-progress-bar {
+          border-radius: 4px;
+          background-color: themed('color-primary');
+        }
+
+        .progress[value]::-webkit-progress-value {
+          background-color: themed('color-accent');
+          border-radius: 4px;
+        }
+
+        .progress[value]::-moz-progress-bar {
+          border-radius: 4px;
+          background-color: themed('color-accent');
+        }
+      }
+
+      &.filled,
+      &.uploading {
+        .infos {
+          p {
+            display: block;
+
+            &:first-of-type {
+              font-weight: bold;
+            }
+
+            &:not(:first-of-type) {
+              margin-top: 0.5em;
+            }
+          }
+        }
+      }
+
+      &.filled {
+        padding: 8vh 4rem;
+        border-style: solid;
+
+        .infos {
+          i:before {
+            content: '\f15b';
+          }
+        }
+
+        &:hover {
+          @include themify($themes) {
+            border-color: themed('color-accent-darker');
+            i,
+            p {
+              color: themed('color-text-active');
+              animation: none;
+            }
+          }
+        }
+
+        button {
+          display: inline-block;
+        }
+      }
+
+      &.uploading {
+        padding: 7vh 4rem;
+        cursor: default;
+
+        @include themify($themes) {
+          border-color: themed('color-accent-darker');
+        }
+
+        button {
+          display: none;
+        }
+
+        .progress-container {
+          display: inline-block;
+        }
+      }
+    }
+
+    .infos {
+      float: left;
+      clear: both;
+      width: 100%;
+
+      i {
+        font-size: 3.5em;
+        margin-bottom: 1rem;
+      }
+
+      p:first-of-type {
+        font-size: 1.2em;
+        display: block;
+      }
+
+      p {
+        display: none;
+      }
+    }
+
+    input[type='file'] {
+      display: none;
+    }
+  }
+
+  button {
+    height: 45px;
+    border: none;
+    font-size: 1.5em;
+    font-weight: bold;
+    width: 100%;
+    text-transform: uppercase;
+    margin: 25px 0;
+    width: 60%;
+
+    @include themify($themes) {
+      color: themed('color-text-active');
+      background-color: themed('color-accent');
+    }
+
+    &:hover {
+      @include themify($themes) {
+        background-color: themed('color-accent-darker');
+      }
+    }
+
+    i {
+      padding-left: 15px;
+    }
+  }
+}

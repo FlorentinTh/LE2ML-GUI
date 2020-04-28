@@ -45,12 +45,31 @@ class StringHelper {
     return string.match(regexp);
   }
 
-  static isAlphaNum(string) {
+  static isAlphaNum(string, size) {
     if (!(typeof string === 'string')) {
       throw new Error('Expected type for argument string is String.');
     }
     const regexp = /^[A-Za-z0-9]+$/;
     return string.match(regexp);
+  }
+
+  static truncateLength(string, size) {
+    if (!(typeof string === 'string')) {
+      throw new Error('Expected type for argument string is String.');
+    }
+
+    const length = string.length;
+    let split = size / 2;
+
+    if (!(split % 2 === 0)) {
+      split = Math.floor(size / 2);
+    }
+
+    if (length > size) {
+      return string.slice(0, split) + '-...-' + string.slice(length - split, length);
+    }
+
+    return string;
   }
 }
 

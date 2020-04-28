@@ -19,6 +19,11 @@ const items = [
     selected: true
   },
   {
+    name: 'File Upload',
+    icon: 'fas fa-file-alt',
+    url: null
+  },
+  {
     name: 'Jobs',
     icon: 'fas fa-tasks',
     url: null
@@ -90,7 +95,7 @@ class Admin extends Controller {
           url: null
         }
       ];
-      ListHelper.insertAt(items, 2, adminData);
+      ListHelper.insertAt(items, 3, adminData);
     }
 
     const accountItem = {

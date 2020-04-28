@@ -1,5 +1,19 @@
 {
-  "presets": ["@babel/preset-env", "minify"],
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "useBuiltIns": "entry",
+        "corejs": "3.6.5"
+      }
+    ],
+    [
+      "minify",
+      {
+        "builtIns": false
+      }
+    ]
+  ],
   "plugins": [
     ["@babel/transform-runtime"],
     ["@babel/plugin-proposal-object-rest-spread"],
@@ -10,10 +24,11 @@
         "alias": {
           "@Assets": "./src/public/assets",
           "@Styles": "./src/styles/main.scss",
-          "@Theme": "./src/theme/Theme.js",
-          "@Store": "./src/store/Store.js",
-          "@Router": "./src/router/Router.js",
-          "@Routes": "./src/router/routes.js",
+          "@Theme": "./src/core/theme/Theme.js",
+          "@Store": "./src/core/Store.js",
+          "@Events": "./src/core/Events.js",
+          "@Router": "./src/core/router/Router.js",
+          "@Routes": "./src/core/router/routes.js",
           "@Menu": "./src/components/menu",
           "@FileList": "./src/components/file-list/FileList.js",
           "@Controller": "./src/components/Controller.js",

@@ -1,0 +1,23 @@
+<h1>{{title}}</h1>
+<div class="upload-wrapper">
+  <div class="file-upload-container">
+    <form method="POST" enctype="multipart/form-data">
+      <input type="file" id="file-input" name="fileInput">
+      <label id="file-upload-label" for="file-input">
+        <div class="infos">
+          <i class="fas fa-download"></i>
+          <p>Drag and drop or click to upload a file</p>
+          <p></p>
+        </div>
+        <button type="submit">Upload</button>
+        <div class="progress-container">
+          <p id="value"></p>
+          <progress class="progress" max="100"></progress>
+          <p id="cancel">
+            <a href="#">Cancel</a>
+          </p>
+        </div>
+      </label>
+    </form>
+  </div>
+</div>

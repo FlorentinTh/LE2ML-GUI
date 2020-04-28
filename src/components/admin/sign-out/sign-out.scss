@@ -1,9 +1,5 @@
-.wrap {
-  justify-content: center;
-}
-
 main.content {
-  .error-container {
+  .info-container {
     margin: 0 auto;
     max-width: 900px;
     @include themify($themes) {
@@ -11,14 +7,10 @@ main.content {
       border-radius: 0.35em;
       padding: 5em 0;
 
-      img {
-        content: url(themed('logo-liara-small'));
-      }
-
-      #code {
+      #title {
         margin-top: 0.5em;
         margin-bottom: 0.25em;
-        font-size: 3em;
+        font-size: 2.5em;
         @include themify($themes) {
           color: themed('color-accent');
         }
