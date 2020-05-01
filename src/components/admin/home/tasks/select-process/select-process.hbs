@@ -1,8 +1,11 @@
 <div class="import-container">
-  <input type="file" id="import-config" name="config">
-  <label for="import-config">
-    <i class="fas fa-file-upload"></i>
-  </label>
+  <form method="POST" enctype="multipart/form-data">
+    <input type="file" id="import-config" name="config" accept=".yml,.yaml">
+    <label for="import-config">
+      <i class="fas fa-file-upload"></i>
+      <button type="submit">Upload</button>
+    </label>
+  </form>
 </div>
 <div class="task-content">
   <h2>{{title}}</h2>

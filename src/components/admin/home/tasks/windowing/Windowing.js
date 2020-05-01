@@ -27,7 +27,7 @@ class Windowing extends Task {
     });
 
     slider = this.context.querySelector('input#overlap');
-    sliderTooltip = this.context.querySelector('.range-value');
+    sliderTooltip = this.context.querySelector('#range-value');
     this.initSlider();
     slider.addEventListener('input', this.sliderChangeListener, false);
   }

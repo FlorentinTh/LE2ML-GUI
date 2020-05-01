@@ -2,7 +2,10 @@ import Index from '@Components/authentication/Index';
 import Register from '@Components/authentication/Register';
 import Admin from '@Components/admin/Admin';
 import Home from '@Components/admin/home/Home';
-import FileUpload from '@Components/admin/file-upload/FileUpload';
+import Data from '@Components/admin/data/Data';
+import DataImport from '@Components/admin/data/data-import/DataImport';
+import DataManagement from '@Components/admin/data/data-management/DataManagement';
+import DataViz from '@Components/admin/data/data-viz/DataViz';
 import Jobs from '@Components/admin/jobs/Jobs';
 import Settings from '@Components/admin/settings/Settings';
 import UserPassword from '@Components/admin/settings/user-password/UserPassword';
@@ -33,8 +36,22 @@ const routes = [
         Controller: Home
       },
       {
-        name: 'file-upload',
-        Controller: FileUpload
+        name: 'data',
+        Controller: Data,
+        SubComponents: [
+          {
+            name: 'data-import',
+            Controller: DataImport
+          },
+          {
+            name: 'data-management',
+            Controller: DataManagement
+          },
+          {
+            name: 'data-viz',
+            Controller: DataViz
+          }
+        ]
       },
       {
         name: 'jobs',

@@ -24,14 +24,6 @@ class Component {
       }
     }
   }
-
-  clearContent() {
-    let child = this.context.lastElementChild;
-    while (child) {
-      this.context.removeChild(child);
-      child = this.context.lastElementChild;
-    }
-  }
 }
 
 export default Component;

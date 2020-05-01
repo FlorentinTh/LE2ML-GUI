@@ -12,7 +12,7 @@
       <div class="form-elems">
         <div class="form-elem inline">
           <span class="label-container">
-            <label for="window-length">Type</label>
+            <label for="window-length">Func</label>
           </span>
           <select id="window-type">
             <option value="standard" selected>No function</option>
@@ -23,9 +23,11 @@
           </select>
         </div>
         <div class="form-elem block">
-          <label for="overlap">Overlap</label>
+          <label for="overlap">
+            Overlap
+            <span id="range-value" class="badge badge-right">40 %</span>
+          </label>
           <input type="range" id="overlap" name="overlap" min="0" max="100" value="0">
-          <span class="range-value"></span>
         </div>
       </div>
   </section>

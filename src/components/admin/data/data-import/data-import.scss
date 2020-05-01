@@ -1,3 +1,10 @@
+.description {
+  font-size: 1.2em;
+  margin-bottom: 25px;
+  p {
+    margin-bottom: 10px;
+  }
+}
 .upload-wrapper {
   @include themify($themes) {
     background-color: themed('color-secondary');
@@ -12,17 +19,17 @@
     margin: 0 auto;
     display: block;
     clear: both;
-    height: 35vh;
+    height: 300px;
 
     label {
       float: left;
       clear: both;
       width: 100%;
-      height: 35vh;
+      height: 300px;
       user-select: none;
       text-align: center;
       cursor: pointer;
-      padding: 10vh 1.5rem;
+      padding: 5.5rem 1.5rem;
       border-radius: 0.25em;
 
       @include themify($themes) {
@@ -38,7 +45,8 @@
 
       &:hover {
         @include themify($themes) {
-          i {
+          i,
+          p {
             animation: pulse 0.35s linear;
             color: themed('color-accent');
           }
@@ -130,7 +138,7 @@
       }
 
       &.filled {
-        padding: 8vh 4rem;
+        padding: 3.2rem 4rem;
         border-style: solid;
 
         .infos {
@@ -156,7 +164,7 @@
       }
 
       &.uploading {
-        padding: 7vh 4rem;
+        padding: 3.2rem 4rem;
         cursor: default;
 
         @include themify($themes) {

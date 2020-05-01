@@ -19,7 +19,6 @@ let filerClickListener;
 class UserManagement extends Component {
   constructor(reload = false, context = null) {
     super(context);
-    super.clearContent();
     this.isFiltersDisabled = false;
     this.reload = reload;
     this.title = 'Manage Users';

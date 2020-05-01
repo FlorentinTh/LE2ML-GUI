@@ -19,8 +19,8 @@ const items = [
     selected: true
   },
   {
-    name: 'File Upload',
-    icon: 'fas fa-file-alt',
+    name: 'Data',
+    icon: 'fas fa-database',
     url: null
   },
   {

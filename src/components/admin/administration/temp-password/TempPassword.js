@@ -13,7 +13,6 @@ import axios from 'axios';
 class TempPassword extends Component {
   constructor(context = null) {
     super(context);
-    super.clearContent();
 
     this.context.innerHTML = tempPasswordTemplate({
       title: 'Temporary Password'

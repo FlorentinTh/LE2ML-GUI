@@ -1,5 +1,17 @@
 <div class="task-content">
   <h2>{{title}}</h2>
-  <section id="existing-files">
-  </section>
+  <div class="switch-group">
+    <input type="radio" id="switch-file" name="source" value="file" checked />
+    <label for="switch-file">
+      <i class="fas fa-file-alt"></i>
+      File
+    </label>
+    <input type="radio" id="switch-ws" name="source" value="ws" />
+    <label for="switch-ws">
+      WS
+      <i class="fas fa-plug"></i>
+    </label>
+  </div>
+  <div class="input-content">
+  </div>
 </div>

@@ -10,7 +10,6 @@ let navItems;
 class Home extends Component {
   constructor(context = null) {
     super(context);
-    super.clearContent();
 
     this.context.innerHTML = homeTemlate({
       title: 'Home'

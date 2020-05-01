@@ -6,7 +6,7 @@ import settingsTemplate from './settings.hbs';
 class Settings extends Component {
   constructor(context = null) {
     super(context);
-    super.clearContent();
+
     this.context.innerHTML = settingsTemplate({
       title: 'My Account'
     });

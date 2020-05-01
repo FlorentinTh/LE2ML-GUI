@@ -1,11 +1,15 @@
 <h1>{{title}}</h1>
+<div class="description">
+  <p>You can upload any dataset you want as far as it's either a <strong>JSON</strong> or a <strong>CSV</strong> file.
+  </p>
+</div>
 <div class="upload-wrapper">
   <div class="file-upload-container">
     <form method="POST" enctype="multipart/form-data">
-      <input type="file" id="file-input" name="fileInput">
+      <input type="file" id="file-input" name="file-input">
       <label id="file-upload-label" for="file-input">
         <div class="infos">
-          <i class="fas fa-download"></i>
+          <i class="fas fa-upload"></i>
           <p>Drag and drop or click to upload a file</p>
           <p></p>
         </div>

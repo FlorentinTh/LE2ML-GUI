@@ -12,7 +12,6 @@ import Cookies from 'js-cookie';
 class UserInfos extends Component {
   constructor(context = null) {
     super(context);
-    super.clearContent();
 
     this.context.innerHTML = userInfosTemplate({
       title: 'My Information'

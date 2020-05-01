@@ -6,7 +6,8 @@ import axios from 'axios';
 import APIHelper from '@APIHelper';
 import Store from '@Store';
 
-let existingFilesContainer;
+// let existingFilesContainer;
+let inputContent;
 
 class DataSource extends Task {
   constructor(context) {
@@ -15,20 +16,15 @@ class DataSource extends Task {
     this.make();
   }
 
-  initWebSocketSection(container) {
-    container.insertAdjacentHTML('beforeend', websocketTemplate());
+  makeInputWs() {
+    inputContent.innerHTML = websocketTemplate();
     super.disableSection('websocket');
   }
 
   initFileList() {
-    const fileList = new FileList(
-      existingFilesContainer,
-      'Existing Data Files',
-      [],
-      'data'
-    );
+    const fileList = new FileList(inputContent, 'Existing Data Files', [], 'data');
 
-    getFiles('/files?type=input', this.context).then(response => {
+    getFiles('/files?type=inputs', this.context).then(response => {
       if (response) {
         const dataStore = Store.get('input-data');
 
@@ -49,20 +45,34 @@ class DataSource extends Task {
     return fileList;
   }
 
-  initExistingFilesSection() {
+  makeInputFile() {
     const dataStore = Store.get('input-data');
 
     if (dataStore === undefined) {
       this.initFileList();
     } else {
       // eslint-disable-next-line no-new
-      new FileList(
-        existingFilesContainer,
-        'Existing Data Files',
-        dataStore.data,
-        'data',
-        false
-      );
+      new FileList(inputContent, 'Existing Data Files', dataStore.data, 'data', false);
+    }
+  }
+
+  switchInputContent(input) {
+    switch (input) {
+      case 'file':
+        this.makeInputFile();
+        break;
+      case 'ws':
+        this.makeInputWs();
+        break;
+    }
+  }
+
+  inputSwitchHandler(event) {
+    event.stopImmediatePropagation();
+    if (event.target.checked) {
+      inputContent.innerHTML = '';
+      const value = event.target.value;
+      this.switchInputContent(value);
     }
   }
 
@@ -71,12 +81,18 @@ class DataSource extends Task {
       title: 'Data Source'
     });
 
-    existingFilesContainer = this.context.querySelector('#existing-files');
-    this.initExistingFilesSection();
+    inputContent = this.context.querySelector('.input-content');
 
-    const sectionsContainer = existingFilesContainer.parentNode;
+    const inputTypeSwitch = this.context.querySelectorAll('.switch-group input');
 
-    this.initWebSocketSection(sectionsContainer);
+    for (let i = 0; i < inputTypeSwitch.length; ++i) {
+      const radio = inputTypeSwitch[i];
+      radio.addEventListener('change', this.inputSwitchHandler.bind(this), false);
+
+      if (radio.checked) {
+        this.switchInputContent(radio.value);
+      }
+    }
   }
 }
 
@@ -87,7 +103,7 @@ async function getFiles(url, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context);
+    APIHelper.errorsHandler(error, context, true);
   }
 }
 

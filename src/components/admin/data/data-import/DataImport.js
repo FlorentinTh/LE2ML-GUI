@@ -1,5 +1,5 @@
 import Component from '@Component';
-import fileUploadTemplate from './file-upload.hbs';
+import dataImportTemplate from './data-import.hbs';
 import axios from 'axios';
 import APIHelper from '@APIHelper';
 import StringHelper from '@StringHelper';
@@ -13,27 +13,25 @@ let fileUploadEventDrop;
 let fileUploadEventSubmit;
 let cancelUploadEventClick;
 
-class FileUpload extends Component {
+class DataImport extends Component {
   constructor(context = null) {
     super(context);
 
     this.cancelToken = undefined;
     this.source = undefined;
 
-    this.context.innerHTML = fileUploadTemplate({
-      title: 'File Upload'
+    this.context.innerHTML = dataImportTemplate({
+      title: 'Data Import'
     });
 
-    this.run();
+    this.mount();
   }
 
   resetFileUpload() {
     const input = this.context.querySelector('input');
     const label = this.context.querySelector('label');
-    const cancelBtn = label.querySelector('p#cancel a');
     const text = label.querySelector('p');
 
-    cancelBtn.removeEventListener(...cancelUploadEventClick);
     input.removeAttribute('disabled');
     input.value = '';
     fileUploadForm.removeEventListener(...fileUploadEventSubmit);
@@ -42,7 +40,7 @@ class FileUpload extends Component {
     text.innerHTML = 'Drag and drop or click to upload a file';
   }
 
-  uploadFile(data, override) {
+  uploadFile(data) {
     const label = fileUploadForm.querySelector('label');
     const input = fileUploadForm.querySelector('input');
     const value = label.querySelector('p#value');
@@ -75,7 +73,7 @@ class FileUpload extends Component {
     cancelBtn.addEventListener(...cancelUploadEventClick);
 
     axios
-      .post('/files?type=input&override=' + override, data, {
+      .post('/files/upload?type=inputs', data, {
         headers: APIHelper.setAuthHeader(),
         cancelToken: this.source.token,
         onUploadProgress: progress => {
@@ -111,6 +109,7 @@ class FileUpload extends Component {
           const filename = response.data.data;
           ModalHelper.notification('success', filename + ' successfully uploaded.');
 
+          cancelBtn.removeEventListener(...cancelUploadEventClick);
           this.resetFileUpload();
         }
       })
@@ -118,25 +117,26 @@ class FileUpload extends Component {
         if (axios.isCancel(error)) {
           ModalHelper.notification('warning', 'The upload was canceled');
         } else {
-          APIHelper.errorsHandler(error, this.context);
+          APIHelper.errorsHandler(error, this.context, true);
         }
         Store.updateEnd('file-upload');
+        cancelBtn.removeEventListener(...cancelUploadEventClick);
         this.resetFileUpload();
       });
   }
 
-  uploadFormSubmitListener(event) {
+  uploadFormSubmitListener() {
     event.preventDefault();
     event.stopImmediatePropagation();
 
     const formData = new FormData(fileUploadForm);
+    formData.delete('file-input');
+    formData.append('file-input', event.currentTarget.file);
 
-    const filenameData = {
-      filename: Object.values(Object.fromEntries(formData))[0].name
-    };
+    const filename = Object.values(Object.fromEntries(formData))[0].name;
 
     axios
-      .post('/files?type=input', filenameData, {
+      .get(`/files/exists/?file=${filename}&type=inputs`, {
         headers: APIHelper.setAuthHeader()
       })
       .then(response => {
@@ -147,19 +147,19 @@ class FileUpload extends Component {
 
             ModalHelper.confirm(title, message).then(result => {
               if (result.value) {
-                this.uploadFile(formData, true);
+                this.uploadFile(formData);
               } else {
                 this.resetFileUpload();
               }
             });
           } else {
-            this.uploadFile(formData, true);
+            this.uploadFile(formData);
           }
         }
       })
       .catch(error => {
+        APIHelper.errorsHandler(error, this.context, true);
         this.resetFileUpload();
-        APIHelper.errorsHandler(error, this.context);
       });
   }
 
@@ -172,6 +172,7 @@ class FileUpload extends Component {
     label.classList.add('filled');
 
     fileUploadEventSubmit = ['submit', this.uploadFormSubmitListener.bind(this), false];
+    fileUploadForm.file = file;
     fileUploadForm.addEventListener(...fileUploadEventSubmit);
   }
 
@@ -194,10 +195,10 @@ class FileUpload extends Component {
   fileUploadListener(event) {
     event.preventDefault();
     event.stopImmediatePropagation();
-    const file = event.target.files || event.dataTransfer.files;
+    const files = event.target.files || event.dataTransfer.files;
 
     if (!(event.target.value === '')) {
-      this.displayFile(file[0]);
+      this.displayFile(files[0]);
     } else {
       const label = this.context.querySelector('label');
       if (label.classList.contains('filled')) {
@@ -234,7 +235,7 @@ class FileUpload extends Component {
 
     Store.on('updateEnd', () => {
       // eslint-disable-next-line no-new
-      new FileUpload();
+      new DataImport();
     });
   }
 
@@ -250,7 +251,10 @@ class FileUpload extends Component {
     container.addEventListener(...fileUploadEventDrop);
   }
 
-  run() {
+  mount() {
+    const menu = Store.get('menu-admin').data;
+    menu.setActive('data');
+
     fileUploadContainer = this.context.querySelector('.file-upload-container');
 
     const dataStore = Store.get('file-upload');
@@ -262,4 +266,4 @@ class FileUpload extends Component {
   }
 }
 
-export default FileUpload;
+export default DataImport;

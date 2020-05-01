@@ -61,18 +61,38 @@ class APIHelper {
         if (code === 500 || code === 401) {
           msg = err.statusText;
           if (msg === '') {
-            msg = JSON.parse(err.response).message;
+            msg = err.responseText;
+            // msg = JSON.parse(err.response).message;
           }
         } else if (typeof msg === 'object') {
           msg = 'Invalid input data.';
         } else {
-          msg = JSON.parse(err.response).message;
+          const data = JSON.parse(err.response).data;
+          if (data) {
+            msg = 'your file is not valid, ';
+            for (let i = 0; i < data.length; ++i) {
+              const elem = data[i];
+              if (i === data.length - 1) {
+                msg += elem.entry + ' ' + elem.message;
+              } else {
+                msg += elem.entry + ' ' + elem.message + ' & ';
+              }
+            }
+          } else {
+            msg = JSON.parse(err.response).message;
+          }
         }
       }
     } else if (error.response) {
       const err = error.response;
-      code = err.code;
-      msg = err.message;
+
+      if (err.code && err.message) {
+        code = err.code;
+        msg = err.message;
+      } else {
+        code = err.status;
+        msg = err.message;
+      }
     } else {
       msg = error.message;
     }

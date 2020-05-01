@@ -10,8 +10,6 @@ class ErrorComponent extends Component {
   }
 
   trigger() {
-    super.clearContent();
-
     this.context.innerHTML = errorTemplate({
       code: this.code,
       message: this.message

@@ -11,7 +11,7 @@ import Cookies from 'js-cookie';
 class UserPassword extends Component {
   constructor(context = null) {
     super(context);
-    super.clearContent();
+
     this.context.innerHTML = userPasswordTemplate({
       title: 'Change my password'
     });

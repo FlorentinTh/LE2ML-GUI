@@ -6,7 +6,6 @@ import administrationTemplate from './administration.hbs';
 class Administration extends Component {
   constructor(context = null) {
     super(context);
-    super.clearContent();
 
     this.context.innerHTML = administrationTemplate({
       title: 'Administration'

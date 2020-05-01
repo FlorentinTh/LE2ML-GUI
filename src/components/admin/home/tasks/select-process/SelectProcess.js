@@ -4,6 +4,7 @@ import FileList from '@FileList';
 import axios from 'axios';
 import APIHelper from '@APIHelper';
 import Store from '@Store';
+import ModalHelper from '@ModalHelper';
 
 let processContainer;
 
@@ -21,7 +22,7 @@ class SelectProcess extends Task {
     if (dataStore === undefined) {
       fileList = new FileList(processContainer, 'Existing trained models', [], 'model');
 
-      getFiles('/files?type=model', this.context).then(response => {
+      getFiles('/files?type=models', this.context).then(response => {
         if (response) {
           Store.add({
             id: 'model-data',
@@ -66,10 +67,65 @@ class SelectProcess extends Task {
     }
   }
 
+  importFileUploadEventSubmit(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const form = this.context.querySelector('.import-container form');
+
+    const data = new FormData(form);
+
+    const input = form.querySelector('input');
+    input.setAttribute('disabled', 'disabled');
+
+    axios
+      .post('/files/import/conf', data, {
+        headers: APIHelper.setAuthHeader()
+      })
+      .then(response => {
+        if (response) {
+          input.removeAttribute('disabled');
+          input.value = '';
+          this.toggleLoading(false);
+          ModalHelper.notification('success', 'Configuration successfully imported.');
+        }
+      })
+      .catch(error => {
+        input.removeAttribute('disabled');
+        input.value = '';
+        this.toggleLoading(false);
+        APIHelper.errorsHandler(error, this.context, true);
+      });
+  }
+
+  toggleLoading(toggle) {
+    const label = this.context.querySelector('.import-container label');
+    const icon = label.children[0];
+
+    if (toggle) {
+      label.classList.add('loading');
+      icon.classList.remove('fa-file-upload');
+      icon.classList.add('fa-spinner');
+    } else {
+      label.classList.remove('loading');
+      icon.classList.remove('fa-spinner');
+      icon.classList.add('fa-file-upload');
+    }
+  }
+
   importFileInputListener(event) {
     event.preventDefault();
     event.stopImmediatePropagation();
-    // const file = this.files[0];
+
+    const file = event.target.files[0];
+
+    if (!(file === undefined)) {
+      const label = this.context.querySelector('.import-container label');
+      const button = label.children[1];
+
+      this.toggleLoading(true);
+      button.click();
+    }
   }
 
   make() {
@@ -78,7 +134,18 @@ class SelectProcess extends Task {
     });
 
     const importFileInput = this.context.querySelector('input#import-config');
-    importFileInput.addEventListener('change', this.importFileInputListener, false);
+    importFileInput.addEventListener(
+      'change',
+      this.importFileInputListener.bind(this),
+      false
+    );
+
+    const importFileForm = this.context.querySelector('form');
+    importFileForm.addEventListener(
+      'submit',
+      this.importFileUploadEventSubmit.bind(this),
+      false
+    );
 
     processContainer = this.context.querySelector('.process-options');
 
@@ -102,7 +169,7 @@ async function getFiles(url, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context);
+    APIHelper.errorsHandler(error, context, true);
   }
 }
 
