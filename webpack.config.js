@@ -127,7 +127,7 @@ module.exports = (env, options) => {
   }
 
   const DEV = {
-    entry: path.join(config.sourceFolder, 'public', 'main.js'),
+    entry: path.join(config.sourceFolder, 'main.js'),
     module: {
       rules: [
         {

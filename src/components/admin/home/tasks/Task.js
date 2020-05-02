@@ -12,6 +12,14 @@ class Task {
     items.forEach(item => {
       if (item.dataset.task === 'process') {
         item.children[0].childNodes[1].nodeValue = value;
+
+        if (value.toLowerCase() === 'predict') {
+          item.children[0].childNodes[0].classList.remove('fa-running');
+          item.children[0].childNodes[0].classList.add('fa-brain');
+        } else if (value.toLowerCase() === 'training') {
+          item.children[0].childNodes[0].classList.remove('fa-brain');
+          item.children[0].childNodes[0].classList.add('fa-running');
+        }
       }
     });
   }

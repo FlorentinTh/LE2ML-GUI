@@ -4,7 +4,7 @@ import Menu from '@Menu/Menu.js';
 import URLHelper from '@URLHelper';
 
 class Router {
-  static _loadPage(page) {
+  static loadPage(page) {
     if (typeof page === 'string') {
       let route = null;
 
@@ -23,7 +23,7 @@ class Router {
     }
   }
 
-  static _loadComponent(page, hash, menu) {
+  static loadComponent(page, hash, menu) {
     if (typeof hash === 'string') {
       let route = null;
       let parent = null;
@@ -116,13 +116,13 @@ class Router {
 
     if (options.hash === null) {
       if (options.page === null) {
-        this._loadPage('index');
+        this.loadPage('index');
       } else {
-        this._loadPage(options.page);
+        this.loadPage(options.page);
       }
     } else {
-      this._loadPage(options.page);
-      this._loadComponent(options.page, options.hash, options.menu);
+      this.loadPage(options.page);
+      this.loadComponent(options.page, options.hash, options.menu);
     }
 
     window.addEventListener('hashchange', this.onHashChangeHandler, true);

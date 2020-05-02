@@ -28,12 +28,12 @@ class Menu {
     this.options.items = this.options.items || defaultItems;
     this.options.theme = this.options.theme || true;
     this.options.logoURL = this.options.logoURL || defaultLogoURL;
-    this._init();
+    this.init();
   }
 
-  _init() {
-    this._build();
-    this._enableTheme();
+  init() {
+    this.build();
+    this.enableTheme();
 
     let hash = URLHelper.getHash();
 
@@ -69,7 +69,7 @@ class Menu {
     );
   }
 
-  _build() {
+  build() {
     this.options.context.innerHTML = menuTemplate({
       title: 'Dashboard',
       items: this.options.items
@@ -79,7 +79,7 @@ class Menu {
     logo.getElementsByTagName('a')[0].setAttribute('href', this.options.logoURL);
   }
 
-  _enableTheme() {
+  enableTheme() {
     if (this.options.theme) {
       const context = document.body.querySelector('*[class^="theme-"]');
       const theme = new Theme(context);
@@ -87,7 +87,7 @@ class Menu {
     }
   }
 
-  _switch(href, callback) {
+  switch(href, callback) {
     if (href.startsWith('#')) {
       this.setActive(URLHelper.getHashName(href));
       Router.setRoute(URLHelper.getPage() + href);
@@ -137,7 +137,7 @@ class Menu {
 
       const href = logo.getAttribute('href');
 
-      this._switch(href, (hash, link) => {
+      this.switch(href, (hash, link) => {
         if (handler !== undefined) {
           if (typeof handler === 'function') {
             handler(hash, link);
@@ -154,7 +154,7 @@ class Menu {
         event.preventDefault();
         event.stopImmediatePropagation();
         const href = li.children[1].getAttribute('href');
-        this._switch(href, (hash, link) => {
+        this.switch(href, (hash, link) => {
           if (typeof handler === 'function') {
             handler(hash, link);
           } else {

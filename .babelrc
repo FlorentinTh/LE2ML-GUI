@@ -24,6 +24,7 @@
         "alias": {
           "@Assets": "./src/public/assets",
           "@Styles": "./src/styles/main.scss",
+          "@Controller": "./src/core/Controller.js",
           "@Theme": "./src/core/theme/Theme.js",
           "@Store": "./src/core/Store.js",
           "@Events": "./src/core/Events.js",
@@ -31,7 +32,6 @@
           "@Routes": "./src/core/router/routes.js",
           "@Menu": "./src/components/menu",
           "@FileList": "./src/components/file-list/FileList.js",
-          "@Controller": "./src/components/Controller.js",
           "@Components": "./src/components",
           "@Component": "./src/components/Component.js",
           "@Errors": "./src/components/errors",

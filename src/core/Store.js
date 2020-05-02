@@ -4,7 +4,7 @@ class StoreInstance extends Event {
   constructor() {
     super();
     if (!StoreInstance.instance) {
-      this._data = [];
+      this.data = [];
       StoreInstance.instance = this;
     }
 
@@ -12,7 +12,7 @@ class StoreInstance extends Event {
   }
 
   getAll() {
-    return this._data;
+    return this.data;
   }
 
   get(id) {
@@ -20,7 +20,7 @@ class StoreInstance extends Event {
       throw new Error('Expected type for argument id is String.');
     }
 
-    return this._data.find(elem => elem.id === id);
+    return this.data.find(elem => elem.id === id);
   }
 
   add(entry) {
@@ -28,7 +28,7 @@ class StoreInstance extends Event {
       throw new Error('Expected type for argument entry is Object.');
     }
 
-    this._data.push(entry);
+    this.data.push(entry);
   }
 
   update(id, data) {
@@ -40,7 +40,7 @@ class StoreInstance extends Event {
       throw new Error('Expected type for argument data is Object.');
     }
 
-    this._data.find(entry => {
+    this.data.find(entry => {
       if (entry.id === id) {
         entry.data = data;
       }
@@ -63,9 +63,9 @@ class StoreInstance extends Event {
       throw new Error('Expected type for argument id is String.');
     }
 
-    for (let i = 0; i < this._data.length; ++i) {
-      if (this._data[i].id === id) {
-        this._data.splice(i, 1);
+    for (let i = 0; i < this.data.length; ++i) {
+      if (this.data[i].id === id) {
+        this.data.splice(i, 1);
       }
     }
   }

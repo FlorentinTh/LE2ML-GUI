@@ -1,19 +1,19 @@
 class Events {
   constructor() {
-    this._callbacks = {};
+    this.callbacks = {};
   }
 
   on(key, callback) {
-    if (this._callbacks[key] === undefined) {
-      this._callbacks[key] = [];
+    if (this.callbacks[key] === undefined) {
+      this.callbacks[key] = [];
     }
-    this._callbacks[key].push(callback);
+    this.callbacks[key].push(callback);
   }
 
   emit(key, ...params) {
-    if (this._callbacks[key] !== undefined) {
-      for (let i = 0; i < this._callbacks[key].length; ++i) {
-        this._callbacks[key][i](...params);
+    if (this.callbacks[key] !== undefined) {
+      for (let i = 0; i < this.callbacks[key].length; ++i) {
+        this.callbacks[key][i](...params);
       }
     }
   }
