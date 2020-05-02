@@ -64,7 +64,7 @@
     "postcss-normalize": "^9.0.0",
     "postcss-preset-env": "^6.7.0",
     "pre-commit": "^1.2.2",
-    "prettier": "^1.19.1",
+    "prettier": "^2.0.5",
     "progress-bar-webpack-plugin": "^2.1.0",
     "sass-loader": "^8.0.2",
     "style-loader": "^1.2.1",
