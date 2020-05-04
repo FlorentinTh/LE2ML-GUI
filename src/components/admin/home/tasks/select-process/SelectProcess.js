@@ -5,8 +5,10 @@ import axios from 'axios';
 import APIHelper from '@APIHelper';
 import Store from '@Store';
 import ModalHelper from '@ModalHelper';
+import DataSource from '../data-source/DataSource';
 
 let processContainer;
+let nextBtn;
 
 class SelectProcess extends Task {
   constructor(context) {
@@ -15,12 +17,36 @@ class SelectProcess extends Task {
     this.make();
   }
 
+  toggleNextBtnEnable(enable) {
+    if (enable) {
+      if (nextBtn.classList.contains('disabled')) {
+        nextBtn.classList.remove('disabled');
+      }
+    } else {
+      if (!nextBtn.classList.contains('disabled')) {
+        nextBtn.classList.add('disabled');
+      }
+    }
+  }
+
   makeProcessTest() {
     let fileList;
-    const dataStore = Store.get('model-data');
 
+    const filename = sessionStorage.getItem('model');
+
+    if (!filename) {
+      this.toggleNextBtnEnable(false);
+    }
+
+    const dataStore = Store.get('model-data');
     if (dataStore === undefined) {
-      fileList = new FileList(processContainer, 'Existing trained models', [], 'model');
+      fileList = new FileList(
+        processContainer,
+        'Existing trained models',
+        [],
+        'model',
+        filename || null
+      );
 
       getFiles('/files?type=models', this.context).then(response => {
         if (response) {
@@ -40,9 +66,18 @@ class SelectProcess extends Task {
         'Existing trained models',
         dataStore.data,
         'model',
+        filename || null,
         false
       );
     }
+
+    fileList.on('selected', result => {
+      if (result) {
+        this.toggleNextBtnEnable(result);
+      } else {
+        this.toggleNextBtnEnable(result);
+      }
+    });
 
     super.setProcessNavItem('Predict');
   }
@@ -50,11 +85,30 @@ class SelectProcess extends Task {
   switchProcessContent(process) {
     switch (process) {
       case 'test':
+        sessionStorage.setItem('process', process);
+        super.toggleNavItemEnable('process', true);
         this.makeProcessTest();
         break;
       case 'train':
+        sessionStorage.setItem('process', process);
+
+        if (sessionStorage.getItem('model')) {
+          sessionStorage.removeItem('model');
+        }
+
+        this.toggleNextBtnEnable(true);
+        super.toggleNavItemEnable('process', true);
         super.setProcessNavItem('Training');
         break;
+      case 'none':
+        sessionStorage.setItem('process', process);
+
+        if (sessionStorage.getItem('model')) {
+          sessionStorage.removeItem('model');
+        }
+
+        this.toggleNextBtnEnable(true);
+        super.toggleNavItemEnable('process', false);
     }
   }
 
@@ -147,12 +201,47 @@ class SelectProcess extends Task {
       false
     );
 
+    nextBtn = this.context.querySelector('.btn-group-nav .next button');
+
+    nextBtn.addEventListener(
+      'click',
+      event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const btn =
+          event.target.tagName === 'BUTTON' ? event.target : event.target.parentNode;
+
+        if (!btn.classList.contains('disabled')) {
+          const taskContainer = super.getContext();
+          // eslint-disable-next-line no-new
+          new DataSource(taskContainer);
+          super.setNavActive('data-source');
+        }
+      },
+      false
+    );
+
     processContainer = this.context.querySelector('.process-options');
 
     const processSwitchInputs = this.context.querySelectorAll('.switch-group input');
 
+    const storedProcess = sessionStorage.getItem('process');
+
+    if (!storedProcess) {
+      processSwitchInputs[0].setAttribute('checked', true);
+    }
+
     for (let i = 0; i < processSwitchInputs.length; ++i) {
       const radio = processSwitchInputs[i];
+
+      if (storedProcess) {
+        if (radio.value === storedProcess) {
+          radio.setAttribute('checked', true);
+        }
+      } else {
+      }
+
       radio.addEventListener('change', this.processSwitchHandler.bind(this), false);
 
       if (radio.checked) {

@@ -1,6 +1,11 @@
 class Task {
   constructor(context) {
     this.context = context;
+    this.navItems = document.querySelectorAll('.task-nav-item');
+  }
+
+  getContext() {
+    return this.context;
   }
 
   setProcessNavItem(value) {
@@ -24,21 +29,42 @@ class Task {
     });
   }
 
-  disableNavItem(task) {
+  toggleNavItemEnable(task, enable = false) {
     if (!(typeof task === 'string')) {
       throw new Error('Expected type for argument task is String.');
     }
 
     const items = document.querySelectorAll('li.task-nav-item');
     items.forEach(item => {
-      if (item.classList.contains('item-disabled')) {
-        item.classList.remove('item-disabled');
-      }
-
       if (item.dataset.task === task) {
-        item.classList.add('item-disabled');
+        if (enable) {
+          if (item.classList.contains('item-disabled')) {
+            item.classList.remove('item-disabled');
+          }
+        } else {
+          if (!item.classList.contains('item-disabled')) {
+            item.classList.add('item-disabled');
+          }
+        }
       }
     });
+  }
+
+  setNavActive(item) {
+    if (!(typeof item === 'string')) {
+      throw new Error('Expected type for argument item is String.');
+    }
+
+    for (let i = 0; i < this.navItems.length; ++i) {
+      const navItem = this.navItems[i];
+      if (navItem.classList.contains('item-active')) {
+        navItem.classList.remove('item-active');
+      }
+
+      if (navItem.dataset.task === item) {
+        navItem.classList.add('item-active');
+      }
+    }
   }
 
   disableSection(id) {

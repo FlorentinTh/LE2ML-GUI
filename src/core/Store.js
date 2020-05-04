@@ -1,6 +1,6 @@
-import Event from './Events';
+import Events from '@Events';
 
-class StoreInstance extends Event {
+class StoreInstance extends Events {
   constructor() {
     super();
     if (!StoreInstance.instance) {

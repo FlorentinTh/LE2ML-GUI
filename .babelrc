@@ -38,6 +38,7 @@
           "@Error404": "./src/components/errors/Error404.js",
           "@Error500": "./src/components/errors/Error500.js",
           "@APIHelper": "./src/helpers/APIHelper.js",
+          "@FileHelper": "./src/helpers/FileHelper.js",
           "@ListHelper": "./src/helpers/ListHelper.js",
           "@ModalHelper": "./src/helpers/ModalHelper.js",
           "@SortHelper": "./src/helpers/SortHelper.js",

@@ -102,44 +102,6 @@
       border: 2px solid themed('color-accent');
     }
 
-    .action {
-      button {
-        height: 35px;
-        width: 80px;
-        border: none;
-        border-radius: 0;
-        font-size: 1.2em;
-        font-weight: bold;
-
-        @include themify($themes) {
-          border-left: 2px solid themed('color-accent');
-          border-bottom: 2px solid themed('color-accent');
-          background-color: themed('color-accent');
-          color: themed('color-text-active');
-        }
-
-        &:hover {
-          i {
-            animation: rubber-band 0.6s linear;
-          }
-        }
-      }
-    }
-
-    .action-left {
-      text-align: left;
-      button {
-        border-bottom-right-radius: 0.25em;
-      }
-    }
-
-    .action-right {
-      text-align: right;
-      button {
-        border-bottom-left-radius: 0.25em;
-      }
-    }
-
     .import-container {
       width: 80px;
       height: 35px;
@@ -183,9 +145,47 @@
       }
     }
 
+    .action {
+      button {
+        height: 35px;
+        width: 80px;
+        border: none;
+        border-radius: 0;
+        font-size: 1.2em;
+        font-weight: bold;
+
+        @include themify($themes) {
+          border-left: 2px solid themed('color-accent');
+          border-bottom: 2px solid themed('color-accent');
+          background-color: themed('color-accent');
+          color: themed('color-text-active');
+        }
+
+        &:hover {
+          i {
+            animation: rubber-band 0.6s linear;
+          }
+        }
+      }
+    }
+
+    .action-left {
+      text-align: left;
+      button {
+        border-bottom-right-radius: 0.25em;
+      }
+    }
+
+    .action-right {
+      text-align: right;
+      button {
+        border-bottom-left-radius: 0.25em;
+      }
+    }
+
     .task-content {
       margin: 25px auto 60px auto;
-      text-align: left;
+      text-align: center;
       width: 80%;
 
       h2 {
@@ -200,6 +200,48 @@
       .input-content {
         section {
           animation: fade-in 0.4s linear;
+        }
+      }
+
+      button {
+        height: 45px;
+        border: none;
+        font-size: 1.2em;
+        width: 60%;
+
+        &.icon-right {
+          i {
+            padding-left: 10px;
+          }
+        }
+
+        &.icon-left {
+          i {
+            padding-right: 10px;
+          }
+        }
+
+        @include themify($themes) {
+          &.primary {
+            color: themed('color-text-active');
+            background-color: themed('color-secondary');
+            transition: border 0.2s ease;
+            transition: color 0.4s ease;
+            &:hover {
+              border: 1px solid themed('color-accent');
+              color: themed('color-accent');
+            }
+          }
+
+          &.disabled {
+            color: themed('color-text-secondary');
+            background-color: themed('color-primary');
+            border: 1px solid themed('color-text-secondary');
+
+            &:hover {
+              cursor: default;
+            }
+          }
         }
       }
 
@@ -372,28 +414,59 @@
             }
           }
         }
+      }
+    }
 
-        button {
-          height: 45px;
-          border: none;
-          font-size: 1.2em;
-          width: 100%;
-          text-transform: uppercase;
-          margin: 25px 0;
-
-          @include themify($themes) {
-            color: themed('color-text-active');
-            background-color: themed('color-accent');
+    .btn-group-nav {
+      margin: 35px auto;
+      width: 85%;
+      padding-top: 45px;
+      text-align: center;
+      @include themify($themes) {
+        border-top: 2px dotted themed('color-secondary');
+        .previous,
+        .next {
+          button {
+            height: 45px;
+            border: none;
+            font-size: 1.2em;
+            width: 100%;
+            width: 60%;
           }
+        }
 
-          &:hover {
-            @include themify($themes) {
-              background-color: themed('color-accent-darker');
+        .next {
+          margin-bottom: 15px;
+          button {
+            &.primary {
+              color: themed('color-text-active');
+              background-color: themed('color-accent');
+              &:not(.disabled):hover {
+                background-color: themed('color-accent-darker');
+              }
+            }
+
+            &.disabled {
+              color: themed('color-text-secondary');
+              background-color: themed('color-primary');
+              border: 1px solid themed('color-text-secondary');
+              &:hover {
+                cursor: default;
+              }
             }
           }
+        }
 
-          i {
-            padding-left: 15px;
+        .previous {
+          button {
+            color: themed('color-accent');
+            background-color: themed('color-primary');
+            border: 1px solid themed('color-accent');
+            transition: all 0.2s ease;
+            &:hover {
+              color: themed('color-accent-darker');
+              border: 1px solid themed('color-accent-darker');
+            }
           }
         }
       }

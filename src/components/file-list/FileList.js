@@ -1,22 +1,31 @@
 import fileListTemplate from './file-list.hbs';
 import itemsTemplate from './items.hbs';
 import SortHelper from '@SortHelper';
+import Events from '@Events';
 
 let headers;
 let fileRows;
-let selectedFile;
-
-class FileList {
-  constructor(context, title, data, key = 'file', loading = true) {
+class FileList extends Events {
+  constructor(context, title, data, key = 'file', selectedFile, loading = true) {
+    super();
     this.context = context;
     this.title = title;
     this.data = data;
     this.loading = loading;
+    this.key = key;
+    this.selectedFile = selectedFile;
     this.make();
   }
 
   setData(data) {
     this.data = data;
+  }
+
+  setSelected(row) {
+    const firstTd = row.firstElementChild;
+    row.classList.add('selected-file');
+    firstTd.innerHTML = '';
+    firstTd.insertAdjacentHTML('afterbegin', '<i class="fas fa-check"></i>');
   }
 
   removeCurrentSelectedFile() {
@@ -27,8 +36,9 @@ class FileList {
         row.firstElementChild.innerHTML = '';
       }
 
-      if (!(selectedFile === undefined)) {
-        selectedFile = undefined;
+      if (!(this.selectedFile === undefined)) {
+        sessionStorage.removeItem(this.key);
+        this.selectedFile = undefined;
       }
     }
   }
@@ -39,19 +49,19 @@ class FileList {
 
     if (event.target.tagName === 'TD') {
       const row = event.target.parentNode;
-      const firstTd = row.firstElementChild;
       const filename = row.childNodes[3].textContent;
 
-      if (!(selectedFile === filename)) {
-        if (!(selectedFile === undefined)) {
+      if (!(this.selectedFile === filename)) {
+        if (!(this.selectedFile === null)) {
           this.removeCurrentSelectedFile();
         }
 
-        selectedFile = filename;
-        row.classList.add('selected-file');
-        firstTd.innerHTML = '';
-        firstTd.insertAdjacentHTML('afterbegin', '<i class="fas fa-check"></i>');
+        this.emit('selected', true);
+        this.selectedFile = filename;
+        this.setSelected(row);
+        sessionStorage.setItem(this.key, filename);
       } else {
+        this.emit('selected', false);
         this.removeCurrentSelectedFile();
       }
     }
@@ -137,6 +147,13 @@ class FileList {
 
     for (let i = 0; i < fileRows.length; ++i) {
       const row = fileRows[i];
+
+      if (!(this.selectedFile === undefined)) {
+        if (this.selectedFile === row.children[1].textContent) {
+          this.setSelected(row);
+        }
+      }
+
       row.removeEventListener('click', this.fileClickListener.bind(this), false);
       row.addEventListener('click', this.fileClickListener.bind(this), false);
     }

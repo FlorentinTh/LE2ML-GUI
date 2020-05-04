@@ -11,7 +11,7 @@
   <h2>{{title}}</h2>
   <div class="process-selector">
     <div class="switch-group">
-      <input type="radio" id="switch-train" name="process" value="train" checked />
+      <input type="radio" id="switch-train" name="process" value="train" />
       <label for="switch-train">
         <i class="fas fa-running"></i>
         Train
@@ -21,7 +21,20 @@
         Predict
         <i class="fas fa-brain"></i>
       </label>
+      <input type="radio" id="switch-none" name="process" value="none" />
+      <label for="switch-none">
+        None
+        <i class="fas fa-times"></i>
+      </label>
     </div>
     <div class="process-options"></div>
+  </div>
+</div>
+<div class="btn-group-nav">
+  <div class="next">
+    <button class="primary">
+      Next
+      <i class="fas fa-arrow-right"></i>
+    </button>
   </div>
 </div>
