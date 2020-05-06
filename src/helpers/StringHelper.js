@@ -45,7 +45,7 @@ class StringHelper {
     return string.match(regexp);
   }
 
-  static isAlphaNum(string, size) {
+  static isAlphaNum(string) {
     if (!(typeof string === 'string')) {
       throw new Error('Expected type for argument string is String.');
     }

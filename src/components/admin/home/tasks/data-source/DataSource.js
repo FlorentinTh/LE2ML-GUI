@@ -5,8 +5,10 @@ import websocketTemplate from './websocket.hbs';
 import axios from 'axios';
 import APIHelper from '@APIHelper';
 import Store from '@Store';
+import URLHelper from '@URLHelper';
+import SelectProcess from '../select-process/SelectProcess';
+import Windowing from '../windowing/Windowing';
 
-// let existingFilesContainer;
 let inputContent;
 
 class DataSource extends Task {
@@ -19,10 +21,26 @@ class DataSource extends Task {
   makeInputWs() {
     inputContent.innerHTML = websocketTemplate();
     super.disableSection('websocket');
+
+    sessionStorage.setItem('input-type', 'ws');
+
+    const content = this.context.querySelector('input#ws-addr').value;
+
+    if (URLHelper.removeProtocol(content) === '') {
+      super.toggleNextBtnEnable(false);
+    } else {
+      sessionStorage.setItem('input-content', content);
+    }
   }
 
-  initFileList() {
-    const fileList = new FileList(inputContent, 'Existing Data Files', [], 'data');
+  initFileList(filename) {
+    const fileList = new FileList(
+      inputContent,
+      'Existing Data Files',
+      [],
+      'input-content',
+      filename || null
+    );
 
     getFiles('/files?type=inputs', this.context).then(response => {
       if (response) {
@@ -46,14 +64,34 @@ class DataSource extends Task {
   }
 
   makeInputFile() {
-    const dataStore = Store.get('input-data');
+    sessionStorage.setItem('input-type', 'file');
 
-    if (dataStore === undefined) {
-      this.initFileList();
+    const dataStore = Store.get('input-data');
+    const filename = sessionStorage.getItem('input-content');
+
+    if (!filename) {
+      super.toggleNextBtnEnable(false);
     } else {
-      // eslint-disable-next-line no-new
-      new FileList(inputContent, 'Existing Data Files', dataStore.data, 'data', false);
+      super.toggleNextBtnEnable(true);
     }
+
+    let fileList;
+    if (dataStore === undefined) {
+      fileList = this.initFileList(filename);
+    } else {
+      fileList = new FileList(
+        inputContent,
+        'Existing Data Files',
+        dataStore.data,
+        'input-content',
+        filename || null,
+        false
+      );
+    }
+
+    fileList.on('selected', result => {
+      super.toggleNextBtnEnable(result);
+    });
   }
 
   switchInputContent(input) {
@@ -81,12 +119,27 @@ class DataSource extends Task {
       title: 'Data Source'
     });
 
+    super.initNavBtn('next', { label: 'windowing', Task: Windowing });
+    super.initNavBtn('previous', { label: 'select-process', Task: SelectProcess });
+
     inputContent = this.context.querySelector('.input-content');
 
     const inputTypeSwitch = this.context.querySelectorAll('.switch-group input');
+    const storedInput = sessionStorage.getItem('input-type');
+
+    if (!storedInput) {
+      inputTypeSwitch[0].setAttribute('checked', true);
+    }
 
     for (let i = 0; i < inputTypeSwitch.length; ++i) {
       const radio = inputTypeSwitch[i];
+
+      if (storedInput) {
+        if (radio.value === storedInput) {
+          radio.setAttribute('checked', true);
+        }
+      }
+
       radio.addEventListener('change', this.inputSwitchHandler.bind(this), false);
 
       if (radio.checked) {

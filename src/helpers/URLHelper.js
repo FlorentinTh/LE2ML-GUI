@@ -8,6 +8,10 @@ class URLHelper {
   }
 
   static getPath(location = null) {
+    if (!(location === null) && !(typeof location === 'string')) {
+      throw new Error('Expected type for argument location is String.');
+    }
+
     const url = location || this.getURL();
     const start = this.getProtocol().length + 2;
     return url.substr(start, url.lastIndexOf('html') + 4 - start);
@@ -24,6 +28,9 @@ class URLHelper {
   }
 
   static getHash(location = null) {
+    if (!(location === null) && !(typeof location === 'string')) {
+      throw new Error('Expected type for argument location is String.');
+    }
     const url = location || this.getURL();
     const page = this.getPage();
     const args = url.substr(url.indexOf(page) + page.length);
@@ -43,20 +50,44 @@ class URLHelper {
   }
 
   static getHashName(hash) {
+    if (!(typeof hash === 'string')) {
+      throw new Error('Expected type for argument hash is String.');
+    }
+
     return hash.substr(1, hash.length);
   }
 
   static toSlug(value) {
+    if (!(typeof value === 'string')) {
+      throw new Error('Expected type for argument value is String.');
+    }
+
     return value.toLocaleLowerCase().replace(' ', '-');
   }
 
   static toAnchor(value) {
+    if (!(typeof value === 'string')) {
+      throw new Error('Expected type for argument value is String.');
+    }
+
     return '#' + value;
   }
 
   static isRouteValid(route) {
+    if (!(typeof route === 'string')) {
+      throw new Error('Expected type for argument route is String.');
+    }
+
     const regexp = new RegExp('^\\/[a-zA-Z0-9-_]+.html+#*[a-zA-Z0-9-_]*$', 'g');
     return regexp.test(route);
+  }
+
+  static removeProtocol(url) {
+    if (!(typeof url === 'string')) {
+      throw new Error('Expected type for argument url is String.');
+    }
+
+    return url.replace(/(^\w+:|^)\/\//, '');
   }
 }
 

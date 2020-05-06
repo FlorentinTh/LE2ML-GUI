@@ -4,6 +4,9 @@ import Task from '../Task';
 import axios from 'axios';
 import APIHelper from '@APIHelper';
 import Store from '@Store';
+import Process from '../process/Process';
+import Windowing from '../windowing/Windowing';
+import configDownloadTemplate from '../config-download.hbs';
 
 let timeFeatures = [];
 let freqFeatures = [];
@@ -28,7 +31,7 @@ class Features extends Task {
     }
   }
 
-  selectToggleClickListener() {
+  selectAllToggleClickListener() {
     event.preventDefault();
     event.stopImmediatePropagation();
 
@@ -127,6 +130,9 @@ class Features extends Task {
   make() {
     this.renderView(false);
 
+    super.initNavBtn('next', { label: 'process', Task: Process });
+    super.initNavBtn('previous', { label: 'windowing', Task: Windowing });
+
     featureItems = this.context.querySelectorAll('.feature-item');
 
     for (let i = 0; i < featureItems.length; ++i) {
@@ -134,12 +140,20 @@ class Features extends Task {
       featureItem.addEventListener('click', this.featureClickListener.bind(this), false);
     }
 
-    const selectToggle = this.context.querySelector('#select-toggle');
-    selectToggle.addEventListener(
+    const selectAllToggle = this.context.querySelector('#select-all-toggle');
+    selectAllToggle.addEventListener(
       'click',
-      this.selectToggleClickListener.bind(this),
+      this.selectAllToggleClickListener.bind(this),
       false
     );
+
+    const processType = sessionStorage.getItem('process-type');
+    if (processType === 'none') {
+      const nextBtn = this.context.querySelector('.btn-group-nav .next button');
+      nextBtn.childNodes[0].textContent = 'Finish ';
+      nextBtn.childNodes[1].classList = 'fas fa-flag-checkered';
+      this.context.insertAdjacentHTML('beforeend', configDownloadTemplate());
+    }
   }
 }
 

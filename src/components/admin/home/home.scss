@@ -169,17 +169,17 @@
       }
     }
 
-    .action-left {
+    .action-top-left {
       text-align: left;
       button {
         border-bottom-right-radius: 0.25em;
       }
     }
 
-    .action-right {
+    .action-bottom-right {
       text-align: right;
       button {
-        border-bottom-left-radius: 0.25em;
+        border-top-left-radius: 0.25em;
       }
     }
 
@@ -203,48 +203,6 @@
         }
       }
 
-      button {
-        height: 45px;
-        border: none;
-        font-size: 1.2em;
-        width: 60%;
-
-        &.icon-right {
-          i {
-            padding-left: 10px;
-          }
-        }
-
-        &.icon-left {
-          i {
-            padding-right: 10px;
-          }
-        }
-
-        @include themify($themes) {
-          &.primary {
-            color: themed('color-text-active');
-            background-color: themed('color-secondary');
-            transition: border 0.2s ease;
-            transition: color 0.4s ease;
-            &:hover {
-              border: 1px solid themed('color-accent');
-              color: themed('color-accent');
-            }
-          }
-
-          &.disabled {
-            color: themed('color-text-secondary');
-            background-color: themed('color-primary');
-            border: 1px solid themed('color-text-secondary');
-
-            &:hover {
-              cursor: default;
-            }
-          }
-        }
-      }
-
       section:not(:last-child) {
         margin-bottom: 50px;
       }
@@ -263,6 +221,38 @@
 
           .form-elem:not(:last-of-type) {
             margin-bottom: 50px;
+          }
+
+          @include themify($themes) {
+            .disabled {
+              label,
+              input,
+              span,
+              select {
+                color: themed('color-text-secondary') !important;
+              }
+
+              span {
+                background-color: themed('color-secondary') !important;
+              }
+
+              input,
+              select {
+                box-shadow: none !important;
+              }
+
+              input[type='range'] {
+                &::-webkit-slider-thumb {
+                  background: themed('color-text-secondary') !important;
+                  cursor: default !important;
+                }
+
+                &::-moz-range-thumb {
+                  background: themed('color-text-secondary') !important;
+                  cursor: default !important;
+                }
+              }
+            }
           }
 
           .inline {
@@ -362,7 +352,6 @@
 
                 &::-moz-range-track {
                   background: themed('color-secondary');
-                  box-shadow: inset 1px 2px 6px themed('box-shadow');
                 }
 
                 &::-webkit-slider-thumb {
@@ -373,7 +362,6 @@
                   background: themed('color-accent');
                   cursor: pointer;
                   transition: background 0.15s ease-in-out;
-                  box-shadow: 1px 2px 6px themed('box-shadow');
                 }
 
                 &::-moz-range-thumb {

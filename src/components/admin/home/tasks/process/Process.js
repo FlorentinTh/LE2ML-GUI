@@ -1,5 +1,6 @@
 import processTemplate from './process.hbs';
 import Task from '../Task';
+import StringHelper from '@StringHelper';
 
 let process;
 
@@ -11,11 +12,10 @@ class Process extends Task {
   }
 
   make() {
-    const activeNav = document.querySelector('li.item-active');
-    process = activeNav.childNodes[1].textContent;
+    process = sessionStorage.getItem('process-type');
 
     this.context.innerHTML = processTemplate({
-      title: process + ' Process'
+      title: StringHelper.capitalizeFirst(process) + 'ing Process'
     });
   }
 }

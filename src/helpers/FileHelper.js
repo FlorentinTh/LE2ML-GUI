@@ -13,9 +13,9 @@ class FileHelper {
     }
 
     const dataEncoded =
-      'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, null, 2));
+      'data:text/yaml;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, null, 2));
     link.setAttribute('href', dataEncoded);
-    link.setAttribute('download', filename + '.json');
+    link.setAttribute('download', filename + '.yml');
     link.addEventListener('click', () => {}, false);
   }
 }

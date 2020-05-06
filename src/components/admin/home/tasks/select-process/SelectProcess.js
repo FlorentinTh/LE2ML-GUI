@@ -8,7 +8,6 @@ import ModalHelper from '@ModalHelper';
 import DataSource from '../data-source/DataSource';
 
 let processContainer;
-let nextBtn;
 
 class SelectProcess extends Task {
   constructor(context) {
@@ -17,25 +16,13 @@ class SelectProcess extends Task {
     this.make();
   }
 
-  toggleNextBtnEnable(enable) {
-    if (enable) {
-      if (nextBtn.classList.contains('disabled')) {
-        nextBtn.classList.remove('disabled');
-      }
-    } else {
-      if (!nextBtn.classList.contains('disabled')) {
-        nextBtn.classList.add('disabled');
-      }
-    }
-  }
-
   makeProcessTest() {
     let fileList;
 
-    const filename = sessionStorage.getItem('model');
+    const filename = sessionStorage.getItem('process-model');
 
     if (!filename) {
-      this.toggleNextBtnEnable(false);
+      super.toggleNextBtnEnable(false);
     }
 
     const dataStore = Store.get('model-data');
@@ -44,7 +31,7 @@ class SelectProcess extends Task {
         processContainer,
         'Existing trained models',
         [],
-        'model',
+        'process-model',
         filename || null
       );
 
@@ -65,50 +52,43 @@ class SelectProcess extends Task {
         context,
         'Existing trained models',
         dataStore.data,
-        'model',
+        'process-model',
         filename || null,
         false
       );
     }
 
     fileList.on('selected', result => {
-      if (result) {
-        this.toggleNextBtnEnable(result);
-      } else {
-        this.toggleNextBtnEnable(result);
-      }
+      super.toggleNextBtnEnable(result);
     });
-
-    super.setProcessNavItem('Predict');
   }
 
   switchProcessContent(process) {
     switch (process) {
       case 'test':
-        sessionStorage.setItem('process', process);
+        sessionStorage.setItem('process-type', process);
         super.toggleNavItemEnable('process', true);
         this.makeProcessTest();
         break;
       case 'train':
-        sessionStorage.setItem('process', process);
+        sessionStorage.setItem('process-type', process);
+        super.toggleNavItemEnable('process', true);
 
-        if (sessionStorage.getItem('model')) {
-          sessionStorage.removeItem('model');
+        if (sessionStorage.getItem('process-model')) {
+          sessionStorage.removeItem('process-model');
         }
 
-        this.toggleNextBtnEnable(true);
-        super.toggleNavItemEnable('process', true);
-        super.setProcessNavItem('Training');
+        super.toggleNextBtnEnable(true);
         break;
       case 'none':
-        sessionStorage.setItem('process', process);
+        sessionStorage.setItem('process-type', process);
 
-        if (sessionStorage.getItem('model')) {
-          sessionStorage.removeItem('model');
+        if (sessionStorage.getItem('process-model')) {
+          sessionStorage.removeItem('process-model');
         }
 
-        this.toggleNextBtnEnable(true);
         super.toggleNavItemEnable('process', false);
+        super.toggleNextBtnEnable(true);
     }
   }
 
@@ -188,37 +168,19 @@ class SelectProcess extends Task {
     });
 
     const importFileInput = this.context.querySelector('input#import-config');
+    const importFileForm = this.context.querySelector('form');
+
+    super.initNavBtn('next', { label: 'data-source', Task: DataSource });
+
     importFileInput.addEventListener(
       'change',
       this.importFileInputListener.bind(this),
       false
     );
 
-    const importFileForm = this.context.querySelector('form');
     importFileForm.addEventListener(
       'submit',
       this.importFileUploadEventSubmit.bind(this),
-      false
-    );
-
-    nextBtn = this.context.querySelector('.btn-group-nav .next button');
-
-    nextBtn.addEventListener(
-      'click',
-      event => {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-
-        const btn =
-          event.target.tagName === 'BUTTON' ? event.target : event.target.parentNode;
-
-        if (!btn.classList.contains('disabled')) {
-          const taskContainer = super.getContext();
-          // eslint-disable-next-line no-new
-          new DataSource(taskContainer);
-          super.setNavActive('data-source');
-        }
-      },
       false
     );
 
@@ -226,8 +188,7 @@ class SelectProcess extends Task {
 
     const processSwitchInputs = this.context.querySelectorAll('.switch-group input');
 
-    const storedProcess = sessionStorage.getItem('process');
-
+    const storedProcess = sessionStorage.getItem('process-type');
     if (!storedProcess) {
       processSwitchInputs[0].setAttribute('checked', true);
     }
@@ -239,7 +200,6 @@ class SelectProcess extends Task {
         if (radio.value === storedProcess) {
           radio.setAttribute('checked', true);
         }
-      } else {
       }
 
       radio.addEventListener('change', this.processSwitchHandler.bind(this), false);

@@ -10,7 +10,6 @@ let navItems;
 class Home extends Component {
   constructor(context = null) {
     super(context);
-
     this.context.innerHTML = homeTemlate({
       title: 'Home'
     });
@@ -20,6 +19,12 @@ class Home extends Component {
 
   setActive(navItem) {
     this.removeCurrentActiveNavItem();
+    sessionStorage.setItem('active-nav', navItem.dataset.task);
+
+    if (navItem.classList.contains('item-disabled')) {
+      navItem.classList.remove('item-disabled');
+    }
+
     navItem.classList.add('item-active');
   }
 
@@ -80,11 +85,20 @@ class Home extends Component {
   run() {
     navItems = this.context.querySelectorAll('.task-nav-item');
 
+    let storedActiveNav = sessionStorage.getItem('active-nav');
+
+    if (storedActiveNav === null) {
+      sessionStorage.setItem('active-nav', navItems[0].dataset.task);
+      storedActiveNav = navItems[0].dataset.task;
+    }
+
     for (let i = 0; i < navItems.length; ++i) {
       const navItem = navItems[i];
+      const task = navItem.dataset.task;
 
-      if (navItem.classList.contains('item-active')) {
+      if (storedActiveNav === task) {
         this.switchTask(navItem.dataset.task);
+        this.setActive(navItem);
       }
 
       const button = navItem.querySelector('button');

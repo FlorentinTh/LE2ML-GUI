@@ -65,9 +65,7 @@ class TempPassword extends Component {
         input.value = value;
 
         if (!(value.trim() === '')) {
-          if (!EmailValidator.validate(value)) {
-            ModalHelper.notification('warning', 'Email input is invalid.');
-          } else {
+          if (EmailValidator.validate(value)) {
             getUserByEmail('/admin/users/email/' + value, this.context).then(response => {
               const data = response.data.user;
               const userName = StringHelper.capitalizeFirst(data.firstname).concat(
@@ -77,8 +75,6 @@ class TempPassword extends Component {
               ModalHelper.notification('success', 'Correct email for ' + userName);
             });
           }
-        } else {
-          ModalHelper.notification('warning', 'Email input cannot be empty.');
         }
       }
     });

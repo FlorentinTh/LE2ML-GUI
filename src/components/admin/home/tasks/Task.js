@@ -8,27 +8,6 @@ class Task {
     return this.context;
   }
 
-  setProcessNavItem(value) {
-    if (!(typeof value === 'string')) {
-      throw new Error('Expected type for argument value is String.');
-    }
-
-    const items = document.querySelectorAll('li.task-nav-item');
-    items.forEach(item => {
-      if (item.dataset.task === 'process') {
-        item.children[0].childNodes[1].nodeValue = value;
-
-        if (value.toLowerCase() === 'predict') {
-          item.children[0].childNodes[0].classList.remove('fa-running');
-          item.children[0].childNodes[0].classList.add('fa-brain');
-        } else if (value.toLowerCase() === 'training') {
-          item.children[0].childNodes[0].classList.remove('fa-brain');
-          item.children[0].childNodes[0].classList.add('fa-running');
-        }
-      }
-    });
-  }
-
   toggleNavItemEnable(task, enable = false) {
     if (!(typeof task === 'string')) {
       throw new Error('Expected type for argument task is String.');
@@ -62,6 +41,7 @@ class Task {
       }
 
       if (navItem.dataset.task === item) {
+        sessionStorage.setItem('active-nav', item);
         navItem.classList.add('item-active');
       }
     }
@@ -76,6 +56,61 @@ class Task {
     elem
       .querySelector('h3')
       .insertAdjacentHTML('afterbegin', '<i class="far fa-times-circle"></i>');
+  }
+
+  toggleNextBtnEnable(enable) {
+    if (!(typeof enable === 'boolean')) {
+      throw new Error('Expected type for argument enable is Boolean.');
+    }
+    const nextBtn = this.context.querySelector('.btn-group-nav .next button');
+    if (enable) {
+      if (nextBtn.classList.contains('disabled')) {
+        nextBtn.classList.remove('disabled');
+      }
+    } else {
+      if (!nextBtn.classList.contains('disabled')) {
+        nextBtn.classList.add('disabled');
+      }
+    }
+  }
+
+  initNavBtn(button, options) {
+    if (!(typeof button === 'string')) {
+      if (!(button === 'next') || !(button === 'previous')) {
+        throw new Error('Argument button should be one of : next or previous.');
+      }
+    }
+
+    if (!(typeof options === 'object')) {
+      throw new Error('Expected type for argument options is Object.');
+    }
+
+    const btnClickListener = [
+      'click',
+      event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const btn =
+          event.target.tagName === 'BUTTON' ? event.target : event.target.parentNode;
+
+        if (!btn.classList.contains('disabled')) {
+          // eslint-disable-next-line no-new
+          new options.Task(this.context);
+          this.setNavActive(options.label);
+        }
+      },
+      false
+    ];
+
+    const nextBtn = this.context.querySelector('.btn-group-nav .next button');
+    const previousBtn = this.context.querySelector('.btn-group-nav .previous button');
+
+    if (!(nextBtn === null) && button === 'next') {
+      nextBtn.addEventListener(...btnClickListener);
+    } else if (!(previousBtn === null) && button === 'previous') {
+      previousBtn.addEventListener(...btnClickListener);
+    }
   }
 }
 
