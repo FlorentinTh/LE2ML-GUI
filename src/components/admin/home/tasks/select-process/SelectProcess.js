@@ -164,7 +164,7 @@ class SelectProcess extends Task {
 
   make() {
     this.context.innerHTML = selectProcessTemplate({
-      title: 'Process to Achieve'
+      title: 'Learning Process to Complete'
     });
 
     const importFileInput = this.context.querySelector('input#import-config');

@@ -4,7 +4,7 @@ import Task from '../Task';
 import axios from 'axios';
 import APIHelper from '@APIHelper';
 import Store from '@Store';
-import Process from '../process/Process';
+import Learning from '../learning/Learning';
 import Windowing from '../windowing/Windowing';
 import configDownloadTemplate from '../config-download.hbs';
 
@@ -130,7 +130,7 @@ class Features extends Task {
   make() {
     this.renderView(false);
 
-    super.initNavBtn('next', { label: 'process', Task: Process });
+    super.initNavBtn('next', { label: 'process', Task: Learning });
     super.initNavBtn('previous', { label: 'windowing', Task: Windowing });
 
     featureItems = this.context.querySelectorAll('.feature-item');

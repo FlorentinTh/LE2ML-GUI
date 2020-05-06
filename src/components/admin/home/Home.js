@@ -4,7 +4,7 @@ import SelectProcess from './tasks/select-process/SelectProcess';
 import DataSource from './tasks/data-source/DataSource';
 import Windowing from './tasks/windowing/Windowing';
 import Features from './tasks/features/Features';
-import Process from './tasks/process/Process';
+import Learning from './tasks/learning/Learning';
 
 let navItems;
 class Home extends Component {
@@ -75,7 +75,7 @@ class Home extends Component {
         break;
       case 'process':
         // eslint-disable-next-line no-new
-        new Process(taskContainer);
+        new Learning(taskContainer);
         break;
       default:
         throw new Error('No defined template for clicked task.');
