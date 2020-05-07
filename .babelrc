@@ -25,6 +25,8 @@
           "@Assets": "./src/public/assets",
           "@Styles": "./src/styles/main.scss",
           "@Controller": "./src/core/Controller.js",
+          "@Configuration": "./src/configuration/Configuration.js",
+          "@ConfVersion": "./src/configuration/Version.js",
           "@Theme": "./src/core/theme/Theme.js",
           "@Store": "./src/core/Store.js",
           "@Events": "./src/core/Events.js",

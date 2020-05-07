@@ -6,8 +6,10 @@ import APIHelper from '@APIHelper';
 import Store from '@Store';
 import ModalHelper from '@ModalHelper';
 import DataSource from '../data-source/DataSource';
+import Configuration from '@Configuration';
 
 let processContainer;
+let fileList;
 
 class SelectProcess extends Task {
   constructor(context) {
@@ -17,8 +19,6 @@ class SelectProcess extends Task {
   }
 
   makeProcessTest() {
-    let fileList;
-
     const filename = sessionStorage.getItem('process-model');
 
     if (!filename) {
@@ -101,6 +101,42 @@ class SelectProcess extends Task {
     }
   }
 
+  applyConfigHandler(conf) {
+    const radios = this.context.querySelectorAll('.switch-group input[type=radio]');
+
+    for (let i = 0; i < radios.length; ++i) {
+      const radio = radios[i];
+      if (radio.value === conf.process) {
+        radio.click();
+      }
+    }
+
+    if (conf.process === 'test') {
+      fileList.on('build', result => {
+        if (result) {
+          const models = this.context.querySelectorAll('.table-container tbody tr');
+          let modelFound = false;
+          for (let i = 0; i < models.length; ++i) {
+            const model = models[i];
+            const filename = model.children[1].textContent;
+            if (filename === conf.model) {
+              modelFound = true;
+              if (!model.classList.contains('selected-file')) {
+                model.children[1].click();
+              }
+            }
+          }
+          if (!modelFound) {
+            throw new Error(`${conf.model} is not found.`);
+          }
+        }
+      });
+    }
+
+    const configuration = new Configuration(conf);
+    configuration.unmarshall();
+  }
+
   importFileUploadEventSubmit(event) {
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -122,6 +158,7 @@ class SelectProcess extends Task {
           input.value = '';
           this.toggleLoading(false);
           ModalHelper.notification('success', 'Configuration successfully imported.');
+          this.applyConfigHandler(response.data.data);
         }
       })
       .catch(error => {

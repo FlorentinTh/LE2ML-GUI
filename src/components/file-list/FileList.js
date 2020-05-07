@@ -156,6 +156,8 @@ class FileList extends Events {
 
       row.removeEventListener('click', this.fileClickListener.bind(this), false);
       row.addEventListener('click', this.fileClickListener.bind(this), false);
+
+      this.emit('build', true);
     }
   }
 

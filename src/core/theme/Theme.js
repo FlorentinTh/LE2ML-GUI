@@ -28,7 +28,7 @@ class Theme {
   toggle() {
     const inputs = this.context.querySelectorAll('div.switch-theme input[name="switch"]');
 
-    for (let i = 0; i < inputs.length; i++) {
+    for (let i = 0; i < inputs.length; ++i) {
       const input = inputs[i];
       input.addEventListener('change', event => {
         if (event.target.id === 'switch-dark') {

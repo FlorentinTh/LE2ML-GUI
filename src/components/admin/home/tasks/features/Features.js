@@ -7,6 +7,8 @@ import Store from '@Store';
 import Learning from '../learning/Learning';
 import Windowing from '../windowing/Windowing';
 import configDownloadTemplate from '../config-download.hbs';
+import { Versions } from '@ConfVersion';
+import Configuration from '@Configuration';
 
 let timeFeatures = [];
 let freqFeatures = [];
@@ -129,6 +131,9 @@ class Features extends Task {
 
   make() {
     this.renderView(false);
+
+    const config = new Configuration();
+    config.marshall(Versions.v1);
 
     super.initNavBtn('next', { label: 'process', Task: Learning });
     super.initNavBtn('previous', { label: 'windowing', Task: Windowing });
