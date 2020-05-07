@@ -2,10 +2,8 @@ class Task {
   constructor(context) {
     this.context = context;
     this.navItems = document.querySelectorAll('.task-nav-item');
-  }
 
-  getContext() {
-    return this.context;
+    this.run();
   }
 
   toggleNavItemEnable(task, enable = false) {
@@ -13,8 +11,18 @@ class Task {
       throw new Error('Expected type for argument task is String.');
     }
 
-    const items = document.querySelectorAll('li.task-nav-item');
-    items.forEach(item => {
+    if (enable) {
+      const disabledItem = sessionStorage.getItem('disabled-nav');
+
+      if (!(disabledItem === null)) {
+        if (task === disabledItem) {
+          sessionStorage.removeItem('disabled-nav');
+        }
+      }
+    }
+
+    for (let i = 0; i < this.navItems.length; ++i) {
+      const item = this.navItems[i];
       if (item.dataset.task === task) {
         if (enable) {
           if (item.classList.contains('item-disabled')) {
@@ -23,10 +31,11 @@ class Task {
         } else {
           if (!item.classList.contains('item-disabled')) {
             item.classList.add('item-disabled');
+            sessionStorage.setItem('disabled-nav', task);
           }
         }
       }
-    });
+    }
   }
 
   setNavActive(item) {
@@ -51,6 +60,7 @@ class Task {
     if (!(typeof id === 'string')) {
       throw new Error('Expected type for argument id is String.');
     }
+
     const elem = document.querySelector('section#' + id);
     elem.classList.add('section-disabled');
     elem
@@ -62,6 +72,7 @@ class Task {
     if (!(typeof enable === 'boolean')) {
       throw new Error('Expected type for argument enable is Boolean.');
     }
+
     const nextBtn = this.context.querySelector('.btn-group-nav .next button');
     if (enable) {
       if (nextBtn.classList.contains('disabled')) {
@@ -110,6 +121,14 @@ class Task {
       nextBtn.addEventListener(...btnClickListener);
     } else if (!(previousBtn === null) && button === 'previous') {
       previousBtn.addEventListener(...btnClickListener);
+    }
+  }
+
+  run() {
+    const disabledItem = sessionStorage.getItem('disabled-nav');
+
+    if (!(disabledItem === null)) {
+      this.toggleNavItemEnable(disabledItem, false);
     }
   }
 }

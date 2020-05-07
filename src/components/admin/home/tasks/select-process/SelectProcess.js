@@ -101,6 +101,24 @@ class SelectProcess extends Task {
     }
   }
 
+  selectModelFileHandler(conf) {
+    const models = this.context.querySelectorAll('.table-container tbody tr');
+    let modelFound = false;
+    for (let i = 0; i < models.length; ++i) {
+      const model = models[i];
+      const filename = model.children[1].textContent;
+      if (filename === conf.model) {
+        modelFound = true;
+        if (!model.classList.contains('selected-file')) {
+          model.children[1].click();
+        }
+      }
+    }
+    if (!modelFound) {
+      throw new Error(`${conf.model} is not found.`);
+    }
+  }
+
   applyConfigHandler(conf) {
     const radios = this.context.querySelectorAll('.switch-group input[type=radio]');
 
@@ -112,25 +130,16 @@ class SelectProcess extends Task {
     }
 
     if (conf.process === 'test') {
-      fileList.on('build', result => {
-        if (result) {
-          const models = this.context.querySelectorAll('.table-container tbody tr');
-          let modelFound = false;
-          for (let i = 0; i < models.length; ++i) {
-            const model = models[i];
-            const filename = model.children[1].textContent;
-            if (filename === conf.model) {
-              modelFound = true;
-              if (!model.classList.contains('selected-file')) {
-                model.children[1].click();
-              }
-            }
+      const dataStore = Store.get('model-data');
+      if (dataStore === undefined) {
+        fileList.on('build', result => {
+          if (result) {
+            this.selectModelFileHandler(conf);
           }
-          if (!modelFound) {
-            throw new Error(`${conf.model} is not found.`);
-          }
-        }
-      });
+        });
+      } else {
+        this.selectModelFileHandler(conf);
+      }
     }
 
     const configuration = new Configuration(conf);

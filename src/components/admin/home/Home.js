@@ -84,23 +84,18 @@ class Home extends Component {
 
   run() {
     navItems = this.context.querySelectorAll('.task-nav-item');
-
     let storedActiveNav = sessionStorage.getItem('active-nav');
-
     if (storedActiveNav === null) {
       sessionStorage.setItem('active-nav', navItems[0].dataset.task);
       storedActiveNav = navItems[0].dataset.task;
     }
-
     for (let i = 0; i < navItems.length; ++i) {
       const navItem = navItems[i];
       const task = navItem.dataset.task;
-
       if (storedActiveNav === task) {
         this.switchTask(navItem.dataset.task);
         this.setActive(navItem);
       }
-
       const button = navItem.querySelector('button');
       button.addEventListener('click', this.navItemClickHandler.bind(this), true);
     }
