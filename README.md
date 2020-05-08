@@ -6,7 +6,7 @@ Repository of the GUI to interact with the Raspberry Pi cluster.
 
 ## Authors
 
-* [**Florentin Thullier**](https://github.com/FlorentinTh) - 2019
+- [**Florentin Thullier**](https://github.com/FlorentinTh) - 2019
 
 ## License
 

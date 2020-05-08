@@ -30,6 +30,7 @@ class Features extends Task {
 
     for (let i = 0; i < featureItems.length; ++i) {
       const featureItem = featureItems[i];
+
       if (toggle) {
         featureItem.classList.remove('item-selected');
       } else {
@@ -73,6 +74,7 @@ class Features extends Task {
 
     for (let i = 0; i < featureItems.length; i++) {
       const item = featureItems[i];
+
       if (features.includes(item.dataset.slug)) {
         if (!item.classList.contains('item-selected')) {
           item.classList.add('item-selected');
@@ -86,6 +88,7 @@ class Features extends Task {
     event.stopImmediatePropagation();
 
     let item = event.target;
+
     if (!(event.target.tagName === 'DIV')) {
       item = event.target.parentNode;
     }
@@ -188,6 +191,7 @@ class Features extends Task {
     }
 
     const selectAllToggle = this.context.querySelector('#select-all-toggle');
+
     selectAllToggle.addEventListener(
       'click',
       this.selectAllToggleClickListener.bind(this),
@@ -195,6 +199,7 @@ class Features extends Task {
     );
 
     const processType = sessionStorage.getItem('process-type');
+
     if (processType === 'none') {
       const nextBtn = this.context.querySelector('.btn-group-nav .next button');
       nextBtn.childNodes[0].textContent = 'Finish ';
@@ -215,6 +220,7 @@ async function getFeatures(url, context) {
     const response = await axios.get(url, {
       headers: APIHelper.setAuthHeader()
     });
+
     return response.data;
   } catch (error) {
     APIHelper.errorsHandler(error, context, true);

@@ -16,7 +16,6 @@ let cancelUploadEventClick;
 class DataImport extends Component {
   constructor(context = null) {
     super(context);
-
     this.cancelToken = undefined;
     this.source = undefined;
 
@@ -40,7 +39,7 @@ class DataImport extends Component {
     text.innerHTML = 'Drag and drop or click to upload a file';
   }
 
-  uploadFile(data) {
+  uploadFile(data, override = false) {
     const label = fileUploadForm.querySelector('label');
     const input = fileUploadForm.querySelector('input');
     const value = label.querySelector('p#value');
@@ -70,10 +69,11 @@ class DataImport extends Component {
       },
       false
     ];
+
     cancelBtn.addEventListener(...cancelUploadEventClick);
 
     axios
-      .post('/files/upload?type=inputs', data, {
+      .post('/files/upload?type=inputs&override=' + override, data, {
         headers: APIHelper.setAuthHeader(),
         cancelToken: this.source.token,
         onUploadProgress: progress => {
@@ -81,13 +81,16 @@ class DataImport extends Component {
 
           label.classList.add('uploading');
           input.setAttribute('disabled', 'disabled');
-
           value.innerHTML = progressValue + '%';
           progressBar.value = progressValue;
 
           const data = Store.get('file-upload').data;
           const filename = data.filename;
           const size = data.size;
+
+          if (progressValue === 100) {
+            value.innerHTML = 'Processing file...';
+          }
 
           Store.update('file-upload', {
             filename: filename,
@@ -107,8 +110,7 @@ class DataImport extends Component {
           }
 
           const filename = response.data.data;
-          ModalHelper.notification('success', filename + ' successfully uploaded.');
-
+          ModalHelper.notification('success', filename + ' successfully uploaded');
           cancelBtn.removeEventListener(...cancelUploadEventClick);
           this.resetFileUpload();
         }
@@ -117,8 +119,11 @@ class DataImport extends Component {
         if (axios.isCancel(error)) {
           ModalHelper.notification('warning', 'The upload was canceled');
         } else {
-          APIHelper.errorsHandler(error, this.context, true);
+          ModalHelper.error(
+            'The file is not valid. It will automatically be removed. Please try again'
+          );
         }
+
         Store.updateEnd('file-upload');
         cancelBtn.removeEventListener(...cancelUploadEventClick);
         this.resetFileUpload();
@@ -130,6 +135,7 @@ class DataImport extends Component {
     event.stopImmediatePropagation();
 
     const formData = new FormData(fileUploadForm);
+
     formData.delete('file-input');
     formData.append('file-input', event.currentTarget.file);
 
@@ -147,7 +153,7 @@ class DataImport extends Component {
 
             ModalHelper.confirm(title, message).then(result => {
               if (result.value) {
-                this.uploadFile(formData);
+                this.uploadFile(formData, true);
               } else {
                 this.resetFileUpload();
               }
@@ -169,6 +175,7 @@ class DataImport extends Component {
 
     texts[0].innerHTML = StringHelper.truncateLength(file.name, 26);
     texts[1].innerHTML = `(${StringHelper.convertBytesToHuman(file.size)})`;
+
     label.classList.add('filled');
 
     fileUploadEventSubmit = ['submit', this.uploadFormSubmitListener.bind(this), false];
@@ -195,12 +202,14 @@ class DataImport extends Component {
   fileUploadListener(event) {
     event.preventDefault();
     event.stopImmediatePropagation();
+
     const files = event.target.files || event.dataTransfer.files;
 
     if (!(event.target.value === '')) {
       this.displayFile(files[0]);
     } else {
       const label = this.context.querySelector('label');
+
       if (label.classList.contains('filled')) {
         const text = label.querySelector('p');
         label.classList.remove('filled');
@@ -219,6 +228,7 @@ class DataImport extends Component {
 
     texts[0].innerHTML = StringHelper.truncateLength(data.filename, 26);
     texts[1].innerHTML = `(${StringHelper.convertBytesToHuman(data.size)})`;
+
     value.innerHTML = data.progress + '%';
     progressBar.value = data.progress;
 
@@ -258,6 +268,7 @@ class DataImport extends Component {
     fileUploadContainer = this.context.querySelector('.file-upload-container');
 
     const dataStore = Store.get('file-upload');
+
     if (!(dataStore === undefined)) {
       this.resumeFileUpload(dataStore.data);
     } else {
