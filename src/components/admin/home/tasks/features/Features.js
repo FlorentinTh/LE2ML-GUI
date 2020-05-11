@@ -137,7 +137,7 @@ class Features extends Task {
     if (timeStore === undefined && freqStore === undefined) {
       this.renderView(true);
 
-      getFeatures('/features', this.context).then(response => {
+      getFeatures('/features/time', this.context).then(response => {
         if (response) {
           Store.add({
             id: 'time-features',
@@ -146,7 +146,7 @@ class Features extends Task {
 
           timeFeatures = response.data;
 
-          getFeatures('/features?domain=frequential', this.context).then(response => {
+          getFeatures('/features/frequential', this.context).then(response => {
             if (response) {
               Store.add({
                 id: 'freq-features',

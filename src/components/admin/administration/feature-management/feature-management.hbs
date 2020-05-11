@@ -1,0 +1,18 @@
+<h1>
+  {{title}}
+  <span class="badge badge-right">{{total}}</span>
+</h1>
+<div class="grid-container" id="features">
+  <div class="outer-grid">
+    <div class="outer-item">
+      <div class="content">
+        <i class="fas fa-plus"></i>
+        <h3>Add a new Feature</h3>
+      </div>
+    </div>
+  </div>
+  {{#> ../search/search}}{{/../search/search}}
+  <div class="grid-features">
+    {{#features}}{{> feature-list}}{{/features}}
+  </div>
+</div>

@@ -203,47 +203,6 @@ class UserManagement extends Component {
     }
   }
 
-  addSearchListener(id) {
-    const search = document.getElementById('search');
-    let timer = null;
-    let query = '';
-
-    search.addEventListener('keydown', event => {
-      const inputValue = event.keyCode;
-      if (
-        (inputValue >= 65 && inputValue <= 90) ||
-        inputValue === 8 ||
-        inputValue === 46
-      ) {
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-          query = search.value.trim();
-
-          if (StringHelper.isAlpha(query)) {
-            const result = usersNormalFull.filter(
-              user =>
-                user.lastname.includes(query) ||
-                user.firstname.includes(query) ||
-                user.email.includes(query)
-            );
-
-            usersNormal.users = result;
-            this.buildUserList(id);
-          }
-        }, 200);
-      }
-    });
-
-    search.addEventListener('keyup', event => {
-      if (search.value.trim() === '' && !(query === '')) {
-        if (event.keyCode === 8 || event.keyCode === 46) {
-          usersNormal.users = usersNormalFull;
-          this.buildUserList(id);
-        }
-      }
-    });
-  }
-
   initData() {
     const usersAdminStore = Store.get('users-admin');
     const usersNormalStore = Store.get('users-normal');
@@ -312,7 +271,10 @@ class UserManagement extends Component {
     this.addFilterClickListener('#users-normal');
     this.buildUserList('#users-normal');
 
-    this.addSearchListener('#users-normal');
+    super.addSearchListener(usersNormalFull, ['firstname', 'lastname', 'email'], data => {
+      usersNormal.users = data;
+      this.buildUserList('#users-normal');
+    });
   }
 
   inputListener(input) {

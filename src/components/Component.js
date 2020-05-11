@@ -1,5 +1,7 @@
 import Router from '@Router';
 import URLHelper from '@URLHelper';
+import StringHelper from '@StringHelper';
+
 class Component {
   constructor(context) {
     if (context === null) {
@@ -41,6 +43,47 @@ class Component {
         });
       }
     }
+  }
+
+  addSearchListener(data, props, callback) {
+    const search = document.getElementById('search');
+    let timer = null;
+    let query = '';
+
+    search.addEventListener('keydown', event => {
+      const inputValue = event.keyCode;
+      if (
+        (inputValue >= 65 && inputValue <= 90) ||
+        inputValue === 8 ||
+        inputValue === 46
+      ) {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          query = search.value.trim();
+
+          if (StringHelper.isAlpha(query)) {
+            const result = data.filter(item => {
+              for (let i = 0; i < props.length; ++i) {
+                const prop = props[i];
+                if (item[prop].includes(query)) {
+                  return item;
+                }
+              }
+            });
+
+            callback(result);
+          }
+        }, 200);
+      }
+    });
+
+    search.addEventListener('keyup', event => {
+      if (search.value.trim() === '' && !(query === '')) {
+        if (event.keyCode === 8 || event.keyCode === 46) {
+          callback(data);
+        }
+      }
+    });
   }
 }
 

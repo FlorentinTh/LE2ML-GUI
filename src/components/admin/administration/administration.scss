@@ -6,6 +6,47 @@
     margin-bottom: 0;
   }
 
+  .outer-grid {
+    display: grid;
+    width: 100%;
+    grid-auto-rows: minmax(95px, auto);
+    grid-gap: 1em;
+    max-width: 900px;
+    margin: 0 auto;
+    padding-bottom: 50px;
+
+    .outer-item {
+      @include themify($themes) {
+        color: themed('color-text-primary');
+        background: themed('color-secondary');
+        border-bottom: 2px solid themed('color-accent');
+
+        &:hover {
+          cursor: pointer;
+          background: themed('color-accent');
+          transition: background 0.5s linear;
+        }
+      }
+
+      display: flex;
+      animation: slide-up 0.4s linear;
+      height: 95px;
+      flex: 1 1 150px;
+      align-items: center;
+      justify-content: center;
+
+      i {
+        font-size: 1.8em;
+        margin-bottom: 10px;
+      }
+
+      h3 {
+        font-size: 1em;
+        text-transform: capitalize;
+      }
+    }
+  }
+
   h2,
   .filters {
     text-align: left;
@@ -15,6 +56,7 @@
 
   .search-container {
     margin: 15px auto 10px auto;
+    width: 400px;
 
     i {
       position: absolute;
@@ -29,6 +71,7 @@
       height: 45px;
       border: none;
       font-weight: lighter;
+      width: 100%;
 
       @include themify($themes) {
         background-color: themed('color-secondary');
@@ -115,6 +158,8 @@
   }
 }
 
+.grid-algos,
+.grid-features,
 .grid-users,
 .grid-jobs {
   display: grid;
@@ -133,36 +178,11 @@
     }
 
     animation: slide-up 0.4s linear;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
     height: 175px;
-    padding-left: 35px;
     flex: 1 1 150px;
 
     &:last-child {
       margin-bottom: 0;
-    }
-
-    .head {
-      margin-right: 25px;
-      width: 13%;
-
-      i {
-        font-size: 4.5em;
-        margin-bottom: 15px;
-      }
-
-      span::before {
-        content: '\A';
-        white-space: pre;
-      }
-
-      span {
-        font-size: 1em;
-        font-weight: bold;
-      }
     }
 
     .loading-item,
@@ -174,34 +194,7 @@
       }
     }
 
-    .infos {
-      padding-left: 5%;
-      min-width: 250px;
-      @include themify($themes) {
-        border-left: 1px solid themed('color-text-primary');
-      }
-
-      p.info {
-        &:first-of-type {
-          display: none;
-        }
-
-        text-align: left;
-        padding-bottom: 15px;
-
-        &:last-of-type {
-          padding-bottom: 0;
-        }
-
-        i {
-          padding-right: 10px;
-        }
-      }
-    }
-
     .actions {
-      padding-right: 35px;
-
       p.action {
         padding-bottom: 8px;
 
@@ -238,6 +231,135 @@
           }
         }
       }
+    }
+  }
+}
+
+.grid-algos,
+.grid-features {
+  .grid-item {
+    padding: 0 50px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .left {
+      flex-grow: 1;
+      .label {
+        h3 {
+          font-size: 1.5em;
+          margin-bottom: 5px;
+        }
+      }
+
+      .state-indic {
+        margin-bottom: 15px;
+        font-size: 0.75em;
+        text-transform: uppercase;
+
+        i {
+          font-size: 0.5em;
+          vertical-align: middle;
+          line-height: 0.2em;
+        }
+
+        &.state-enabled {
+          @include themify($themes) {
+            color: themed('color-accent');
+          }
+        }
+
+        &.state-disabled {
+          @include themify($themes) {
+            color: #ef5350;
+          }
+        }
+      }
+
+      .infos {
+        font-size: 0.85em;
+        padding: 5px 0 5px 25px;
+        @include themify($themes) {
+          border-left: 1px solid themed('color-text-primary');
+        }
+
+        .info:not(:last-of-type) {
+          margin-bottom: 15px;
+        }
+
+        .info:last-child:not(i) {
+          font-style: italic;
+        }
+
+        i {
+          padding-right: 10px;
+        }
+      }
+    }
+    .actions {
+      p.action {
+        padding-bottom: 8px;
+      }
+    }
+  }
+}
+
+.grid-users,
+.grid-jobs {
+  .grid-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 35px;
+    .head {
+      margin-right: 25px;
+      width: 13%;
+
+      i {
+        font-size: 4.5em;
+        margin-bottom: 15px;
+      }
+
+      span::before {
+        content: '\A';
+        white-space: pre;
+      }
+
+      span {
+        font-size: 1em;
+        font-weight: bold;
+      }
+    }
+
+    .infos {
+      padding-left: 5%;
+      min-width: 250px;
+      @include themify($themes) {
+        border-left: 1px solid themed('color-text-primary');
+      }
+
+      p.info {
+        &:first-of-type {
+          display: none;
+        }
+
+        text-align: left;
+        padding-bottom: 15px;
+
+        &:last-of-type {
+          padding-bottom: 0;
+        }
+
+        i {
+          padding-right: 10px;
+        }
+      }
+    }
+
+    .actions {
+      padding-right: 35px;
     }
   }
 }

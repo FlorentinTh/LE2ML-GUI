@@ -12,8 +12,10 @@ import UserPassword from '@Components/admin/settings/user-password/UserPassword'
 import UserInfo from '@Components/admin/settings/user-info/UserInfo';
 import Administration from '@Components/admin/administration/Administration';
 import UserManagement from '@Components/admin/administration/user-management/UserManagement';
-import JobManagement from '@Components/admin/administration/job-management/JobManagement';
 import TempPassword from '@Components/admin/administration/temp-password/TempPassword';
+import JobManagement from '@Components/admin/administration/job-management/JobManagement';
+import FeatureManagement from '@Components/admin/administration/feature-management/FeatureManagement';
+import AlgoManagement from '@Components/admin/administration/algo-management/AlgoManagement';
 import SignOut from '@Components/admin/sign-out/SignOut';
 
 const routes = [
@@ -80,12 +82,20 @@ const routes = [
             Controller: UserManagement
           },
           {
+            name: 'temp-password',
+            Controller: TempPassword
+          },
+          {
             name: 'job-management',
             Controller: JobManagement
           },
           {
-            name: 'temp-password',
-            Controller: TempPassword
+            name: 'feature-management',
+            Controller: FeatureManagement
+          },
+          {
+            name: 'algo-management',
+            Controller: AlgoManagement
           }
         ]
       },
