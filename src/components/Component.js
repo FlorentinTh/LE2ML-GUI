@@ -59,7 +59,7 @@ class Component {
       ) {
         clearTimeout(timer);
         timer = setTimeout(() => {
-          query = search.value.trim();
+          query = search.value.trim().toLowerCase();
 
           if (StringHelper.isAlpha(query)) {
             const result = data.filter(item => {
