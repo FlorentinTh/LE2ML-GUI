@@ -47,6 +47,11 @@ class Component {
 
   addSearchListener(data, props, callback) {
     const search = document.getElementById('search');
+
+    const count = document.querySelector('.result-count');
+    const countNb = document.querySelector('.result-count span.badge');
+    const countMsg = document.querySelector('.result-count p');
+
     let timer = null;
     let query = '';
 
@@ -71,6 +76,18 @@ class Component {
               }
             });
 
+            if (count.classList.contains('hidden')) {
+              count.classList.remove('hidden');
+              count.classList.add('active');
+            }
+
+            countNb.textContent = result.length;
+            if (result.length > 1) {
+              countMsg.textContent = 'results found';
+            } else if (result.length >= 0 && result.length <= 1) {
+              countMsg.textContent = 'result found';
+            }
+
             callback(result);
           }
         }, 200);
@@ -80,6 +97,11 @@ class Component {
     search.addEventListener('keyup', event => {
       if (search.value.trim() === '' && !(query === '')) {
         if (event.keyCode === 8 || event.keyCode === 46) {
+          if (count.classList.contains('active')) {
+            count.classList.remove('active');
+            count.classList.add('hidden');
+          }
+
           callback(data);
         }
       }

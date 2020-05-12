@@ -278,11 +278,15 @@ class UserManagement extends Component {
   }
 
   inputListener(input) {
-    input.addEventListener('focusout', event => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      input.value = StringHelper.capitalizeFirst(input.value.toLowerCase());
-    });
+    input.addEventListener(
+      'focusout',
+      event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        input.value = StringHelper.capitalizeFirst(input.value.toLowerCase());
+      },
+      false
+    );
   }
 
   editAction(users) {

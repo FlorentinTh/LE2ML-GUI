@@ -1,0 +1,48 @@
+<div class="form-infos form-infos-modal">
+  <div class="form">
+    <form action="#">
+      <label for="label"></label>
+      {{#[utils/compare] label '===' undefined}}
+      <input type="text" id="label" name="label" autocomplete="false" placeholder="Label" required />
+      {{else}}
+      <input type="text" id="label" name="label" autocomplete="false" value="{{label}}" required />
+      {{/[utils/compare]}}
+      <label for="domain"></label>
+      <select id="domain">
+        {{#[utils/compare] domain '===' undefined}}
+        <option value="time" selected>Time</option>
+        <option value="frequential">Frequential</option>
+        {{else}}
+        {{#[utils/compare] domain '===' 'time'}}
+        <option value="time" selected>Time</option>
+        <option value="frequential">Frequential</option>
+        {{else}}
+        <option value="time">Time</option>
+        <option value="frequential" selected>Frequential</option>
+        {{/[utils/compare]}}
+        {{/[utils/compare]}}
+      </select>
+      <label for="container"></label>
+      {{#[utils/compare] container '===' undefined}}
+      <input type="text" id="container" name="container" autocomplete="false" placeholder="Container Name" required />
+      {{else}}
+      <input type="text" id="container" name="container" autocomplete="false" value="{{container}}" required />
+      {{/[utils/compare]}}
+      <label for="enabled"></label>
+      <select id="enabled">
+        {{#[utils/compare] enabled '===' undefined}}
+        <option value="true" selected>Enabled</option>
+        <option value="false">Disabled</option>
+        {{else}}
+        {{#[utils/compare] enabled '===' true}}
+        <option value="true" selected>Enabled</option>
+        <option value="false">Disabled</option>
+        {{else}}
+        <option value="true">Enabled</option>
+        <option value="false" selected>Disabled</option>
+        {{/[utils/compare]}}
+        {{/[utils/compare]}}
+      </select>
+    </form>
+  </div>
+</div>

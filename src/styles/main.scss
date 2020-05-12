@@ -193,6 +193,10 @@ input[type='file']::-webkit-file-upload-button {
       text-transform: capitalize !important;
     }
 
+    .swal2-title {
+      text-transform: capitalize;
+    }
+
     .swal2-content {
       form {
         *:last-child {

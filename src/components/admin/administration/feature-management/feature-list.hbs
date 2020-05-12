@@ -1,10 +1,10 @@
 {{#each features as |feature|}}
-<div class="grid-item" data-feature="{{feature._id}}">
+<div class="grid-item" id="feature-infos" data-feature="{{feature._id}}">
   <div class="left">
     <div class="label">
       <h3>{{feature.label}}</h3>
     </div>
-    {{#[utils/compare] feature.enable '===' true}}
+    {{#[utils/compare] feature.enabled '===' true}}
     <p class="state-indic state-enabled">
       <i class="fas fa-circle"></i>
       Enabled
@@ -37,7 +37,7 @@
         <button id="edit">Edit</button>
       </p>
       <p class="action">
-        {{#[utils/compare] feature.enable '===' true}}
+        {{#[utils/compare] feature.enabled '===' true}}
         <button id="state">Disable</button>
         {{else}}
         <button id="state">Enable</button>

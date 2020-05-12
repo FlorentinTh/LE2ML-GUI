@@ -1,9 +1,12 @@
 import Component from '@Component';
 import algoManagementTemplate from './algo-management.hbs';
 import algoListTemplate from './algo-list.hbs';
+import formAlgoTemplate from './form-algo.hbs';
 import Store from '@Store';
 import axios from 'axios';
 import APIHelper from '@APIHelper';
+import ModalHelper from '@ModalHelper';
+import StringHelper from '@StringHelper';
 
 let allAlgorithms;
 
@@ -58,6 +61,9 @@ class AlgoManagement extends Component {
     this.initView();
     this.buildAlgoList('#algorithms');
 
+    const addBtn = this.context.querySelector('#add');
+    addBtn.addEventListener('click', this.addBtnListener.bind(this), false);
+
     super.addSearchListener(allAlgorithms.algorithms, ['slug'], data => {
       allAlgorithms.algorithms = data;
       this.buildAlgoList('#algorithms');
@@ -77,7 +83,187 @@ class AlgoManagement extends Component {
         algorithms: allAlgorithms.algorithms,
         loading: opts.loading
       });
+
+      this.setActions(allAlgorithms.algorithms);
     }
+  }
+
+  addBtnListener(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const content = formAlgoTemplate();
+    const elems = ['label', 'type', 'enabled', 'container'];
+
+    ModalHelper.edit('Add a new algorithm', content, 'add', elems).then(result => {
+      if (result.value) {
+        const data = {
+          label: result.value.label.toLowerCase(),
+          type: result.value.type,
+          container: StringHelper.toSlug(result.value.container, '-'),
+          enabled: result.value.enabled === 'true'
+        };
+
+        addAlgo('/algos', data, this.context).then(response => {
+          if (response) {
+            ModalHelper.notification(
+              'success',
+              response.data.label + ' successfully created.'
+            );
+            // eslint-disable-next-line no-new
+            new AlgoManagement(true);
+          }
+        });
+      }
+    });
+
+    const labelInput = document.querySelector('input#label');
+    const containerInput = document.querySelector('input#container');
+
+    this.inputListener(labelInput);
+    this.inputListener(containerInput);
+  }
+
+  inputListener(input) {
+    input.addEventListener(
+      'focusout',
+      event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        switch (input.id) {
+          case 'label':
+            input.value = input.value.toLowerCase();
+            break;
+          case 'container':
+            input.value = StringHelper.toSlug(input.value, '-');
+            break;
+        }
+      },
+      false
+    );
+  }
+
+  setActions(algos) {
+    this.editAction(algos);
+    this.grantOrRevokeAction(algos);
+    this.deleteAction(algos);
+  }
+
+  editAction(algos) {
+    const buttons = this.context.querySelectorAll('button#edit');
+
+    buttons.forEach(button => {
+      const algoId = button.closest('#algo-infos').dataset.algo;
+      const algo = algos.find(elem => elem._id === algoId);
+
+      button.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const content = formAlgoTemplate({
+          label: algo.label.toLowerCase(),
+          type: algo.type,
+          container: StringHelper.toSlug(algo.container, '-'),
+          enabled: algo.enabled
+        });
+
+        const elems = ['label', 'type', 'container', 'enabled'];
+        ModalHelper.edit('Edit algorithm', content, 'update', elems).then(result => {
+          if (result.value) {
+            const data = result.value;
+            updateAlgo('/algos/' + algoId, data, this.context).then(response => {
+              if (response) {
+                ModalHelper.notification(
+                  'success',
+                  response.data.algo.label + ' successfully updated.'
+                );
+                // eslint-disable-next-line no-new
+                new AlgoManagement(true);
+              }
+            });
+          }
+        });
+
+        const labelInput = document.querySelector('input#label');
+        const containerInput = document.querySelector('input#container');
+
+        this.inputListener(labelInput);
+        this.inputListener(containerInput);
+      });
+    });
+  }
+
+  grantOrRevokeAction(algos) {
+    const buttons = this.context.querySelectorAll('button#state');
+
+    buttons.forEach(button => {
+      const algoId = button.closest('#algo-infos').dataset.algo;
+      const algo = algos.find(elem => elem._id === algoId);
+
+      button.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const data = {
+          label: algo.label,
+          type: algo.type,
+          container: algo.container,
+          enabled: !algo.enabled
+        };
+
+        const askTitle = algo.enabled ? 'Disable algorithm' : 'Enable aglorithm';
+
+        const askMessage = algo.enabled
+          ? algo.label + ' will be disabled.'
+          : algo.label + ' will be enabled.';
+
+        ModalHelper.confirm(askTitle, askMessage).then(result => {
+          if (result.value) {
+            const confirmMessage = algo.enabled
+              ? algo.label + ' is now disabled.'
+              : algo.label + ' is now enabled.';
+            updateState('/algos/state/' + algoId, data, this.context).then(response => {
+              if (response) {
+                ModalHelper.notification('success', confirmMessage);
+                // eslint-disable-next-line no-new
+                new AlgoManagement(true);
+              }
+            });
+          }
+        });
+      });
+    });
+  }
+
+  deleteAction(algos) {
+    const buttons = this.context.querySelectorAll('button#delete');
+    buttons.forEach(button => {
+      const algoId = button.closest('#algo-infos').dataset.algo;
+      const algo = algos.find(elem => elem._id === algoId);
+      button.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const askTitle = 'Delete ' + algo.label + ' ?';
+        const askMessage = algo.label + ' will be permanently deleted.';
+
+        ModalHelper.confirm(askTitle, askMessage).then(result => {
+          if (result.value) {
+            deleteAlgo('/algos/' + algoId, this.context).then(response => {
+              if (response) {
+                ModalHelper.notification(
+                  'success',
+                  algo.label + ' successfully deleted.'
+                );
+                // eslint-disable-next-line no-new
+                new AlgoManagement(true);
+              }
+            });
+          }
+        });
+      });
+    });
   }
 }
 
@@ -89,6 +275,52 @@ async function getAlgorithms(url, context) {
     return response.data;
   } catch (error) {
     APIHelper.errorsHandler(error, context, true);
+  }
+}
+
+async function addAlgo(url, data, context) {
+  try {
+    const response = await axios.put(url, data, {
+      headers: APIHelper.setAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    APIHelper.errorsHandler(error, context);
+  }
+}
+
+async function updateAlgo(url, data, context) {
+  try {
+    const response = await axios.post(url, data, {
+      headers: APIHelper.setAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    APIHelper.errorsHandler(error, context);
+  }
+}
+
+async function updateState(url, data, context) {
+  try {
+    const response = await axios.post(url, data, {
+      headers: APIHelper.setAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    APIHelper.errorsHandler(error, context);
+  }
+}
+
+async function deleteAlgo(url, context) {
+  try {
+    const response = await axios.delete(url, {
+      headers: APIHelper.setAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    if (error) {
+      APIHelper.errorsHandler(error, context);
+    }
   }
 }
 

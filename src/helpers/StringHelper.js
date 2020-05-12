@@ -71,6 +71,32 @@ class StringHelper {
 
     return string;
   }
+
+  static toSlug(string, separator) {
+    if (!(typeof string === 'string')) {
+      throw new Error('Expected type for argument string is String');
+    }
+
+    if (
+      !(typeof separator === 'string') &&
+      (!(separator === '-') || !(separator === '_'))
+    ) {
+      throw new Error('Expected values for separator are either "-" or "_".');
+    }
+
+    const spaces = string.toLowerCase().replace(/\s/g, separator);
+    let result;
+    switch (separator) {
+      case '-':
+        result = spaces.replace(/_/g, separator);
+        break;
+      case '_':
+        result = spaces.replace(/-/g, separator);
+        break;
+    }
+
+    return result;
+  }
 }
 
 export default StringHelper;
