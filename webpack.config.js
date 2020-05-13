@@ -168,7 +168,7 @@ module.exports = (env, options) => {
 
   const PROD = {
     entry: {
-      main: path.join(config.sourceFolder, 'public', 'main.js'),
+      main: path.join(config.sourceFolder, 'main.js'),
       fontAwesome: path.join(config.sourceFolder, 'styles', 'font-awesome.scss')
     },
     module: {
