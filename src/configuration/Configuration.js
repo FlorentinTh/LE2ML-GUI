@@ -16,8 +16,7 @@ class Configuration {
 
     switch (version.value) {
       case '1':
-        new V1().marshall(JSONValues);
-        break;
+        return new V1().marshall(JSONValues);
     }
   }
 

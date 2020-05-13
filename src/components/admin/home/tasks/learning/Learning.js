@@ -4,7 +4,6 @@ import Task from '../Task';
 import Features from '../features/Features';
 import StringHelper from '@StringHelper';
 import APIHelper from '@APIHelper';
-// import FileHelper from '@FileHelper';
 import Store from '@Store';
 import axios from 'axios';
 
@@ -84,11 +83,11 @@ class Learning extends Task {
     const select = event.target;
     const selected = select.options[select.selectedIndex].value;
 
-    sessionStorage.setItem('algorithm', selected);
+    sessionStorage.setItem('algorithm-name', selected);
   }
 
   initAlgoSelect() {
-    const storedValue = sessionStorage.getItem('algorithm');
+    const storedValue = sessionStorage.getItem('algorithm-name');
     const options = algoSelect.options;
 
     for (let i = 1; i < options.length; ++i) {
@@ -112,15 +111,13 @@ class Learning extends Task {
     this.initAlgoSelect();
     algoSelect.addEventListener('change', this.algoChangeListener.bind(this), false);
 
-    /**
-     * TODO
-     * Make session storage a JSON File
-     * API CALL
-     * RECEIVE YML
-     * INIT DOWNLOAD
-     */
-    // const downloadConfBtn = this.context.querySelector('#download-config');
-    // FileHelper.downloadAsJson(downloadConfBtn, { test: 'test', prout: 'prout' }, 'test');
+    const downloadBtn = this.context.querySelector('#download-config');
+
+    downloadBtn.addEventListener(
+      'click',
+      super.downloadBtnClickListener.bind(this),
+      false
+    );
   }
 }
 

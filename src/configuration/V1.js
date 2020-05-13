@@ -3,7 +3,54 @@ class V1 {
     this.config = config;
   }
 
-  marshall(values) {}
+  marshall(values) {
+    const result = {
+      version: '1',
+      process: values['process-type']
+    };
+
+    if (values['process-type'] === 'test') {
+      result.model = values['process-model'];
+    }
+
+    switch (values['input-type']) {
+      case 'file':
+        result.input = { file: values['input-content'] };
+        break;
+      case 'ws':
+        result.input = { ws: values['input-content'] };
+        break;
+    }
+
+    const isWindowingEnabled = Boolean(values['windowing-enabled']);
+    result.windowing = {
+      enable: isWindowingEnabled
+    };
+
+    switch (isWindowingEnabled) {
+      case true:
+        result.windowing = {
+          ...result.windowing,
+          parameters: {
+            length: Number(values['windowing-length']),
+            function: values['windowing-function'],
+            overlap: Number(values['windowing-overlap'])
+          }
+        };
+        break;
+    }
+
+    if (!(values.features === undefined)) {
+      const features = values.features.split(',');
+      result.features = features;
+    }
+
+    if (values['process-type'] === 'train' || values['process-type'] === 'test') {
+      result.algorithm = { name: values['algorithm-name'] };
+    }
+
+    return result;
+  }
 
   unmarshall() {
     const inputType = Object.keys(this.config.input)[0];
@@ -32,7 +79,7 @@ class V1 {
     const algorithm = this.config.algorithm;
 
     if (!(algorithm === undefined)) {
-      sessionStorage.setItem('algorithm', algorithm.name);
+      sessionStorage.setItem('algorithm-name', algorithm.name);
     }
   }
 }

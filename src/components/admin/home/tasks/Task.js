@@ -1,3 +1,9 @@
+import Configuration from '@Configuration';
+import { Versions } from '@ConfVersion';
+import FileHelper from '@FileHelper';
+import axios from 'axios';
+import APIHelper from '@APIHelper';
+
 class Task {
   constructor(context) {
     this.context = context;
@@ -122,6 +128,50 @@ class Task {
     } else if (!(previousBtn === null) && button === 'previous') {
       previousBtn.addEventListener(...btnClickListener);
     }
+  }
+
+  downloadBtnClickListener(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const btn =
+      event.target.tagName === 'BUTTON' ? event.target : event.target.parentNode;
+
+    btn.setAttribute('disabled', true);
+
+    if (!btn.classList.contains('loading')) {
+      btn.classList.add('loading');
+    }
+
+    const JSONConf = new Configuration().marshall(Versions.v1);
+
+    axios
+      .post('/files/convert/conf', JSONConf, {
+        headers: APIHelper.setAuthHeader()
+      })
+      .then(response => {
+        if (response) {
+          const downloadConfBtn = this.context.querySelector('#download-config a');
+          FileHelper.enableDownload(downloadConfBtn, response.data.data, 'config', () => {
+            downloadConfBtn.click();
+
+            FileHelper.disableDownload(downloadConfBtn);
+            btn.removeAttribute('disabled');
+
+            if (btn.classList.contains('loading')) {
+              btn.classList.remove('loading');
+            }
+          });
+        }
+      })
+      .catch(error => {
+        btn.removeAttribute('disabled');
+
+        if (btn.classList.contains('loading')) {
+          btn.classList.remove('loading');
+        }
+        APIHelper.errorsHandler(error, this.context, true);
+      });
   }
 
   run() {

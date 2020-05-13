@@ -197,6 +197,13 @@ class Features extends Task {
       }
 
       this.context.insertAdjacentHTML('beforeend', configDownloadTemplate());
+
+      const downloadBtn = this.context.querySelector('#download-config');
+      downloadBtn.addEventListener(
+        'click',
+        super.downloadBtnClickListener.bind(this),
+        false
+      );
     } else {
       super.initNavBtn('next', { label: 'process', Task: Learning });
     }
