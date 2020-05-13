@@ -36,7 +36,7 @@ class DataSource extends Task {
   initFileList(filename) {
     const fileList = new FileList(
       inputContent,
-      'Existing Data Files',
+      'Existing Datasets',
       [],
       'input-content',
       filename || null
@@ -81,7 +81,7 @@ class DataSource extends Task {
     } else {
       fileList = new FileList(
         inputContent,
-        'Existing Data Files',
+        'Existing Datasets',
         dataStore.data,
         'input-content',
         filename || null,

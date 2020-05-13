@@ -177,11 +177,35 @@ class Features extends Task {
     this.buildFeatureList('#freq-features', loading);
   }
 
+  initNav() {
+    const processType = sessionStorage.getItem('process-type');
+
+    if (processType === 'none') {
+      const firstNav = this.context.querySelector('.btn-group-nav').children[0];
+
+      if (firstNav.classList.contains('next')) {
+        firstNav.classList.remove('next');
+        firstNav.classList.add('finish');
+      }
+
+      const icon = firstNav.children[0].children[0];
+
+      if (icon.classList.contains('fa-arrow-right')) {
+        icon.classList.remove('fa-arrow-right');
+        icon.classList.add('fa-flag-checkered');
+      }
+
+      this.context.insertAdjacentHTML('beforeend', configDownloadTemplate());
+    } else {
+      super.initNavBtn('next', { label: 'process', Task: Learning });
+    }
+
+    super.initNavBtn('previous', { label: 'windowing', Task: Windowing });
+  }
+
   make() {
     this.renderView(false);
-
-    super.initNavBtn('next', { label: 'process', Task: Learning });
-    super.initNavBtn('previous', { label: 'windowing', Task: Windowing });
+    this.initNav();
 
     featureItems = this.context.querySelectorAll('.feature-item');
 
@@ -197,15 +221,6 @@ class Features extends Task {
       this.selectAllToggleClickListener.bind(this),
       false
     );
-
-    const processType = sessionStorage.getItem('process-type');
-
-    if (processType === 'none') {
-      const nextBtn = this.context.querySelector('.btn-group-nav .next button');
-      nextBtn.childNodes[0].textContent = 'Finish ';
-      nextBtn.childNodes[1].classList = 'fas fa-flag-checkered';
-      this.context.insertAdjacentHTML('beforeend', configDownloadTemplate());
-    }
 
     const storedFeatures = sessionStorage.getItem('features');
 

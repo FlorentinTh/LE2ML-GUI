@@ -417,7 +417,8 @@
       @include themify($themes) {
         border-top: 2px dotted themed('color-secondary');
         .previous,
-        .next {
+        .next,
+        .finish {
           button {
             height: 45px;
             border: none;
@@ -427,7 +428,8 @@
           }
         }
 
-        .next {
+        .next,
+        .finish {
           margin-bottom: 15px;
           button {
             &.primary {
@@ -446,6 +448,18 @@
                 cursor: default;
               }
             }
+          }
+        }
+
+        .next {
+          button:before {
+            content: 'Next';
+          }
+        }
+
+        .finish {
+          button:before {
+            content: 'Start';
           }
         }
 
