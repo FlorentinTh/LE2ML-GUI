@@ -1,6 +1,29 @@
 <div class="task-content">
   <h2>{{title}}</h2>
-  <section id="process"></section>
+  <section id="process">
+    <div class="form-elems">
+      <div class="form-elem inline">
+        <span class="label-container">
+          <label for="algo">Algo</label>
+        </span>
+        <select id="algo">
+          <option disabled selected>Select an Algorithm</option>
+          <optgroup id="supervised-group" label="Supervised">
+            {{#supervised-algo}}{{> algo-list}}{{/supervised-algo}}
+          </optgroup>
+          <optgroup id="unsupervised-group" label="Unsupervised">
+            {{#unsupervised-algo}}{{> algo-list}}{{/unsupervised-algo}}
+          </optgroup>
+        </select>
+      </div>
+    </div>
+    <div class="algo-params">
+      <h3>Parameters</h3>
+      <div class="wip-content">
+        <p>Work in Porgress</p>
+      </div>
+    </div>
+  </section>
 </div>
 <div class="btn-group-nav">
   <div class="finish">

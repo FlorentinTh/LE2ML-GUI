@@ -146,11 +146,11 @@ class Windowing extends Task {
       if (storedValue && storedValue === option.value) {
         option.selected = true;
         properties.function = storedValue;
-      } else {
-        if (!storedValue) {
-          options[0].selected = true;
-        }
       }
+    }
+
+    if (!storedValue) {
+      options[0].selected = true;
     }
   }
 

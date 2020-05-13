@@ -122,6 +122,7 @@ class Features extends Task {
 
   buildFeatureList(id, loading = true) {
     const features = id.includes('time') ? timeFeatures.features : freqFeatures.features;
+
     const container = this.context.querySelector(id + ' > .list-container');
 
     container.innerHTML = featureListTemplate({

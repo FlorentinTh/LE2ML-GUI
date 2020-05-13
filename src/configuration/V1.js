@@ -32,7 +32,7 @@ class V1 {
     const algorithm = this.config.algorithm;
 
     if (!(algorithm === undefined)) {
-      sessionStorage.setItem('algo-label', algorithm.name);
+      sessionStorage.setItem('algorithm', algorithm.name);
     }
   }
 }

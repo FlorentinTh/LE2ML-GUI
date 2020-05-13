@@ -1,0 +1,11 @@
+{{#each algos as |algo|}}
+{{#[utils/compare] algo.enabled '===' true}}
+<option value="{{algo.slug}}">{{algo.label}}</option>
+{{else}}
+<option value="{{algo.slug}}" disabled>{{algo.label}}</option>
+{{/[utils/compare]}}
+{{else}}
+{{#[utils/compare] loading '===' true}}
+<option disabled>Fetching data...</option>
+{{/[utils/compare]}}
+{{/each}}
