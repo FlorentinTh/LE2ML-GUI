@@ -79,7 +79,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.13.0",
     "axios": "^0.19.2",
-    "dayjs": "^1.8.26",
+    "dayjs": "^1.8.27",
     "email-validator": "^2.0.4",
     "handlebars": "^4.7.6",
     "handlebars-utils": "^1.0.6",
