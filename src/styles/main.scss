@@ -153,6 +153,13 @@ input[type='file']::-webkit-file-upload-button {
     }
   }
 
+  &.switch-large {
+    label {
+      width: 175px;
+      padding: 12px 16px;
+    }
+  }
+
   label {
     @include themify($themes) {
       background-color: themed('color-secondary');

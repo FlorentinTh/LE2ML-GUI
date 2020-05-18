@@ -410,23 +410,8 @@
           }
         }
 
-        /**
-         * To Be Removed
-         */
         .algo-params {
           margin-top: 35px;
-          .wip-content {
-            height: 100px;
-            border-radius: 0.35em;
-            @include themify($themes) {
-              background-color: themed('color-secondary');
-            }
-
-            p {
-              line-height: 90px;
-              font-style: italic;
-            }
-          }
         }
 
         &.section-disabled {
