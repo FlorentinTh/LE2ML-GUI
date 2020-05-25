@@ -7,13 +7,17 @@ import axios from 'axios';
 import APIHelper from '@APIHelper';
 import ModalHelper from '@ModalHelper';
 import StringHelper from '@StringHelper';
+import SortHelper from '@SortHelper';
 
 let allFeatures;
+let filters;
+let filerClickListener;
 
 class FeatureManagement extends Component {
   constructor(reload = false, context = null) {
     super(context);
     this.title = 'Manage Features';
+    this.isFiltersDisabled = false;
     this.reload = reload;
     this.mount();
   }
@@ -40,7 +44,6 @@ class FeatureManagement extends Component {
         }
       });
     } else {
-      allFeatures = featureStore.data;
       this.render();
     }
   }
@@ -52,6 +55,8 @@ class FeatureManagement extends Component {
       total: total
     });
 
+    filters = this.context.querySelectorAll('.filters span.filter');
+
     if (loading) {
       this.buildFeatureList('#features', { defaultSort: false, loading: loading });
     }
@@ -59,6 +64,8 @@ class FeatureManagement extends Component {
 
   render() {
     this.initView();
+
+    this.addFilterClickListener();
     this.buildFeatureList('#features');
 
     const addBtn = this.context.querySelector('#add');
@@ -70,21 +77,135 @@ class FeatureManagement extends Component {
     });
   }
 
+  enableFilters() {
+    filters[0].classList.add('filter-active');
+
+    for (let i = 0; i < filters.length; ++i) {
+      const filter = filters[i];
+
+      if (filter.classList.contains('filter-disabled')) {
+        filter.classList.remove('filter-disabled');
+      }
+      filter.addEventListener(...filerClickListener);
+    }
+  }
+
+  disableFilters(isEventAdded = true) {
+    for (let i = 0; i < filters.length; ++i) {
+      const filter = filters[i];
+      if (filter.classList.contains('filter-active')) {
+        filter.classList.remove('filter-active');
+      }
+      filter.classList.add('filter-disabled');
+      if (isEventAdded) {
+        filter.removeEventListener(...filerClickListener);
+      }
+    }
+  }
+
+  addFilterClickListener() {
+    filerClickListener = [
+      'click',
+      event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const filter =
+          event.target.tagName === 'SPAN' ? event.target : event.target.parentNode;
+
+        if (filter.className.includes('active')) {
+          const sortIcon = filter.children[1].className;
+          let className = null;
+          if (sortIcon.includes('up')) {
+            className = sortIcon.replace('up', 'down');
+            filter.dataset.order = 'desc';
+          } else {
+            className = sortIcon.replace('down', 'up');
+            filter.dataset.order = 'asc';
+          }
+          filter.children[1].className = className;
+        } else {
+          filters.forEach(fil => {
+            if (fil.className.includes('active')) {
+              const className = fil.className;
+              fil.className = className
+                .split(' ')
+                .filter(name => name !== 'filter-active');
+            }
+          });
+          const className = filter.className;
+          filter.className = className + ' filter-active';
+        }
+        this.buildFeatureList('#features');
+      },
+      true
+    ];
+
+    for (let i = 0; i < filters.length; ++i) {
+      const filter = filters[i];
+      filter.addEventListener(...filerClickListener);
+    }
+  }
+
+  setDefaultSort(id, data) {
+    const elem = this.context.querySelector(id);
+    const filters = elem.querySelectorAll('span.filter');
+
+    for (let i = 0; i < filters.length; ++i) {
+      const filter = filters[i];
+      if (filter.className.includes('active')) {
+        return this.sort(filter.dataset.action, filter.dataset.order, data);
+      }
+    }
+  }
+
+  sort(filter, order, data) {
+    if (filter === 'alpha-sort') {
+      return SortHelper.sortArrayAlpha(data, 'label', order);
+    } else if (filter === 'state-sort') {
+      return SortHelper.sortArrayBoolean(data, 'enabled', order);
+    } else if (filter === 'container-sort') {
+      return SortHelper.sortArrayAlpha(data, 'container', order);
+    }
+  }
+
   buildFeatureList(id, opts = { defaultSort: true, loading: false }) {
     const container = document.querySelector(id + ' > .grid-features');
 
+    let features;
     if (opts.loading) {
+      features = [];
       container.innerHTML = featureListTemplate({
-        features: [],
-        loading: opts.loading
-      });
-    } else {
-      container.innerHTML = featureListTemplate({
-        features: allFeatures.features,
+        features: features,
         loading: opts.loading
       });
 
-      this.setActions(allFeatures.features);
+      if (!this.isFiltersDisabled) {
+        this.disableFilters(false);
+      }
+    } else {
+      features = allFeatures.features;
+
+      if (this.isFiltersDisabled) {
+        this.isFiltersDisabled = false;
+        this.enableFilters();
+      }
+
+      if (opts.defaultSort) {
+        features = this.setDefaultSort(id, features);
+      }
+
+      container.innerHTML = featureListTemplate({
+        features: features,
+        loading: opts.loading
+      });
+
+      this.setActions(features);
+
+      if (features.length <= 1) {
+        this.isFiltersDisabled = true;
+        this.disableFilters();
+      }
     }
   }
 

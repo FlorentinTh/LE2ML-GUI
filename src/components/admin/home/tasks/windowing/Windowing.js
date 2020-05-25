@@ -1,12 +1,17 @@
 import windowingTemplate from './windowing.hbs';
+import funcListTemplate from './func-list.hbs';
 import Task from '../Task';
 import DataSource from '../data-source/DataSource';
 import Features from '../features/Features';
+import axios from 'axios';
+import APIHelper from '@APIHelper';
+import Store from '@Store';
 
 let lengthInput;
 let windowType;
 let slider;
 let sliderTooltip;
+let windowFunctions;
 
 const properties = {
   length: 0,
@@ -18,7 +23,47 @@ class Windowing extends Task {
   constructor(context) {
     super(context);
     this.context = context;
-    this.make();
+    this.initData();
+  }
+
+  initData() {
+    const windowFuncStore = Store.get('window-type');
+
+    if (windowFuncStore === undefined) {
+      this.renderView(true);
+
+      getFunctions('/windows', this.context).then(response => {
+        if (response) {
+          windowFunctions = response.data.functions;
+
+          Store.add({
+            id: 'window-type',
+            data: windowFunctions
+          });
+
+          this.make();
+        }
+      });
+    } else {
+      windowFunctions = windowFuncStore.data;
+      this.make();
+    }
+  }
+
+  renderView(loading = true) {
+    this.context.innerHTML = windowingTemplate({
+      title: 'Windowing'
+    });
+
+    this.buildFunctionsList('#window-type', loading);
+  }
+
+  buildFunctionsList(id, loading = true) {
+    const select = this.context.querySelector(id);
+    select.innerHTML += funcListTemplate({
+      functions: windowFunctions,
+      loading: loading
+    });
   }
 
   resetInputs() {
@@ -144,8 +189,14 @@ class Windowing extends Task {
     for (let i = 0; i < options.length; ++i) {
       const option = options[i];
       if (storedValue && storedValue === option.value) {
-        option.selected = true;
-        properties.function = storedValue;
+        if (!option.disabled) {
+          option.selected = true;
+          properties.function = storedValue;
+        } else {
+          options[0].selected = true;
+          properties.function = options[0].value;
+          this.storeWindowingProperties(properties);
+        }
       }
     }
 
@@ -165,9 +216,7 @@ class Windowing extends Task {
   }
 
   make() {
-    this.context.innerHTML = windowingTemplate({
-      title: 'Windowing'
-    });
+    this.renderView(false);
 
     super.initNavBtn('next', { label: 'feature-extraction', Task: Features });
     super.initNavBtn('previous', { label: 'data-source', Task: DataSource });
@@ -216,6 +265,17 @@ class Windowing extends Task {
         this.toggleWindowingEnable(radio.value);
       }
     }
+  }
+}
+
+async function getFunctions(url, context) {
+  try {
+    const response = await axios.get(url, {
+      headers: APIHelper.setAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    APIHelper.errorsHandler(error, context, true);
   }
 }
 

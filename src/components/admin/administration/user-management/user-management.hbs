@@ -9,7 +9,7 @@
     {{~/[utils/compare]~}}
     <span class="badge badge-right">{{totalAdmin}}</span>
   </h2>
-  {{#> user-filters}}{{/user-filters}}
+  {{#> ../filters/users/filters}}{{/../filters/users/filters}}
   <div class="grid-users">
     {{#administrators}}{{> user-list}}{{/administrators}}
   </div>
@@ -25,7 +25,7 @@
     <span class="badge badge-right">{{totalNormal}}</span>
   </h2>
   {{#> ../search/search}}{{/../search/search}}
-  {{#> user-filters}}{{/user-filters}}
+  {{#> ../filters/users/filters}}{{/../filters/users/filters}}
   <div class="grid-users">
     {{#users}}{{> user-list}}{{/users}}
   </div>

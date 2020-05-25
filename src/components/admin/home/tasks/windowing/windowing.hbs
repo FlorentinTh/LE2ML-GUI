@@ -26,11 +26,8 @@
           <label for="window-length">Func</label>
         </span>
         <select id="window-type">
-          <option value="none">No function</option>
-          <option value="rectangular" disabled>Rectangular</option>
-          <option value="triangular" disabled>Triangular</option>
-          <option value="hamming" disabled>Hamming</option>
-          <option value="hann" disabled>Hann</option>
+          <option value="none" selected>No function</option>
+          {{#functions}}{{> func-list}}{{/functions}}
         </select>
       </div>
       <div class="form-elem block">

@@ -1,7 +1,7 @@
 import Component from '@Component';
-import algoManagementTemplate from './algo-management.hbs';
-import algoListTemplate from './algo-list.hbs';
-import formAlgoTemplate from './form-algo.hbs';
+import windowingManagementTemplate from './windowing-management.hbs';
+import funcListTemplate from './func-list.hbs';
+import formFuncTemplate from './form-func.hbs';
 import Store from '@Store';
 import axios from 'axios';
 import APIHelper from '@APIHelper';
@@ -9,14 +9,14 @@ import ModalHelper from '@ModalHelper';
 import StringHelper from '@StringHelper';
 import SortHelper from '@SortHelper';
 
-let allAlgorithms;
+let allWindowFunctions;
 let filters;
 let filerClickListener;
 
-class AlgoManagement extends Component {
+class WindowingManagement extends Component {
   constructor(reload = false, context = null) {
     super(context);
-    this.title = 'Manage Algorithms';
+    this.title = 'Manage Window Functions';
     this.isFiltersDisabled = false;
     this.reload = reload;
     this.mount();
@@ -29,17 +29,17 @@ class AlgoManagement extends Component {
   }
 
   initData() {
-    const algoStore = Store.get('algorithms');
+    const funcStore = Store.get('window-functions');
 
-    if (this.reload || algoStore === undefined) {
+    if (this.reload || funcStore === undefined) {
       this.initView(true);
-      getAlgorithms('/algos', this.context).then(response => {
+      getFunctions('/windows', this.context).then(response => {
         if (response) {
           Store.add({
-            id: 'algorithms',
+            id: 'window-functions',
             data: response.data
           });
-          allAlgorithms = response.data;
+          allWindowFunctions = response.data;
           this.render();
         }
       });
@@ -49,8 +49,8 @@ class AlgoManagement extends Component {
   }
 
   initView(loading = false) {
-    const total = allAlgorithms === undefined ? 0 : allAlgorithms.total;
-    this.context.innerHTML = algoManagementTemplate({
+    const total = allWindowFunctions === undefined ? 0 : allWindowFunctions.total;
+    this.context.innerHTML = windowingManagementTemplate({
       title: this.title,
       total: total
     });
@@ -58,7 +58,7 @@ class AlgoManagement extends Component {
     filters = this.context.querySelectorAll('.filters span.filter');
 
     if (loading) {
-      this.buildAlgoList('#algorithms', { defaultSort: false, loading: loading });
+      this.buildFuncList('#functions', { defaultSort: false, loading: loading });
     }
   }
 
@@ -66,14 +66,14 @@ class AlgoManagement extends Component {
     this.initView();
 
     this.addFilterClickListener();
-    this.buildAlgoList('#algorithms');
+    this.buildFuncList('#functions');
 
     const addBtn = this.context.querySelector('#add');
     addBtn.addEventListener('click', this.addBtnListener.bind(this), false);
 
-    super.addSearchListener(allAlgorithms.algorithms, ['slug'], data => {
-      allAlgorithms.algorithms = data;
-      this.buildAlgoList('#algorithms');
+    super.addSearchListener(allWindowFunctions.functions, ['slug'], data => {
+      allWindowFunctions.functions = data;
+      this.buildFuncList('#functions');
     });
   }
 
@@ -136,7 +136,7 @@ class AlgoManagement extends Component {
           const className = filter.className;
           filter.className = className + ' filter-active';
         }
-        this.buildAlgoList('#algorithms');
+        this.buildFuncList('#functions');
       },
       true
     ];
@@ -169,14 +169,14 @@ class AlgoManagement extends Component {
     }
   }
 
-  buildAlgoList(id, opts = { defaultSort: true, loading: false }) {
-    const container = document.querySelector(id + ' > .grid-algos');
+  buildFuncList(id, opts = { defaultSort: true, loading: false }) {
+    const container = document.querySelector(id + ' > .grid-functions');
 
-    let algorithms;
+    let windowFunctions;
     if (opts.loading) {
-      algorithms = [];
-      container.innerHTML = algoListTemplate({
-        algorithms: algorithms,
+      windowFunctions = [];
+      container.innerHTML = funcListTemplate({
+        functions: windowFunctions,
         loading: opts.loading
       });
 
@@ -184,7 +184,7 @@ class AlgoManagement extends Component {
         this.disableFilters(false);
       }
     } else {
-      algorithms = allAlgorithms.algorithms;
+      windowFunctions = allWindowFunctions.functions;
 
       if (this.isFiltersDisabled) {
         this.isFiltersDisabled = false;
@@ -192,17 +192,17 @@ class AlgoManagement extends Component {
       }
 
       if (opts.defaultSort) {
-        algorithms = this.setDefaultSort(id, algorithms);
+        windowFunctions = this.setDefaultSort(id, windowFunctions);
       }
 
-      container.innerHTML = algoListTemplate({
-        algorithms: algorithms,
+      container.innerHTML = funcListTemplate({
+        functions: windowFunctions,
         loading: opts.loading
       });
 
-      this.setActions(algorithms);
+      this.setActions(windowFunctions);
 
-      if (algorithms.length <= 1) {
+      if (windowFunctions.length <= 1) {
         this.isFiltersDisabled = true;
         this.disableFilters();
       }
@@ -213,26 +213,25 @@ class AlgoManagement extends Component {
     event.preventDefault();
     event.stopImmediatePropagation();
 
-    const content = formAlgoTemplate();
-    const elems = ['label', 'type', 'enabled', 'container'];
+    const content = formFuncTemplate();
+    const elems = ['label', 'enabled', 'container'];
 
-    ModalHelper.edit('Add a new algorithm', content, 'add', elems).then(result => {
+    ModalHelper.edit('Add a new window function', content, 'add', elems).then(result => {
       if (result.value) {
         const data = {
           label: result.value.label.toLowerCase(),
-          type: result.value.type,
           container: StringHelper.toSlug(result.value.container, '-'),
           enabled: result.value.enabled === 'true'
         };
 
-        addAlgo('/algos', data, this.context).then(response => {
+        addFunction('/windows', data, this.context).then(response => {
           if (response) {
             ModalHelper.notification(
               'success',
               response.data.label + ' successfully created.'
             );
             // eslint-disable-next-line no-new
-            new AlgoManagement(true);
+            new WindowingManagement(true);
           }
         });
       }
@@ -265,46 +264,55 @@ class AlgoManagement extends Component {
     );
   }
 
-  setActions(algos) {
-    this.editAction(algos);
-    this.grantOrRevokeAction(algos);
-    this.deleteAction(algos);
+  setActions(windowFunctions) {
+    this.editAction(windowFunctions);
+    this.grantOrRevokeAction(windowFunctions);
+    this.deleteAction(windowFunctions);
   }
 
-  editAction(algos) {
+  removeTaskWindowTypeStore() {
+    const windowTypeStored = Store.get('window-type');
+    if (!(windowTypeStored === undefined)) {
+      Store.remove('window-type');
+    }
+  }
+
+  editAction(windowFunctions) {
     const buttons = this.context.querySelectorAll('button#edit');
 
     buttons.forEach(button => {
-      const algoId = button.closest('#algo-infos').dataset.algo;
-      const algo = algos.find(elem => elem._id === algoId);
+      const funcId = button.closest('#func-infos').dataset.func;
+      const func = windowFunctions.find(elem => elem._id === funcId);
 
       button.addEventListener('click', event => {
         event.preventDefault();
         event.stopImmediatePropagation();
 
-        const content = formAlgoTemplate({
-          label: algo.label.toLowerCase(),
-          type: algo.type,
-          container: StringHelper.toSlug(algo.container, '-'),
-          enabled: algo.enabled
+        const content = formFuncTemplate({
+          label: func.label.toLowerCase(),
+          container: StringHelper.toSlug(func.container, '-'),
+          enabled: func.enabled
         });
 
-        const elems = ['label', 'type', 'container', 'enabled'];
-        ModalHelper.edit('Edit algorithm', content, 'update', elems).then(result => {
-          if (result.value) {
-            const data = result.value;
-            updateAlgo('/algos/' + algoId, data, this.context).then(response => {
-              if (response) {
-                ModalHelper.notification(
-                  'success',
-                  response.data.algo.label + ' successfully updated.'
-                );
-                // eslint-disable-next-line no-new
-                new AlgoManagement(true);
-              }
-            });
+        const elems = ['label', 'container', 'enabled'];
+        ModalHelper.edit('Edit window function', content, 'update', elems).then(
+          result => {
+            if (result.value) {
+              const data = result.value;
+              updateFunction('/windows/' + funcId, data, this.context).then(response => {
+                if (response) {
+                  ModalHelper.notification(
+                    'success',
+                    response.data.function.label + ' successfully updated.'
+                  );
+                  this.removeTaskWindowTypeStore();
+                  // eslint-disable-next-line no-new
+                  new WindowingManagement(true);
+                }
+              });
+            }
           }
-        });
+        );
 
         const labelInput = document.querySelector('input#label');
         const containerInput = document.querySelector('input#container');
@@ -315,40 +323,42 @@ class AlgoManagement extends Component {
     });
   }
 
-  grantOrRevokeAction(algos) {
+  grantOrRevokeAction(windowFunctions) {
     const buttons = this.context.querySelectorAll('button#state');
 
     buttons.forEach(button => {
-      const algoId = button.closest('#algo-infos').dataset.algo;
-      const algo = algos.find(elem => elem._id === algoId);
+      const funcId = button.closest('#func-infos').dataset.func;
+      const func = windowFunctions.find(elem => elem._id === funcId);
 
       button.addEventListener('click', event => {
         event.preventDefault();
         event.stopImmediatePropagation();
 
         const data = {
-          label: algo.label,
-          type: algo.type,
-          container: algo.container,
-          enabled: !algo.enabled
+          label: func.label,
+          container: func.container,
+          enabled: !func.enabled
         };
 
-        const askTitle = algo.enabled ? 'Disable algorithm' : 'Enable aglorithm';
+        const askTitle = func.enabled
+          ? 'Disable window function'
+          : 'Enable window function';
 
-        const askMessage = algo.enabled
-          ? algo.label + ' will be disabled.'
-          : algo.label + ' will be enabled.';
+        const askMessage = func.enabled
+          ? func.label + ' will be disabled.'
+          : func.label + ' will be enabled.';
 
         ModalHelper.confirm(askTitle, askMessage).then(result => {
           if (result.value) {
-            const confirmMessage = algo.enabled
-              ? algo.label + ' is now disabled.'
-              : algo.label + ' is now enabled.';
-            updateState('/algos/state/' + algoId, data, this.context).then(response => {
+            const confirmMessage = func.enabled
+              ? func.label + ' is now disabled.'
+              : func.label + ' is now enabled.';
+            updateState('/windows/state/' + funcId, data, this.context).then(response => {
               if (response) {
                 ModalHelper.notification('success', confirmMessage);
+                this.removeTaskWindowTypeStore();
                 // eslint-disable-next-line no-new
-                new AlgoManagement(true);
+                new WindowingManagement(true);
               }
             });
           }
@@ -357,28 +367,29 @@ class AlgoManagement extends Component {
     });
   }
 
-  deleteAction(algos) {
+  deleteAction(windowFunctions) {
     const buttons = this.context.querySelectorAll('button#delete');
     buttons.forEach(button => {
-      const algoId = button.closest('#algo-infos').dataset.algo;
-      const algo = algos.find(elem => elem._id === algoId);
+      const funcId = button.closest('#func-infos').dataset.func;
+      const func = windowFunctions.find(elem => elem._id === funcId);
       button.addEventListener('click', event => {
         event.preventDefault();
         event.stopImmediatePropagation();
 
-        const askTitle = 'Delete ' + algo.label + ' ?';
-        const askMessage = algo.label + ' will be permanently deleted.';
+        const askTitle = 'Delete ' + func.label + ' ?';
+        const askMessage = func.label + ' will be permanently deleted.';
 
         ModalHelper.confirm(askTitle, askMessage).then(result => {
           if (result.value) {
-            deleteAlgo('/algos/' + algoId, this.context).then(response => {
+            deleteFunction('/windows/' + funcId, this.context).then(response => {
               if (response) {
                 ModalHelper.notification(
                   'success',
-                  algo.label + ' successfully deleted.'
+                  func.label + ' successfully deleted.'
                 );
+                this.removeTaskWindowTypeStore();
                 // eslint-disable-next-line no-new
-                new AlgoManagement(true);
+                new WindowingManagement(true);
               }
             });
           }
@@ -388,7 +399,7 @@ class AlgoManagement extends Component {
   }
 }
 
-async function getAlgorithms(url, context) {
+async function getFunctions(url, context) {
   try {
     const response = await axios.get(url, {
       headers: APIHelper.setAuthHeader()
@@ -399,7 +410,7 @@ async function getAlgorithms(url, context) {
   }
 }
 
-async function addAlgo(url, data, context) {
+async function addFunction(url, data, context) {
   try {
     const response = await axios.put(url, data, {
       headers: APIHelper.setAuthHeader()
@@ -410,7 +421,7 @@ async function addAlgo(url, data, context) {
   }
 }
 
-async function updateAlgo(url, data, context) {
+async function updateFunction(url, data, context) {
   try {
     const response = await axios.post(url, data, {
       headers: APIHelper.setAuthHeader()
@@ -432,7 +443,7 @@ async function updateState(url, data, context) {
   }
 }
 
-async function deleteAlgo(url, context) {
+async function deleteFunction(url, context) {
   try {
     const response = await axios.delete(url, {
       headers: APIHelper.setAuthHeader()
@@ -445,4 +456,4 @@ async function deleteAlgo(url, context) {
   }
 }
 
-export default AlgoManagement;
+export default WindowingManagement;

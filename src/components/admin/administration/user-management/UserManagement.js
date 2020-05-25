@@ -61,34 +61,6 @@ class UserManagement extends Component {
     }
   }
 
-  filterClickHandler(event, filter, filters, id) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-
-    if (filter.className.includes('active')) {
-      const sortIcon = filter.children[1].className;
-      let className = null;
-      if (sortIcon.includes('up')) {
-        className = sortIcon.replace('up', 'down');
-        filter.dataset.order = 'desc';
-      } else {
-        className = sortIcon.replace('down', 'up');
-        filter.dataset.order = 'asc';
-      }
-      filter.children[1].className = className;
-    } else {
-      filters.forEach(fil => {
-        if (fil.className.includes('active')) {
-          const className = fil.className;
-          fil.className = className.split(' ').filter(name => name !== 'filter-active');
-        }
-      });
-      const className = filter.className;
-      filter.className = className + ' filter-active';
-    }
-    this.buildUserList(id);
-  }
-
   addFilterClickListener(id) {
     const filters = id.includes('admin') ? adminFilters : normalFilters;
 

@@ -1,0 +1,11 @@
+{{#each functions as |function|}}
+{{#[utils/compare] function.enabled '===' true}}
+<option value="{{function.slug}}">{{function.label}}</option>
+{{else}}
+<option value="{{function.slug}}" disabled>{{function.label}}</option>
+{{/[utils/compare]}}
+{{else}}
+{{#[utils/compare] loading '===' true}}
+<option disabled>Fetching data...</option>
+{{/[utils/compare]}}
+{{/each}}

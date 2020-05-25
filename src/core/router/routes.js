@@ -14,6 +14,7 @@ import Administration from '@Components/admin/administration/Administration';
 import UserManagement from '@Components/admin/administration/user-management/UserManagement';
 import TempPassword from '@Components/admin/administration/temp-password/TempPassword';
 import JobManagement from '@Components/admin/administration/job-management/JobManagement';
+import WindowingManagement from '@Components/admin/administration/windowing-management/WindowingManagement';
 import FeatureManagement from '@Components/admin/administration/feature-management/FeatureManagement';
 import AlgoManagement from '@Components/admin/administration/algo-management/AlgoManagement';
 import SignOut from '@Components/admin/sign-out/SignOut';
@@ -88,6 +89,10 @@ const routes = [
           {
             name: 'job-management',
             Controller: JobManagement
+          },
+          {
+            name: 'windowing-management',
+            Controller: WindowingManagement
           },
           {
             name: 'feature-management',
