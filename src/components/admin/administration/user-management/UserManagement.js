@@ -208,9 +208,6 @@ class UserManagement extends Component {
         }
       });
     } else {
-      usersAdmin = usersAdminStore.data;
-      usersNormal = usersNormalStore.data;
-      usersNormal.users = usersNormalFull;
       this.render();
     }
   }

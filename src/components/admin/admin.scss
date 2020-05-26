@@ -23,6 +23,13 @@ h1 {
   }
 }
 
+.badge-inverse {
+  @include themify($themes) {
+    background-color: themed('color-text-primary') !important;
+    color: themed('color-secondary') !important;
+  }
+}
+
 .badge-left {
   margin-right: 8px;
 }

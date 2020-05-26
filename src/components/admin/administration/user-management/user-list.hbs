@@ -24,8 +24,8 @@
       {{~#[utils/compare] user.lastConnection '===' null~}}
       no connection so far.
       {{~else~}}
-      last conn. on {{#[format/date] user.lastConnection 'DD/MM/YYYY'~}}{{~/[format/date]~}} @
-      {{~#[format/date] user.lastConnection 'HH:mm:ss'~}}{{/[format/date]~}}
+      last conn. on {{#[format/date] user.lastConnection 'DD/MM/YYYY'~}}{{~/[format/date]}} @
+      {{#[format/date] user.lastConnection 'HH:mm:ss'~}}{{/[format/date]~}}
       {{~/[utils/compare]~}}
     </p>
   </div>

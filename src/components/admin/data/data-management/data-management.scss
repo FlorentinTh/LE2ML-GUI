@@ -1,0 +1,117 @@
+.grid-files {
+  display: grid;
+  width: 100%;
+  grid-auto-rows: minmax(175px, auto);
+  grid-gap: 1em;
+  max-width: 900px;
+  margin: 0 auto;
+  padding-top: 25px;
+
+  .grid-item {
+    @include themify($themes) {
+      color: themed('color-text-primary');
+      background: themed('color-secondary');
+      border-bottom: 2px solid themed('color-accent');
+    }
+
+    animation: slide-up 0.4s linear;
+    height: 175px;
+    flex: 1 1 150px;
+
+    padding: 0 50px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .loading-item,
+    .not-found {
+      width: 100%;
+      text-align: center;
+
+      p {
+        font-size: 1.2em;
+      }
+    }
+
+    .actions {
+      p.action {
+        padding-bottom: 8px;
+
+        &:last-of-type {
+          padding-bottom: 0;
+        }
+
+        &:first-child {
+          button {
+            margin-top: 0;
+          }
+        }
+
+        button {
+          height: 26px;
+          margin-top: 5px;
+          width: 150px;
+          background-color: transparent;
+          text-transform: uppercase;
+
+          @include themify($themes) {
+            border: 1px solid themed('color-accent');
+            color: themed('color-accent');
+          }
+
+          transition: all 0.5s ease-in-out;
+
+          &:hover {
+            @include themify($themes) {
+              background-color: themed('color-accent');
+              border: 1px solid themed('color-accent');
+              color: themed('color-text-active');
+            }
+          }
+        }
+      }
+    }
+
+    .left {
+      flex-grow: 1;
+      .label {
+        h3 {
+          font-size: 1.5em;
+          margin-bottom: 25px;
+          text-transform: lowercase;
+        }
+      }
+
+      .infos {
+        font-size: 0.85em;
+        padding: 5px 0 5px 25px;
+        @include themify($themes) {
+          border-left: 1px solid themed('color-text-primary');
+        }
+
+        .info:not(:last-of-type) {
+          margin-bottom: 15px;
+        }
+
+        .info:last-child:not(i) {
+          font-style: italic;
+        }
+
+        i {
+          padding-right: 10px;
+        }
+      }
+
+      .actions {
+        p.action {
+          padding-bottom: 8px;
+        }
+      }
+    }
+  }
+}

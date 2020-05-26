@@ -1,1 +1,30 @@
 <h1>{{title}}</h1>
+
+<div class="switch-group switch-large bottom-space">
+  <input type="radio" id="switch-models" name="files" value="models" />
+  <label for="switch-models">
+    {{~#[utils/compare] totalModel '===' 1~}}
+    Model
+    {{~else~}}
+    Models
+    {{~/[utils/compare]~}}
+    <span class="badge badge-inverse badge-right">{{totalModel}}</span>
+  </label>
+  <input type="radio" id="switch-datasets" name="files" value="datasets" />
+  <label for="switch-datasets">
+    {{~#[utils/compare] totalDataset '===' 1~}}
+    Dataset
+    {{~else~}}
+    Datasets
+    {{~/[utils/compare]~}}
+    <span class="badge badge-inverse badge-right">{{totalDataset}}</span>
+  </label>
+</div>
+
+{{#> ../../search/search}}{{/../../search/search}}
+<div class="grid-container" id="files">
+  {{#> ../../filters/files/filters}}{{/../../filters/files/filters}}
+  <div class="grid-files">
+    {{#files}}{{> file-list}}{{/files}}
+  </div>
+</div>

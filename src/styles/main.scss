@@ -153,6 +153,10 @@ input[type='file']::-webkit-file-upload-button {
     }
   }
 
+  &.bottom-space {
+    margin-bottom: 65px;
+  }
+
   &.switch-large {
     label {
       width: 175px;
