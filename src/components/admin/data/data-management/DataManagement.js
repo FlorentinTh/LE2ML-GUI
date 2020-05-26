@@ -113,9 +113,11 @@ class DataManagement extends Component {
       });
       //   this.setActions(users);
 
-      if (files.length <= 1) {
-        this.isFiltersDisabled = true;
-        this.disableFilters();
+      if (!(files === undefined)) {
+        if (files.length <= 1) {
+          this.isFiltersDisabled = true;
+          this.disableFilters();
+        }
       }
     }
   }
