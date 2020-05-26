@@ -22,7 +22,8 @@ class V1 {
         break;
     }
 
-    const isWindowingEnabled = Boolean(values['windowing-enabled']);
+    const isWindowingEnabled = values['windowing-enabled'] === 'true';
+
     result.windowing = {
       enable: isWindowingEnabled
     };
