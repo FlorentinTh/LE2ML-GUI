@@ -209,6 +209,19 @@ class FeatureManagement extends Component {
     }
   }
 
+  removeTaskFeatureListStore() {
+    const timeFeatureStored = Store.get('time-features');
+    const freqFeatureStored = Store.get('freq-features');
+
+    if (!(timeFeatureStored === undefined)) {
+      Store.remove('time-features');
+    }
+
+    if (!(freqFeatureStored === undefined)) {
+      Store.remove('freq-features');
+    }
+  }
+
   addBtnListener(event) {
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -231,6 +244,7 @@ class FeatureManagement extends Component {
               'success',
               response.data.label + ' successfully created.'
             );
+            this.removeTaskFeatureListStore();
             // eslint-disable-next-line no-new
             new FeatureManagement(true);
           }
@@ -299,6 +313,7 @@ class FeatureManagement extends Component {
                   'success',
                   response.data.feature.label + ' successfully updated.'
                 );
+                this.removeTaskFeatureListStore();
                 // eslint-disable-next-line no-new
                 new FeatureManagement(true);
               }
@@ -348,6 +363,7 @@ class FeatureManagement extends Component {
               response => {
                 if (response) {
                   ModalHelper.notification('success', confirmMessage);
+                  this.removeTaskFeatureListStore();
                   // eslint-disable-next-line no-new
                   new FeatureManagement(true);
                 }
@@ -379,6 +395,7 @@ class FeatureManagement extends Component {
                   'success',
                   feature.label + ' successfully deleted.'
                 );
+                this.removeTaskFeatureListStore();
                 // eslint-disable-next-line no-new
                 new FeatureManagement(true);
               }

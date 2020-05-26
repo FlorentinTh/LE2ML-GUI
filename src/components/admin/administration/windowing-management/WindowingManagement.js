@@ -209,6 +209,13 @@ class WindowingManagement extends Component {
     }
   }
 
+  removeTaskWindowTypeStore() {
+    const windowTypeStored = Store.get('window-type');
+    if (!(windowTypeStored === undefined)) {
+      Store.remove('window-type');
+    }
+  }
+
   addBtnListener(event) {
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -230,6 +237,7 @@ class WindowingManagement extends Component {
               'success',
               response.data.label + ' successfully created.'
             );
+            this.removeTaskWindowTypeStore();
             // eslint-disable-next-line no-new
             new WindowingManagement(true);
           }
@@ -268,13 +276,6 @@ class WindowingManagement extends Component {
     this.editAction(windowFunctions);
     this.grantOrRevokeAction(windowFunctions);
     this.deleteAction(windowFunctions);
-  }
-
-  removeTaskWindowTypeStore() {
-    const windowTypeStored = Store.get('window-type');
-    if (!(windowTypeStored === undefined)) {
-      Store.remove('window-type');
-    }
   }
 
   editAction(windowFunctions) {

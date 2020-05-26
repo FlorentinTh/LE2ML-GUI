@@ -209,6 +209,19 @@ class AlgoManagement extends Component {
     }
   }
 
+  removeTaskAlgoListStore() {
+    const supervisedAlgoStored = Store.get('supervised-algos');
+    const unsupervisedAlgoStored = Store.get('unsupervised-algos');
+
+    if (!(supervisedAlgoStored === undefined)) {
+      Store.remove('supervised-algos');
+    }
+
+    if (!(unsupervisedAlgoStored === undefined)) {
+      Store.remove('unsupervised-algos');
+    }
+  }
+
   addBtnListener(event) {
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -231,6 +244,7 @@ class AlgoManagement extends Component {
               'success',
               response.data.label + ' successfully created.'
             );
+            this.removeTaskAlgoListStore();
             // eslint-disable-next-line no-new
             new AlgoManagement(true);
           }
@@ -299,6 +313,7 @@ class AlgoManagement extends Component {
                   'success',
                   response.data.algo.label + ' successfully updated.'
                 );
+                this.removeTaskAlgoListStore();
                 // eslint-disable-next-line no-new
                 new AlgoManagement(true);
               }
@@ -347,6 +362,7 @@ class AlgoManagement extends Component {
             updateState('/algos/state/' + algoId, data, this.context).then(response => {
               if (response) {
                 ModalHelper.notification('success', confirmMessage);
+                this.removeTaskAlgoListStore();
                 // eslint-disable-next-line no-new
                 new AlgoManagement(true);
               }
@@ -377,6 +393,7 @@ class AlgoManagement extends Component {
                   'success',
                   algo.label + ' successfully deleted.'
                 );
+                this.removeTaskAlgoListStore();
                 // eslint-disable-next-line no-new
                 new AlgoManagement(true);
               }
