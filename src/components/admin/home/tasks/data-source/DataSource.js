@@ -67,7 +67,7 @@ class DataSource extends Task {
     sessionStorage.setItem('input-type', 'file');
 
     const dataStore = Store.get('input-data');
-    const filename = sessionStorage.getItem('input-content');
+    const filename = sessionStorage.getItem('input-content').split('.')[0];
 
     if (!filename) {
       super.toggleNextBtnEnable(false);
