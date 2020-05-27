@@ -107,7 +107,7 @@ class SelectProcess extends Task {
     for (let i = 0; i < models.length; ++i) {
       const model = models[i];
       const filename = model.children[1].textContent;
-      if (filename === conf.model) {
+      if (filename === conf.model.split('.')[0]) {
         modelFound = true;
         if (!model.classList.contains('selected-file')) {
           model.children[1].click();
