@@ -39,7 +39,9 @@ class ModalHelper {
       confirmButtonText: confirmText,
       showCancelButton: cancelable,
       cancelButtonText: cancelable ? cancelText : '',
-      allowEscapeKey: cancelable,
+      allowEscapeKey: false,
+      allowEnterKey: false,
+      stopKeydownPropagation: false,
       preConfirm: () => {
         const data = {};
 

@@ -10,14 +10,14 @@
     {{~/[utils/compare]~}}
     <span class="badge badge-inverse badge-right">{{totalModel}}</span>
   </label>
-  <input type="radio" id="switch-datasets" name="files" value="datasets" />
-  <label for="switch-datasets">
-    {{~#[utils/compare] totalDataset '===' 1~}}
+  <input type="radio" id="switch-inputs" name="files" value="inputs" />
+  <label for="switch-inputs">
+    {{~#[utils/compare] totalInput '===' 1~}}
     Dataset
     {{~else~}}
     Datasets
     {{~/[utils/compare]~}}
-    <span class="badge badge-inverse badge-right">{{totalDataset}}</span>
+    <span class="badge badge-inverse badge-right">{{totalInput}}</span>
   </label>
 </div>
 

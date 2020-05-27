@@ -209,10 +209,8 @@ input[type='file']::-webkit-file-upload-button {
     }
 
     .swal2-content {
-      form {
-        *:last-child {
-          margin-bottom: 0;
-        }
+      *:last-child {
+        margin-bottom: 0;
       }
     }
 
