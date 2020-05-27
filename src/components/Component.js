@@ -1,6 +1,5 @@
 import Router from '@Router';
 import URLHelper from '@URLHelper';
-import StringHelper from '@StringHelper';
 
 class Component {
   constructor(context) {
