@@ -49,7 +49,8 @@ class FileList extends Events {
 
     if (event.target.tagName === 'TD') {
       const row = event.target.parentNode;
-      const filename = row.childNodes[3].textContent;
+      const filename = row.childNodes[3].textContent.toLowerCase();
+      const ext = row.childNodes[5].textContent.toLowerCase();
 
       if (!(this.selectedFile === filename)) {
         if (!(this.selectedFile === null)) {
@@ -59,7 +60,7 @@ class FileList extends Events {
         this.emit('selected', true);
         this.selectedFile = filename;
         this.setSelected(row);
-        sessionStorage.setItem(this.key, filename);
+        sessionStorage.setItem(this.key, filename + '.' + ext);
       } else {
         this.emit('selected', false);
         this.removeCurrentSelectedFile();
