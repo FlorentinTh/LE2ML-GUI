@@ -7,11 +7,11 @@ import axios from 'axios';
 import APIHelper from '@APIHelper';
 import ModalHelper from '@ModalHelper';
 import StringHelper from '@StringHelper';
-import SortHelper from '@SortHelper';
+import { Filters, FilterType } from '@Filters';
+import Search from '@Search';
 
 let allWindowFunctions;
-let filters;
-let filerClickListener;
+let windowFuncFilters;
 
 class WindowingManagement extends Component {
   constructor(reload = false, context = null) {
@@ -55,7 +55,8 @@ class WindowingManagement extends Component {
       total: total
     });
 
-    filters = this.context.querySelectorAll('.filters span.filter');
+    const filters = this.context.querySelectorAll('.filters span.filter');
+    windowFuncFilters = new Filters(filters, FilterType.DEFAULT);
 
     if (loading) {
       this.buildFuncList('#functions', { defaultSort: false, loading: loading });
@@ -65,108 +66,18 @@ class WindowingManagement extends Component {
   render() {
     this.initView();
 
-    this.addFilterClickListener();
+    windowFuncFilters.addFilterClickListener(() => {
+      this.buildFuncList('#functions');
+    });
     this.buildFuncList('#functions');
 
     const addBtn = this.context.querySelector('#add');
     addBtn.addEventListener('click', this.addBtnListener.bind(this), false);
 
-    super.addSearchListener(allWindowFunctions.functions, ['slug'], data => {
+    Search.addSearchListener(allWindowFunctions.functions, ['slug'], data => {
       allWindowFunctions.functions = data;
       this.buildFuncList('#functions');
     });
-  }
-
-  enableFilters() {
-    filters[0].classList.add('filter-active');
-
-    for (let i = 0; i < filters.length; ++i) {
-      const filter = filters[i];
-
-      if (filter.classList.contains('filter-disabled')) {
-        filter.classList.remove('filter-disabled');
-      }
-      filter.addEventListener(...filerClickListener);
-    }
-  }
-
-  disableFilters(isEventAdded = true) {
-    for (let i = 0; i < filters.length; ++i) {
-      const filter = filters[i];
-      if (filter.classList.contains('filter-active')) {
-        filter.classList.remove('filter-active');
-      }
-      filter.classList.add('filter-disabled');
-      if (isEventAdded) {
-        filter.removeEventListener(...filerClickListener);
-      }
-    }
-  }
-
-  addFilterClickListener() {
-    filerClickListener = [
-      'click',
-      event => {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-
-        const filter =
-          event.target.tagName === 'SPAN' ? event.target : event.target.parentNode;
-
-        if (filter.className.includes('active')) {
-          const sortIcon = filter.children[1].className;
-          let className = null;
-          if (sortIcon.includes('up')) {
-            className = sortIcon.replace('up', 'down');
-            filter.dataset.order = 'desc';
-          } else {
-            className = sortIcon.replace('down', 'up');
-            filter.dataset.order = 'asc';
-          }
-          filter.children[1].className = className;
-        } else {
-          filters.forEach(fil => {
-            if (fil.className.includes('active')) {
-              const className = fil.className;
-              fil.className = className
-                .split(' ')
-                .filter(name => name !== 'filter-active');
-            }
-          });
-          const className = filter.className;
-          filter.className = className + ' filter-active';
-        }
-        this.buildFuncList('#functions');
-      },
-      true
-    ];
-
-    for (let i = 0; i < filters.length; ++i) {
-      const filter = filters[i];
-      filter.addEventListener(...filerClickListener);
-    }
-  }
-
-  setDefaultSort(id, data) {
-    const elem = this.context.querySelector(id);
-    const filters = elem.querySelectorAll('span.filter');
-
-    for (let i = 0; i < filters.length; ++i) {
-      const filter = filters[i];
-      if (filter.className.includes('active')) {
-        return this.sort(filter.dataset.action, filter.dataset.order, data);
-      }
-    }
-  }
-
-  sort(filter, order, data) {
-    if (filter === 'alpha-sort') {
-      return SortHelper.sortArrayAlpha(data, 'label', order);
-    } else if (filter === 'state-sort') {
-      return SortHelper.sortArrayBoolean(data, 'enabled', order);
-    } else if (filter === 'container-sort') {
-      return SortHelper.sortArrayAlpha(data, 'container', order);
-    }
   }
 
   buildFuncList(id, opts = { defaultSort: true, loading: false }) {
@@ -181,18 +92,18 @@ class WindowingManagement extends Component {
       });
 
       if (!this.isFiltersDisabled) {
-        this.disableFilters(false);
+        windowFuncFilters.disableFilters(false);
       }
     } else {
       windowFunctions = allWindowFunctions.functions;
 
       if (this.isFiltersDisabled) {
         this.isFiltersDisabled = false;
-        this.enableFilters();
+        windowFuncFilters.enableFilters();
       }
 
       if (opts.defaultSort) {
-        windowFunctions = this.setDefaultSort(id, windowFunctions);
+        windowFunctions = windowFuncFilters.setDefaultSort(windowFunctions);
       }
 
       container.innerHTML = funcListTemplate({
@@ -202,9 +113,9 @@ class WindowingManagement extends Component {
 
       this.setActions(windowFunctions);
 
-      if (windowFunctions.length <= 1) {
+      if (windowFunctions === undefined || windowFunctions.length <= 1) {
         this.isFiltersDisabled = true;
-        this.disableFilters();
+        windowFuncFilters.disableFilters();
       }
     }
   }
