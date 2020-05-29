@@ -205,7 +205,7 @@ input[type='file']::-webkit-file-upload-button {
     }
 
     .swal2-title {
-      text-transform: capitalize;
+      max-width: none !important;
     }
 
     .swal2-content {
