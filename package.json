@@ -22,7 +22,7 @@
   "homepage": "https://github.com/FlorentinTh/picluster-gui#readme",
   "devDependencies": {
     "@babel/core": "^7.10.1",
-    "@babel/generator": "^7.10.1",
+    "@babel/generator": "^7.10.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.10.1",
     "@babel/plugin-transform-runtime": "^7.10.1",
     "@babel/preset-env": "^7.10.1",
