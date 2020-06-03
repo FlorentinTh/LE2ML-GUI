@@ -49,21 +49,23 @@ class FileList extends Events {
 
     if (event.target.tagName === 'TD') {
       const row = event.target.parentNode;
-      const filename = row.childNodes[3].textContent.toLowerCase();
-      const ext = row.childNodes[5].textContent.toLowerCase();
+      if (row.querySelector('.no-data') === null) {
+        const filename = row.childNodes[3].textContent.toLowerCase();
+        const ext = row.childNodes[5].textContent.toLowerCase();
 
-      if (!(this.selectedFile === filename)) {
-        if (!(this.selectedFile === null)) {
+        if (!(this.selectedFile === filename)) {
+          if (!(this.selectedFile === null)) {
+            this.removeCurrentSelectedFile();
+          }
+
+          this.emit('selected', true);
+          this.selectedFile = filename;
+          this.setSelected(row);
+          sessionStorage.setItem(this.key, filename + '.' + ext);
+        } else {
+          this.emit('selected', false);
           this.removeCurrentSelectedFile();
         }
-
-        this.emit('selected', true);
-        this.selectedFile = filename;
-        this.setSelected(row);
-        sessionStorage.setItem(this.key, filename + '.' + ext);
-      } else {
-        this.emit('selected', false);
-        this.removeCurrentSelectedFile();
       }
     }
   }
@@ -157,9 +159,8 @@ class FileList extends Events {
 
       row.removeEventListener('click', this.fileClickListener.bind(this), false);
       row.addEventListener('click', this.fileClickListener.bind(this), false);
-
-      this.emit('build', true);
     }
+    this.emit('build', true);
   }
 
   make() {

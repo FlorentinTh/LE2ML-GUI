@@ -1,20 +1,45 @@
-.description {
-  font-size: 1.2em;
-  margin: 0 auto 35px auto;
+.select-type,
+.description,
+.upload-wrapper {
   max-width: 900px;
-  text-align: justify;
-  line-height: 1.5em;
-  padding: 15px 5px 15px 25px;
-  @include themify($themes) {
-    border-left: 2px solid themed('color-accent');
+  margin: 0 auto;
+}
+
+.select-type {
+  margin-bottom: 35px;
+}
+
+.description {
+  margin-bottom: 35px;
+  padding: 15px 45px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  i {
+    font-size: 2em;
+    padding-right: 1em;
+    vertical-align: middle;
+    @include themify($themes) {
+      color: themed('color-accent');
+    }
+  }
+
+  p {
+    font-size: 1.2em;
+    text-align: justify;
+    line-height: 1.5em;
+    padding: 10px 0 10px 20px;
+
+    @include themify($themes) {
+      border-left: 3px solid themed('color-accent');
+    }
   }
 }
 .upload-wrapper {
   @include themify($themes) {
     background-color: themed('color-secondary');
   }
-  margin: 0 auto;
-  max-width: 900px;
   padding: 4em 0;
   border-radius: 0.35em;
 

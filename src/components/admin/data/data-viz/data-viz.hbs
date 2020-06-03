@@ -1,1 +1,20 @@
 <h1>{{title}}</h1>
+
+<div class="data-viz-wrapper">
+  <div class="form-elems">
+    <div class="form-elem inline">
+      <span class="label-container">
+        <label for="file">File</label>
+      </span>
+      <select class="no-caps" id="file">
+        <option disabled selected>Select a File</option>
+        <optgroup id="raw" label="Raw Datasets">
+          {{#raw-files}}{{> file-list}}{{/raw-files}}
+        </optgroup>
+        <optgroup id="features" label="Features Datasets">
+          {{#features-files}}{{> file-list}}{{/features-files}}
+        </optgroup>
+      </select>
+    </div>
+  </div>
+</div>

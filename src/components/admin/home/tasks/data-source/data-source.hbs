@@ -1,10 +1,15 @@
 <div class="task-content">
   <h2>{{title}}</h2>
-  <div class="switch-group">
-    <input type="radio" id="switch-file" name="source" value="file" />
-    <label for="switch-file">
+  <div class="switch-group switch-large no-padding">
+    <input type="radio" id="switch-raw-file" name="source" value="raw-file" />
+    <label for="switch-raw-file">
       <i class="fas fa-file-alt"></i>
-      File
+      Raw File
+    </label>
+    <input type="radio" id="switch-feature-file" name="source" value="features-file" />
+    <label for="switch-feature-file">
+      <i class="fas fa-square-root-alt"></i>
+      Feat. File
     </label>
     <input type="radio" id="switch-ws" name="source" value="ws" />
     <label for="switch-ws">

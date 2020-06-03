@@ -19,9 +19,13 @@ class SelectProcess extends Task {
   }
 
   makeProcessTest() {
-    const filename = sessionStorage.getItem('process-model');
+    const file = sessionStorage.getItem('process-model');
 
-    if (!filename) {
+    let filename;
+    if (!(file === null)) {
+      filename = file.split('.')[0];
+      super.toggleNextBtnEnable(true);
+    } else {
       super.toggleNextBtnEnable(false);
     }
 
@@ -29,7 +33,7 @@ class SelectProcess extends Task {
     if (dataStore === undefined) {
       fileList = new FileList(
         processContainer,
-        'Existing trained models',
+        'Existing Trained Models',
         [],
         'process-model',
         filename || null
@@ -50,7 +54,7 @@ class SelectProcess extends Task {
       const context = this.context.querySelector('.process-options');
       fileList = new FileList(
         context,
-        'Existing trained models',
+        'Existing Trained Models',
         dataStore.data,
         'process-model',
         filename || null,

@@ -13,13 +13,13 @@ class V1 {
       result.model = values['process-model'];
     }
 
-    switch (values['input-type']) {
-      case 'file':
-        result.input = { file: values['input-content'] };
-        break;
-      case 'ws':
-        result.input = { ws: values['input-content'] };
-        break;
+    const inputType = values['input-type'];
+
+    if (inputType.includes('file')) {
+      const fileType = inputType.split('-')[0];
+      result.input = { file: { type: fileType, filename: values['input-content'] } };
+    } else {
+      result.input = { ws: values['input-content'] };
     }
 
     const isWindowingEnabled = values['windowing-enabled'] === 'true';
@@ -56,8 +56,14 @@ class V1 {
   unmarshall() {
     const inputType = Object.keys(this.config.input)[0];
 
-    sessionStorage.setItem('input-type', inputType);
-    sessionStorage.setItem('input-content', this.config.input[inputType]);
+    if (inputType === 'file') {
+      const type = this.config.input[inputType].type;
+      sessionStorage.setItem('input-type', type.concat('-', inputType));
+      sessionStorage.setItem('input-content', this.config.input[inputType].filename);
+    } else {
+      sessionStorage.setItem('input-type', inputType);
+      sessionStorage.setItem('input-content', this.config.input[inputType]);
+    }
 
     const isWindowingEnable = this.config.windowing.enable;
     sessionStorage.setItem('windowing-enabled', isWindowingEnable);

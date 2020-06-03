@@ -12,6 +12,7 @@ let fileUploadEventChange;
 let fileUploadEventDrop;
 let fileUploadEventSubmit;
 let cancelUploadEventClick;
+let fileType;
 
 class DataImport extends Component {
   constructor(context = null) {
@@ -20,15 +21,21 @@ class DataImport extends Component {
     this.source = undefined;
 
     this.context.innerHTML = dataImportTemplate({
-      title: 'Data Import'
+      title: 'Import Datasets'
     });
 
     this.mount();
   }
 
+  removeStoredFiles(type) {
+    Store.remove(type + '-file-data');
+    Store.remove('admin-file-' + type);
+    Store.remove(type + '-files');
+  }
+
   resetFileUpload() {
-    const input = this.context.querySelector('input');
-    const label = this.context.querySelector('label');
+    const input = this.context.querySelector('#file-input');
+    const label = this.context.querySelector('#file-upload-label');
     const text = label.querySelector('p');
 
     input.removeAttribute('disabled');
@@ -73,7 +80,7 @@ class DataImport extends Component {
     cancelBtn.addEventListener(...cancelUploadEventClick);
 
     axios
-      .post('/files/upload?type=inputs&override=' + override, data, {
+      .post(`/files/upload?type=${fileType}&override=${override}`, data, {
         headers: APIHelper.setAuthHeader(),
         cancelToken: this.source.token,
         onUploadProgress: progress => {
@@ -90,6 +97,7 @@ class DataImport extends Component {
 
           if (progressValue === 100) {
             value.innerHTML = 'Processing file...';
+            cancelBtn.style.visibility = 'hidden';
           }
 
           Store.update('file-upload', {
@@ -113,6 +121,7 @@ class DataImport extends Component {
           ModalHelper.notification('success', filename + ' successfully uploaded');
           cancelBtn.removeEventListener(...cancelUploadEventClick);
           this.resetFileUpload();
+          this.removeStoredFiles(fileType);
         }
       })
       .catch(error => {
@@ -142,7 +151,7 @@ class DataImport extends Component {
     const filename = Object.values(Object.fromEntries(formData))[0].name;
 
     axios
-      .get(`/files/exists/?file=${filename}&type=inputs`, {
+      .get(`/files/exists/?file=${filename}&type=${fileType}`, {
         headers: APIHelper.setAuthHeader()
       })
       .then(response => {
@@ -219,9 +228,9 @@ class DataImport extends Component {
   }
 
   resumeFileUpload(data) {
-    const label = this.context.querySelector('label');
-    const input = this.context.querySelector('input');
-    const texts = this.context.querySelectorAll('.infos p');
+    const label = this.context.querySelector('#file-upload-label');
+    const input = this.context.querySelector('#file-input');
+    const texts = label.querySelectorAll('.infos p');
     const value = label.querySelector('p#value');
     const cancelBtn = label.querySelector('p#cancel a');
     const progressBar = label.querySelector('progress');
@@ -229,10 +238,16 @@ class DataImport extends Component {
     texts[0].innerHTML = StringHelper.truncateLength(data.filename, 26);
     texts[1].innerHTML = `(${StringHelper.convertBytesToHuman(data.size)})`;
 
-    value.innerHTML = data.progress + '%';
+    if (data.progress === 100) {
+      value.innerHTML = 'Processing file...';
+      cancelBtn.style.visibility = 'hidden';
+    } else {
+      value.innerHTML = data.progress + '%';
+    }
+
     progressBar.value = data.progress;
 
-    label.classList.add('uploading');
+    label.classList.add('filled', 'uploading');
     input.setAttribute('disabled', 'disabled');
 
     cancelBtn.addEventListener(...cancelUploadEventClick);
@@ -261,6 +276,13 @@ class DataImport extends Component {
     container.addEventListener(...fileUploadEventDrop);
   }
 
+  fileTypeSwitchHandler(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    fileType = event.target.value;
+  }
+
   mount() {
     const menu = Store.get('menu-admin').data;
     menu.setActive('data');
@@ -273,6 +295,18 @@ class DataImport extends Component {
       this.resumeFileUpload(dataStore.data);
     } else {
       this.initFileUpload(fileUploadContainer);
+    }
+
+    const fileTypeSwitchInputs = this.context.querySelectorAll('.switch-group input');
+
+    for (let i = 0; i < fileTypeSwitchInputs.length; ++i) {
+      const radio = fileTypeSwitchInputs[i];
+
+      if (radio.checked) {
+        fileType = radio.value;
+      }
+
+      radio.addEventListener('change', this.fileTypeSwitchHandler.bind(this), false);
     }
   }
 }

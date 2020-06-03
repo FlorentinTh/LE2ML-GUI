@@ -33,25 +33,25 @@ class DataSource extends Task {
     }
   }
 
-  initFileList(filename) {
+  initFileList(filename, fileType) {
     const fileList = new FileList(
       inputContent,
-      'Existing Datasets',
+      fileType === 'raw' ? 'Existing Raw Datasets' : 'Existing Features Datasets',
       [],
       'input-content',
       filename || null
     );
 
-    getFiles('/files?type=inputs', this.context).then(response => {
+    getFiles('/files?type=' + fileType, this.context).then(response => {
       if (response) {
-        const dataStore = Store.get('input-data');
+        const dataStore = Store.get(fileType + '-file-data');
 
         if (!(dataStore === undefined)) {
-          Store.remove('input-data');
+          Store.remove(fileType + '-file-data');
         }
 
         Store.add({
-          id: 'input-data',
+          id: fileType + '-file-data',
           data: response.data
         });
 
@@ -63,30 +63,60 @@ class DataSource extends Task {
     return fileList;
   }
 
-  makeInputFile() {
-    sessionStorage.setItem('input-type', 'file');
+  containsSelected() {
+    const files = this.context.querySelectorAll('.file-list table tbody tr');
+    for (let i = 0; i < files.length; ++i) {
+      const file = files[i];
+      if (file.className.includes('selected')) {
+        return true;
+      }
+    }
+    return false;
+  }
 
-    const dataStore = Store.get('input-data');
-    const filename = sessionStorage.getItem('input-content').split('.')[0];
+  makeInputFile(fileType) {
+    const file = sessionStorage.getItem('input-content');
 
-    if (!filename) {
-      super.toggleNextBtnEnable(false);
+    if (fileType === 'raw') {
+      sessionStorage.setItem('input-type', 'raw-file');
     } else {
-      super.toggleNextBtnEnable(true);
+      sessionStorage.setItem('input-type', 'features-file');
+    }
+
+    const dataStore = Store.get(fileType + '-file-data');
+
+    let filename;
+    if (!(file === null)) {
+      filename = file.split('.')[0];
     }
 
     let fileList;
     if (dataStore === undefined) {
-      fileList = this.initFileList(filename);
+      fileList = this.initFileList(filename, fileType);
+      fileList.on('build', result => {
+        if (result) {
+          if (this.containsSelected()) {
+            super.toggleNextBtnEnable(true);
+          } else {
+            super.toggleNextBtnEnable(false);
+          }
+        }
+      });
     } else {
       fileList = new FileList(
         inputContent,
-        'Existing Datasets',
+        fileType === 'raw' ? 'Existing Raw Datasets' : 'Existing Features Datasets',
         dataStore.data,
         'input-content',
         filename || null,
         false
       );
+
+      if (this.containsSelected()) {
+        super.toggleNextBtnEnable(true);
+      } else {
+        super.toggleNextBtnEnable(false);
+      }
     }
 
     fileList.on('selected', result => {
@@ -96,8 +126,11 @@ class DataSource extends Task {
 
   switchInputContent(input) {
     switch (input) {
-      case 'file':
-        this.makeInputFile();
+      case 'raw-file':
+        this.makeInputFile('raw');
+        break;
+      case 'features-file':
+        this.makeInputFile('features');
         break;
       case 'ws':
         this.makeInputWs();
