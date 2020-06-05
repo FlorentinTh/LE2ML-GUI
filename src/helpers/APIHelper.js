@@ -47,7 +47,7 @@ class APIHelper {
     return this.parseJWT(uuid);
   }
 
-  static errorsHandler(error, context, replaceContent = false) {
+  static errorsHandler(error, replaceContent = false) {
     let code = '';
     let msg = '';
 
@@ -61,8 +61,8 @@ class APIHelper {
         if (code === 500 || code === 401) {
           msg = err.statusText;
           if (msg === '') {
-            msg = err.responseText;
-            // msg = JSON.parse(err.response).message;
+            // msg = err.responseText;
+            msg = JSON.parse(err.response).message;
           }
         } else if (typeof msg === 'object') {
           msg = 'Invalid input data.';

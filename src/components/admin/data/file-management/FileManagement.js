@@ -10,6 +10,7 @@ import { Filters, FilterType } from '@Filters';
 import Search from '@Search';
 import ModalHelper from '@ModalHelper';
 import StringHelper from '@StringHelper';
+import FileHelper from '@FileHelper';
 
 let fileModels;
 let fileRaw;
@@ -370,12 +371,20 @@ class FileManagement extends Component {
             if (selectedFormat === 'none') {
               ModalHelper.error('You must select a format to download the file.');
             } else {
+              const info = ModalHelper.notification(
+                'info',
+                'Your download will begin automatically'
+              );
               downloadFile(
                 `/files/download/${filename}?type=${this.fileType}&from=${fileFormat}&to=${selectedFormat}`,
                 this.context
               ).then(response => {
                 if (response) {
-                  window.open(response.data, '_blank');
+                  info.close();
+                  window.open(
+                    new URL(FileHelper.getFileServerURL() + response.data),
+                    '_blank'
+                  );
                 }
               });
             }

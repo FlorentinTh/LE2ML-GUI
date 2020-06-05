@@ -1,4 +1,8 @@
 class FileHelper {
+  static getFileServerURL() {
+    return 'http://127.0.0.1:8080/';
+  }
+
   static enableDownload(link, data, filename, callback) {
     if (!(link instanceof HTMLElement)) {
       throw new Error('Expected type for argument link is HTMLElement.');
