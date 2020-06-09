@@ -7,7 +7,7 @@
         <label for="file">File</label>
       </span>
       <select class="no-caps" id="file">
-        <option disabled selected>Select a File</option>
+        <option value="none" disabled selected>Select a File</option>
         <optgroup id="raw" label="Raw Datasets">
           {{#raw-files}}{{> file-list}}{{/raw-files}}
         </optgroup>
@@ -16,5 +16,24 @@
         </optgroup>
       </select>
     </div>
+  </div>
+  <div class="grid-container" id="attributes">
+    <h2>
+      {{~#[utils/compare] total '===' 1~}}
+      Attribute
+      {{~else~}}
+      Attributes
+      {{~/[utils/compare]~}}
+      <span class="badge badge-right">{{total}}</span>
+    </h2>
+    <div class="grid-attributes">
+      {{#attributes}}{{> attribute-list}}{{/attributes}}
+    </div>
+  </div>
+  <div class="save-btn">
+    <button class="disabled" id="save" disabled>
+      Save file
+      <i class="fas fa-file-download"></i>
+    </button>
   </div>
 </div>

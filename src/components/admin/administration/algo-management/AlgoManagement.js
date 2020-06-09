@@ -6,7 +6,6 @@ import Store from '@Store';
 import axios from 'axios';
 import APIHelper from '@APIHelper';
 import ModalHelper from '@ModalHelper';
-import StringHelper from '@StringHelper';
 import { Filters, FilterType } from '@Filters';
 import Search from '@Search';
 
@@ -145,7 +144,7 @@ class AlgoManagement extends Component {
         const data = {
           label: result.value.label.toLowerCase(),
           type: result.value.type,
-          container: StringHelper.toSlug(result.value.container, '-'),
+          container: result.value.container,
           enabled: result.value.enabled === 'true'
         };
 
@@ -172,17 +171,18 @@ class AlgoManagement extends Component {
 
   inputListener(input) {
     input.addEventListener(
-      'focusout',
+      'input',
       event => {
         event.preventDefault();
         event.stopImmediatePropagation();
 
         switch (input.id) {
           case 'label':
-            input.value = input.value.toLowerCase();
+            input.value = input.value.replace(/[^0-9a-zA-Z-]/gi, '-').toLowerCase();
             break;
           case 'container':
-            input.value = StringHelper.toSlug(input.value, '-');
+            input.value = input.value.replace(/[^0-9a-zA-Z-]/gi, '-').toLowerCase();
+
             break;
         }
       },
@@ -210,7 +210,7 @@ class AlgoManagement extends Component {
         const content = formAlgoTemplate({
           label: algo.label.toLowerCase(),
           type: algo.type,
-          container: StringHelper.toSlug(algo.container, '-'),
+          container: algo.container,
           enabled: algo.enabled
         });
 

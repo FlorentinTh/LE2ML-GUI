@@ -211,6 +211,14 @@ input[type='file']::-webkit-file-upload-button {
   @include themify($themes) {
     background: themed('color-primary') !important;
 
+    .swal2-loading {
+      .swal2-confirm {
+        &:hover {
+          background-color: transparent !important;
+        }
+      }
+    }
+
     h2 {
       color: themed('color-text-primary') !important;
     }

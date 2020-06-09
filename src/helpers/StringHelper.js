@@ -53,9 +53,17 @@ class StringHelper {
     return string.match(regexp);
   }
 
-  static truncateLength(string, size) {
+  static truncateLength(string, size, sep) {
     if (!(typeof string === 'string')) {
       throw new Error('Expected type for argument string is String.');
+    }
+
+    if (!(typeof size === 'number')) {
+      throw new Error('Expected type for argument size is Number.');
+    }
+
+    if (!(typeof sep === 'string')) {
+      throw new Error('Expected type for argument sep is String.');
     }
 
     const length = string.length;
@@ -66,36 +74,12 @@ class StringHelper {
     }
 
     if (length > size) {
-      return string.slice(0, split) + '-...-' + string.slice(length - split, length);
+      return (
+        string.slice(0, split) + sep + '...' + sep + string.slice(length - split, length)
+      );
     }
 
     return string;
-  }
-
-  static toSlug(string, separator) {
-    if (!(typeof string === 'string')) {
-      throw new Error('Expected type for argument string is String');
-    }
-
-    if (
-      !(typeof separator === 'string') &&
-      (!(separator === '-') || !(separator === '_'))
-    ) {
-      throw new Error('Expected values for separator are either "-" or "_".');
-    }
-
-    const spaces = string.toLowerCase().replace(/\s/g, separator);
-    let result;
-    switch (separator) {
-      case '-':
-        result = spaces.replace(/_/g, separator);
-        break;
-      case '_':
-        result = spaces.replace(/-/g, separator);
-        break;
-    }
-
-    return result;
   }
 }
 

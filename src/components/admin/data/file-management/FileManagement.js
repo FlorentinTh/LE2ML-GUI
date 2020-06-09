@@ -9,7 +9,6 @@ import APIHelper from '@APIHelper';
 import { Filters, FilterType } from '@Filters';
 import Search from '@Search';
 import ModalHelper from '@ModalHelper';
-import StringHelper from '@StringHelper';
 import FileHelper from '@FileHelper';
 
 let fileModels;
@@ -262,7 +261,7 @@ class FileManagement extends Component {
         event.stopImmediatePropagation();
 
         const content = formFileTemplate({
-          filename: filename.split('.')[0]
+          filename: filename.split('.').slice(0, -1)
         });
 
         const elems = ['filename'];
@@ -276,6 +275,20 @@ class FileManagement extends Component {
             renameFile('/files/rename', data, this.context).then(response => {
               if (response) {
                 ModalHelper.notification('success', response.message);
+
+                if (this.fileType === 'raw') {
+                  const rawStore = Store.get('raw-files');
+
+                  if (!(rawStore === undefined)) {
+                    Store.remove('raw-files');
+                  }
+                } else if (this.fileType === 'features') {
+                  const featuredStore = Store.get('features-files');
+
+                  if (!(featuredStore === undefined)) {
+                    Store.remove('features-files');
+                  }
+                }
                 // eslint-disable-next-line no-new
                 new FileManagement(true, this.fileType);
               }
@@ -291,14 +304,14 @@ class FileManagement extends Component {
 
   inputListener(input) {
     input.addEventListener(
-      'focusout',
+      'input',
       event => {
         event.preventDefault();
         event.stopImmediatePropagation();
 
         switch (input.id) {
           case 'filename':
-            input.value = StringHelper.toSlug(input.value.toLowerCase(), '_');
+            input.value = input.value.replace(/[^0-9a-zA-Z_]/gi, '_').toLowerCase();
             break;
         }
       },
@@ -329,6 +342,21 @@ class FileManagement extends Component {
             deleteFile('/files', data, this.context).then(response => {
               if (response) {
                 ModalHelper.notification('success', response.message);
+
+                if (this.fileType === 'raw') {
+                  const rawStore = Store.get('raw-files');
+
+                  if (!(rawStore === undefined)) {
+                    Store.remove('raw-files');
+                  }
+                } else if (this.fileType === 'features') {
+                  const featuredStore = Store.get('features-files');
+
+                  if (!(featuredStore === undefined)) {
+                    Store.remove('features-files');
+                  }
+                }
+
                 // eslint-disable-next-line no-new
                 new FileManagement(true, this.fileType);
               }
@@ -371,16 +399,17 @@ class FileManagement extends Component {
             if (selectedFormat === 'none') {
               ModalHelper.error('You must select a format to download the file.');
             } else {
-              const info = ModalHelper.notification(
-                'info',
+              const loader = ModalHelper.loading(
+                'Preparing Download...',
                 'Your download will begin automatically'
               );
+
               downloadFile(
                 `/files/download/${filename}?type=${this.fileType}&from=${fileFormat}&to=${selectedFormat}`,
                 this.context
               ).then(response => {
                 if (response) {
-                  info.close();
+                  loader.close();
                   window.open(
                     new URL(FileHelper.getFileServerURL() + response.data),
                     '_blank'

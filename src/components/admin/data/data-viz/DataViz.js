@@ -4,6 +4,7 @@ import fileListTemplate from './file-list.hbs';
 import Store from '@Store';
 import axios from 'axios';
 import APIHelper from '@APIHelper';
+import SortHelper from '@SortHelper';
 
 let rawFiles;
 let featuresFiles;
@@ -29,21 +30,22 @@ class DataViz extends Component {
 
       getFiles('/files?type=raw', this.context).then(response => {
         if (response) {
+          rawFiles = SortHelper.sortArrayAlpha(response.data, 'filename', 'asc');
+
           Store.add({
             id: 'raw-files',
-            data: response.data
+            data: rawFiles
           });
-
-          rawFiles = response.data;
 
           getFiles('/files?type=features', this.context).then(response => {
             if (response) {
+              featuresFiles = SortHelper.sortArrayAlpha(response.data, 'filename', 'asc');
+
               Store.add({
                 id: 'features-files',
-                data: response.data
+                data: featuresFiles
               });
 
-              featuresFiles = response.data;
               this.make();
             }
           });

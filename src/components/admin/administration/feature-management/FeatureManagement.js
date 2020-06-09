@@ -6,7 +6,6 @@ import Store from '@Store';
 import axios from 'axios';
 import APIHelper from '@APIHelper';
 import ModalHelper from '@ModalHelper';
-import StringHelper from '@StringHelper';
 import { Filters, FilterType } from '@Filters';
 import Search from '@Search';
 
@@ -145,7 +144,7 @@ class FeatureManagement extends Component {
         const data = {
           label: result.value.label.toLowerCase(),
           domain: result.value.domain,
-          container: StringHelper.toSlug(result.value.container, '-'),
+          container: result.value.container,
           enabled: result.value.enabled === 'true'
         };
 
@@ -172,17 +171,17 @@ class FeatureManagement extends Component {
 
   inputListener(input) {
     input.addEventListener(
-      'focusout',
+      'input',
       event => {
         event.preventDefault();
         event.stopImmediatePropagation();
 
         switch (input.id) {
           case 'label':
-            input.value = input.value.toLowerCase();
+            input.value = input.value.replace(/[^0-9a-zA-Z-]/gi, '-').toLowerCase();
             break;
           case 'container':
-            input.value = StringHelper.toSlug(input.value, '-');
+            input.value = input.value.replace(/[^0-9a-zA-Z-]/gi, '-').toLowerCase();
             break;
         }
       },
@@ -210,7 +209,7 @@ class FeatureManagement extends Component {
         const content = formFeatureTemplate({
           label: feature.label.toLowerCase(),
           domain: feature.domain,
-          container: StringHelper.toSlug(feature.container, '-'),
+          container: feature.container,
           enabled: feature.enabled
         });
 

@@ -1,0 +1,48 @@
+{{#each attributes as |attribute|}}
+<div class="grid-item" id="attribute-infos">
+  <div class="left">
+    <div class="label" data-att="{{~attribute.label~}}">
+      <h3>{{~#[format/truncate] attribute.label 18 '_'}}{{/[format/truncate]~}}
+      </h3>
+    </div>
+    <div class="position" data-pos="{{~attribute.pos~}}">
+      <h3>Position : {{attribute.pos~}}</h3>
+    </div>
+  </div>
+  <div class="right">
+    <div class="actions">
+      <p class="action">
+        {{#[utils/compare] attribute.label '===' 'label'}}
+        <button class="btn-disabled" id="edit" disabled>Edit</button>
+        {{else}}
+        <button id="edit">Edit</button>
+        {{/[utils/compare]}}
+      </p>
+      <p class="action">
+        {{#[utils/compare] attribute.label '===' 'label'}}
+        <button class="btn-disabled" id="delete" disabled>Delete</button>
+        {{else}}
+        <button id="delete">Delete</button>
+        {{/[utils/compare]}}
+      </p>
+    </div>
+  </div>
+</div>
+{{else}}
+{{#[utils/compare] loading '===' true}}
+<div class="grid-item">
+  <div class="loading-item">
+    <span class="loading">
+      Fetching data...
+      <i class="fas fa-spinner"></i>
+    </span>
+  </div>
+</div>
+{{else}}
+<div class="grid-item">
+  <div class="not-found">
+    <p>Nothing to display</p>
+  </div>
+</div>
+{{/[utils/compare]}}
+{{/each}}

@@ -151,7 +151,7 @@ class DataImport extends Component {
     const filename = Object.values(Object.fromEntries(formData))[0].name;
 
     axios
-      .get(`/files/exists/?file=${filename}&type=${fileType}`, {
+      .get(`/files/exists/${filename}?type=${fileType}`, {
         headers: APIHelper.setAuthHeader()
       })
       .then(response => {
@@ -182,7 +182,19 @@ class DataImport extends Component {
     const label = fileUploadForm.querySelector('label');
     const texts = fileUploadForm.querySelectorAll('p');
 
-    texts[0].innerHTML = StringHelper.truncateLength(file.name, 26);
+    const filename = file.name
+      .split('.')
+      .slice(0, -1)
+      .join('_')
+      .replace(/[^0-9a-zA-Z_]/gi, '_')
+      .toLowerCase();
+
+    const ext = file.name
+      .split('.')
+      .pop()
+      .toLowerCase();
+
+    texts[0].innerHTML = StringHelper.truncateLength(`${filename}.${ext}`, 26, '_');
     texts[1].innerHTML = `(${StringHelper.convertBytesToHuman(file.size)})`;
 
     label.classList.add('filled');
@@ -235,7 +247,7 @@ class DataImport extends Component {
     const cancelBtn = label.querySelector('p#cancel a');
     const progressBar = label.querySelector('progress');
 
-    texts[0].innerHTML = StringHelper.truncateLength(data.filename, 26);
+    texts[0].innerHTML = StringHelper.truncateLength(data.filename, 26, '_');
     texts[1].innerHTML = `(${StringHelper.convertBytesToHuman(data.size)})`;
 
     if (data.progress === 100) {

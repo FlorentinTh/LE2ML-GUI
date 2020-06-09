@@ -182,7 +182,7 @@ class UserManagement extends Component {
 
   inputListener(input) {
     input.addEventListener(
-      'focusout',
+      'input',
       event => {
         event.preventDefault();
         event.stopImmediatePropagation();

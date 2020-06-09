@@ -1,0 +1,12 @@
+<div class="form-infos form-infos-modal">
+  <div class="form">
+    <label for="attribute-name"></label>
+    {{#[utils/compare] attribute '===' undefined}}
+    <input type="text" id="attribute-name" name="attribute-name" autocomplete="false" placeholder="Attribute name"
+      required />
+    {{else}}
+    <input type="text" id="attribute-name" name="attribute-name" autocomplete="false" placeholder="Attribute name"
+      value="{{attribute}}" required />
+    {{/[utils/compare]}}
+  </div>
+</div>

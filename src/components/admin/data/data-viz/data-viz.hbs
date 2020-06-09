@@ -16,5 +16,14 @@
         </optgroup>
       </select>
     </div>
+    <div class="form-elem inline">
+      <span class="label-container">
+        <label for="file">Att.</label>
+      </span>
+      <select class="no-caps" id="file">
+        <option disabled selected>Select an Attribute</option>
+        {{#attributes}}{{> attribute-list}}{{/attributes}}
+      </select>
+    </div>
   </div>
 </div>

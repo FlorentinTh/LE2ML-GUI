@@ -77,7 +77,14 @@ class ModalHelper {
     });
   }
 
-  static confirm(title, message, confirmText = 'Yes', cancelable = true) {
+  static confirm(
+    title,
+    message,
+    confirmText = 'Yes',
+    cancelText = 'No',
+    cancelable = true,
+    esc = true
+  ) {
     return Swal.fire({
       title: title,
       text: message,
@@ -85,10 +92,25 @@ class ModalHelper {
       position: 'top',
       confirmButtonText: confirmText,
       showCancelButton: cancelable,
-      cancelButtonText: cancelable ? 'No' : '',
-      allowEscapeKey: cancelable,
+      cancelButtonText: cancelable ? cancelText : '',
+      allowEscapeKey: esc,
       allowOutsideClick: false,
       target: document.getElementById('root')
+    });
+  }
+
+  static loading(title, message) {
+    return Swal.fire({
+      title: title,
+      text: message,
+      position: 'top',
+      width: 600,
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      target: document.getElementById('root'),
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      }
     });
   }
 }
