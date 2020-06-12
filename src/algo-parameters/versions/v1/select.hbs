@@ -1,0 +1,17 @@
+<div class="elem">
+  <label for="{{param.slug}}"></label>
+  <select id="{{param.slug}}">
+    {{#if param.values}}
+    <option value="none" disabled>{{param.label}}</option>
+    {{#each param.values as |value|}}
+    {{#[utils/compare] value.slug '===' ../param.default}}
+    <option value="{{value.slug}}" selected>{{value.label}}</option>
+    {{else}}
+    <option value="{{value.slug}}">{{value.label}}</option>
+    {{/[utils/compare]}}
+    {{/each}}
+    {{else}}
+    <option value="none" disabled selected>{{param.label}}</option>
+    {{/if}}
+  </select>
+</div>

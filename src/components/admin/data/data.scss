@@ -14,15 +14,9 @@
 
   @include themify($themes) {
     .disabled {
-      label,
       input,
-      span,
       select {
         color: themed('color-text-secondary') !important;
-      }
-
-      span {
-        background-color: themed('color-secondary') !important;
       }
 
       input,

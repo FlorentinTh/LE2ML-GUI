@@ -483,7 +483,7 @@ async function getFiles(url, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context, true);
+    APIHelper.errorsHandler(error, true);
   }
 }
 
@@ -494,7 +494,7 @@ async function getFileHeaders(url, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context, true);
+    APIHelper.errorsHandler(error, true);
   }
 }
 
@@ -505,7 +505,7 @@ async function saveFile(url, data, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context, true);
+    APIHelper.errorsHandler(error, true);
   }
 }
 

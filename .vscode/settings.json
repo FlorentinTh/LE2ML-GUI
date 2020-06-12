@@ -9,5 +9,6 @@
   "scssFormatter.tabWidth": 2,
   "scssFormatter.useTabs": false,
   "editor.formatOnPaste": true,
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "telemetry.enableCrashReporter": false
 }

@@ -431,7 +431,7 @@ async function getFiles(url, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context, true);
+    APIHelper.errorsHandler(error, true);
   }
 }
 
@@ -442,7 +442,7 @@ async function downloadFile(url, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context, true);
+    APIHelper.errorsHandler(error, true);
   }
 }
 
@@ -453,7 +453,7 @@ async function renameFile(url, data, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context);
+    APIHelper.errorsHandler(error, true);
   }
 }
 
@@ -466,7 +466,7 @@ async function deleteFile(url, data, context) {
     return response.data;
   } catch (error) {
     if (error) {
-      APIHelper.errorsHandler(error, context);
+      APIHelper.errorsHandler(error, true);
     }
   }
 }

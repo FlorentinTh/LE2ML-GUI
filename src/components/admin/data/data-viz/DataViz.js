@@ -89,7 +89,7 @@ async function getFiles(url, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context, true);
+    APIHelper.errorsHandler(error, true);
   }
 }
 

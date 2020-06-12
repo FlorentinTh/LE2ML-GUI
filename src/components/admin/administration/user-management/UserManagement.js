@@ -339,7 +339,7 @@ async function getUsers(url, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context, true);
+    APIHelper.errorsHandler(error, true);
   }
 }
 
@@ -350,7 +350,7 @@ async function updateUser(url, data, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context);
+    APIHelper.errorsHandler(error, true);
   }
 }
 
@@ -361,7 +361,7 @@ async function updateRole(url, data, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context);
+    APIHelper.errorsHandler(error, true);
   }
 }
 
@@ -373,7 +373,7 @@ async function deleteUser(url, context) {
     return response.data;
   } catch (error) {
     if (error) {
-      APIHelper.errorsHandler(error, context);
+      APIHelper.errorsHandler(error, true);
     }
   }
 }

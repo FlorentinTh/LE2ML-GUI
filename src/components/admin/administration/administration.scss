@@ -113,7 +113,7 @@
     }
 
     .actions {
-      p.action {
+      div.action {
         padding-bottom: 8px;
 
         &:last-of-type {
@@ -123,6 +123,79 @@
         &:first-child {
           button {
             margin-top: 0;
+          }
+        }
+
+        .form-container {
+          height: 26px;
+          margin-top: 5px;
+          width: 150px;
+
+          @include themify($themes) {
+            border: 1px solid themed('color-accent');
+            color: themed('color-accent');
+          }
+
+          transition: all 0.5s ease-in-out;
+
+          &:not(.loading) {
+            &:hover {
+              @include themify($themes) {
+                background-color: themed('color-accent');
+                color: themed('color-text-active');
+              }
+            }
+          }
+
+          &.loading {
+            @include themify($themes) {
+              background-color: themed('color-accent');
+              color: themed('color-text-active');
+            }
+          }
+
+          border-radius: 0.25rem;
+
+          label {
+            float: left;
+            clear: both;
+            width: 100%;
+            height: 100%;
+            user-select: none;
+            text-align: center;
+            cursor: pointer;
+            line-height: 26px;
+
+            span {
+              font-size: 0.95em;
+              text-transform: uppercase;
+            }
+
+            button {
+              display: none;
+            }
+
+            &.loading {
+              cursor: default;
+            }
+
+            i {
+              display: none;
+            }
+
+            &.loading {
+              span {
+                display: none;
+              }
+
+              i {
+                display: inline-block;
+              }
+            }
+          }
+
+          input[type='file'] {
+            display: none;
           }
         }
 
@@ -206,10 +279,6 @@
 
         .info:not(:last-of-type) {
           margin-bottom: 15px;
-        }
-
-        .info:last-child:not(i) {
-          font-style: italic;
         }
 
         i {

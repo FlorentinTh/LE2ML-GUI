@@ -86,7 +86,7 @@ async function signIn(url, data, context) {
     return response.data;
   } catch (error) {
     if (error) {
-      APIHelper.errorsHandler(error, context);
+      APIHelper.errorsHandler(error, true);
     }
   }
 }

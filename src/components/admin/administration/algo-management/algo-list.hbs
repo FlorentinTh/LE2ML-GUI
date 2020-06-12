@@ -31,23 +31,40 @@
         <i class="fas fa-box-open"></i>
         {{~algorithm.container~}}
       </p>
+      <p class="info">
+        <i class="fas fa-file-code"></i>
+        {{#[utils/compare] algorithm.config '===' null}}
+        none
+        {{else}}
+        {{~algorithm.config~}}
+        {{/[utils/compare]}}
+      </p>
     </div>
   </div>
   <div class="right">
     <div class="actions">
-      <p class="action">
+      <div class="action">
+        <div class="form-container">
+          <form method="POST" enctype="multipart/form-data">
+            <input type="file" class="import-config" id="{{algorithm.slug}}" name="{{algorithm.slug}}" accept=".json">
+            <label for="{{algorithm.slug}}">
+              {{#[utils/compare] algorithm.config '===' null}}
+              <span>Add conf.</span>
+              {{else}}
+              <span>Replace conf.</span>
+              {{/[utils/compare]}}
+              <i class="fas fa-spinner"></i>
+              <button type="submit">Upload</button>
+            </label>
+          </form>
+        </div>
+      </div>
+      <div class="action">
         <button id="edit">Edit</button>
-      </p>
-      <p class="action">
-        {{#[utils/compare] algorithm.enabled '===' true}}
-        <button id="state">Disable</button>
-        {{else}}
-        <button id="state">Enable</button>
-        {{/[utils/compare]}}
-      </p>
-      <p class="action">
+      </div>
+      <div class="action">
         <button id="delete">Delete</button>
-      </p>
+      </div>
     </div>
   </div>
 </div>

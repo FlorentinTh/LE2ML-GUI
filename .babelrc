@@ -27,6 +27,8 @@
           "@Controller": "./src/core/Controller.js",
           "@Configuration": "./src/configuration/Configuration.js",
           "@ConfVersion": "./src/configuration/Version.js",
+          "@AlgoParameters": "./src/algo-parameters/Parameters.js",
+          "@AlgoParametersVersion": "./src/algo-parameters/Version.js",
           "@Theme": "./src/core/theme/Theme.js",
           "@Store": "./src/core/Store.js",
           "@Events": "./src/core/Events.js",

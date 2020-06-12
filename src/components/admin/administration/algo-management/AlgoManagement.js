@@ -11,6 +11,7 @@ import Search from '@Search';
 
 let allAlgorithms;
 let algoFilters;
+let selectedConfInput;
 
 class AlgoManagement extends Component {
   constructor(reload = false, context = null) {
@@ -191,9 +192,88 @@ class AlgoManagement extends Component {
   }
 
   setActions(algos) {
+    this.applyConf(algos);
     this.editAction(algos);
-    this.grantOrRevokeAction(algos);
     this.deleteAction(algos);
+  }
+
+  applyConf(algos) {
+    const inputs = this.context.querySelectorAll('input.import-config');
+
+    inputs.forEach(input => {
+      const form = input.closest('form');
+
+      input.addEventListener(
+        'change',
+        event => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          const file = event.target.files[0];
+
+          selectedConfInput = input;
+
+          if (!(file === undefined)) {
+            const label = form.querySelector('label');
+            const submit = label.querySelector('button[type="submit"]');
+
+            this.toggleLoading(true);
+            submit.click();
+          }
+        },
+        false
+      );
+
+      form.addEventListener('submit', this.importFileUploadEventSubmit.bind(this), false);
+    });
+  }
+
+  toggleLoading(toggle) {
+    const container = selectedConfInput.closest('.form-container');
+    const label = container.querySelector('label');
+
+    if (toggle) {
+      container.classList.add('loading');
+      label.classList.add('loading');
+    } else {
+      container.classList.remove('loading');
+      label.classList.remove('loading');
+    }
+  }
+
+  importFileUploadEventSubmit(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const form = selectedConfInput.closest('form');
+    const data = new FormData(form);
+
+    selectedConfInput.setAttribute('disabled', 'disabled');
+
+    const algo = selectedConfInput.id;
+
+    axios
+      .post(`/files/import/conf?algo=${algo}`, data, {
+        headers: APIHelper.setAuthHeader()
+      })
+      .then(response => {
+        if (response) {
+          selectedConfInput.removeAttribute('disabled');
+          selectedConfInput.value = '';
+          this.toggleLoading(false);
+          ModalHelper.notification(
+            'success',
+            `Config of ${response.data.data.algo.label} successfully imported`
+          );
+          // eslint-disable-next-line no-new
+          new AlgoManagement(true);
+        }
+      })
+      .catch(error => {
+        selectedConfInput.removeAttribute('disabled');
+        selectedConfInput.value = '';
+        this.toggleLoading(false);
+        APIHelper.errorsHandler(error, true);
+      });
   }
 
   editAction(algos) {
@@ -222,7 +302,7 @@ class AlgoManagement extends Component {
               if (response) {
                 ModalHelper.notification(
                   'success',
-                  response.data.algo.label + ' successfully updated.'
+                  response.data.algo.label + ' successfully updated'
                 );
                 this.removeTaskAlgoListStore();
                 // eslint-disable-next-line no-new
@@ -237,49 +317,6 @@ class AlgoManagement extends Component {
 
         this.inputListener(labelInput);
         this.inputListener(containerInput);
-      });
-    });
-  }
-
-  grantOrRevokeAction(algos) {
-    const buttons = this.context.querySelectorAll('button#state');
-
-    buttons.forEach(button => {
-      const algoId = button.closest('#algo-infos').dataset.algo;
-      const algo = algos.find(elem => elem._id === algoId);
-
-      button.addEventListener('click', event => {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-
-        const data = {
-          label: algo.label,
-          type: algo.type,
-          container: algo.container,
-          enabled: !algo.enabled
-        };
-
-        const askTitle = algo.enabled ? 'Disable algorithm' : 'Enable aglorithm';
-
-        const askMessage = algo.enabled
-          ? algo.label + ' will be disabled.'
-          : algo.label + ' will be enabled.';
-
-        ModalHelper.confirm(askTitle, askMessage).then(result => {
-          if (result.value) {
-            const confirmMessage = algo.enabled
-              ? algo.label + ' is now disabled.'
-              : algo.label + ' is now enabled.';
-            updateState('/algos/state/' + algoId, data, this.context).then(response => {
-              if (response) {
-                ModalHelper.notification('success', confirmMessage);
-                this.removeTaskAlgoListStore();
-                // eslint-disable-next-line no-new
-                new AlgoManagement(true);
-              }
-            });
-          }
-        });
       });
     });
   }
@@ -323,7 +360,7 @@ async function getAlgorithms(url, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context, true);
+    APIHelper.errorsHandler(error, true);
   }
 }
 
@@ -334,7 +371,7 @@ async function addAlgo(url, data, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context);
+    APIHelper.errorsHandler(error, true);
   }
 }
 
@@ -345,18 +382,7 @@ async function updateAlgo(url, data, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context);
-  }
-}
-
-async function updateState(url, data, context) {
-  try {
-    const response = await axios.post(url, data, {
-      headers: APIHelper.setAuthHeader()
-    });
-    return response.data;
-  } catch (error) {
-    APIHelper.errorsHandler(error, context);
+    APIHelper.errorsHandler(error, true);
   }
 }
 
@@ -368,7 +394,7 @@ async function deleteAlgo(url, context) {
     return response.data;
   } catch (error) {
     if (error) {
-      APIHelper.errorsHandler(error, context);
+      APIHelper.errorsHandler(error, true);
     }
   }
 }

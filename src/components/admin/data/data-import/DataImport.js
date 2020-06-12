@@ -173,7 +173,7 @@ class DataImport extends Component {
         }
       })
       .catch(error => {
-        APIHelper.errorsHandler(error, this.context, true);
+        APIHelper.errorsHandler(error, true);
         this.resetFileUpload();
       });
   }

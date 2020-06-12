@@ -317,7 +317,7 @@ async function getFunctions(url, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context, true);
+    APIHelper.errorsHandler(error, true);
   }
 }
 
@@ -328,7 +328,7 @@ async function addFunction(url, data, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context);
+    APIHelper.errorsHandler(error, true);
   }
 }
 
@@ -339,7 +339,7 @@ async function updateFunction(url, data, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context);
+    APIHelper.errorsHandler(error, true);
   }
 }
 
@@ -350,7 +350,7 @@ async function updateState(url, data, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context);
+    APIHelper.errorsHandler(error, true);
   }
 }
 
@@ -362,7 +362,7 @@ async function deleteFunction(url, context) {
     return response.data;
   } catch (error) {
     if (error) {
-      APIHelper.errorsHandler(error, context);
+      APIHelper.errorsHandler(error, true);
     }
   }
 }

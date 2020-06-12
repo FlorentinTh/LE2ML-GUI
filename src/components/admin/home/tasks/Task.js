@@ -170,7 +170,7 @@ class Task {
         if (btn.classList.contains('loading')) {
           btn.classList.remove('loading');
         }
-        APIHelper.errorsHandler(error, this.context, true);
+        APIHelper.errorsHandler(error, true);
       });
   }
 

@@ -170,7 +170,7 @@ class SelectProcess extends Task {
           input.removeAttribute('disabled');
           input.value = '';
           this.toggleLoading(false);
-          ModalHelper.notification('success', 'Configuration successfully imported.');
+          ModalHelper.notification('success', response.data.message);
           this.applyConfigHandler(response.data.data);
         }
       })
@@ -178,7 +178,7 @@ class SelectProcess extends Task {
         input.removeAttribute('disabled');
         input.value = '';
         this.toggleLoading(false);
-        APIHelper.errorsHandler(error, this.context, true);
+        APIHelper.errorsHandler(error, true);
       });
   }
 
@@ -205,10 +205,10 @@ class SelectProcess extends Task {
 
     if (!(file === undefined)) {
       const label = this.context.querySelector('.import-container label');
-      const button = label.children[1];
+      const submit = label.querySelector('button[type="submit"]');
 
       this.toggleLoading(true);
-      button.click();
+      submit.click();
     }
   }
 
@@ -268,7 +268,7 @@ async function getFiles(url, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context, true);
+    APIHelper.errorsHandler(error, true);
   }
 }
 

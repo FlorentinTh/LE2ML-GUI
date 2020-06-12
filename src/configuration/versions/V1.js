@@ -50,6 +50,22 @@ class V1 {
       result.algorithm = { name: values['algorithm-name'] };
     }
 
+    const parameters = {};
+    Object.keys(values).filter((key, index) => {
+      if (/^algo-param-/.test(key)) {
+        const value = values[key];
+        const param = key.substring(11);
+        parameters[param] = value;
+      }
+    });
+
+    if (!(Object.keys(parameters).length === 0)) {
+      result.algorithm = {
+        ...result.algorithm,
+        parameters: parameters
+      };
+    }
+
     return result;
   }
 

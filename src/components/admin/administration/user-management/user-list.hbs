@@ -31,33 +31,33 @@
   </div>
   <div class="actions">
     {{#[user/connected-user] user._id}}
-    <p class="action">
+    <div class="action">
       <button class="btn-disabled" id="edit" disabled>Edit</button>
-    </p>
-    <p class="action">
+    </div>
+    <div class="action">
       {{#[utils/compare] user.role '===' 'admin'}}
       <button class="btn-disabled" id="edit-role" disabled>Revoke role</button>
       {{else}}
       <button class="btn-disabled" id="edit-role" disabled>Grant role</button>
       {{/[utils/compare]}}
-    </p>
-    <p class="action">
+    </div>
+    <div class="action">
       <button class="btn-disabled" id="delete" disabled>Delete</button>
-    </p>
+    </div>
     {{else}}
-    <p class="action">
+    <div class="action">
       <button id="edit">Edit</button>
-    </p>
-    <p class="action">
+    </div>
+    <div class="action">
       {{#[utils/compare] user.role '===' 'admin'}}
       <button id="edit-role">Revoke role</button>
       {{else}}
       <button id="edit-role">Grant role</button>
       {{/[utils/compare]}}
-    </p>
-    <p class="action">
+    </div>
+    <div class="action">
       <button id="delete">Delete</button>
-    </p>
+    </div>
     {{/[user/connected-user]}}
   </div>
 </div>

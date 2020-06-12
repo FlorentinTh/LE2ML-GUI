@@ -1,0 +1,40 @@
+.params-container {
+  &.no-conf,
+  &.loading {
+    padding: 45px 25px;
+    border-radius: 0.25rem;
+    @include themify($themes) {
+      background-color: themed('color-secondary');
+    }
+  }
+  width: 65%;
+  margin: 0 auto;
+
+  .elem {
+    margin-bottom: 30px;
+  }
+
+  .elem:last-of-type {
+    margin-bottom: 0;
+  }
+
+  input,
+  select {
+    width: 100%;
+    height: 45px;
+    border: none;
+    font-weight: lighter;
+  }
+  input,
+  select {
+    font-size: 1.25em;
+  }
+
+  input[type='number'] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+  }
+}

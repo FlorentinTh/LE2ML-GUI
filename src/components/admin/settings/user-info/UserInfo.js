@@ -109,7 +109,7 @@ async function changeUserInfo(url, data, context) {
     });
     return response.data;
   } catch (error) {
-    APIHelper.errorsHandler(error, context);
+    APIHelper.errorsHandler(error, true);
   }
 }
 
