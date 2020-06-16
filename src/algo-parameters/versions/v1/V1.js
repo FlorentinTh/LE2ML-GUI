@@ -35,7 +35,6 @@ class V1 {
           break;
       }
     }
-
     this.initListeners();
   }
 
@@ -69,11 +68,19 @@ class V1 {
       event => {
         event.preventDefault();
         event.stopImmediatePropagation();
+
         if (!(element.value === '')) {
-          sessionStorage.setItem('algo-param-' + element.id, element.value);
+          sessionStorage.setItem(
+            'algo-param-' + element.id,
+            element.value + ',' + element.dataset.type
+          );
         } else {
           if (!(sessionStorage.getItem('algo-param-' + element.id) === '')) {
-            sessionStorage.removeItem('algo-param-' + element.id);
+            if (element.required) {
+              sessionStorage.setItem('algo-param-' + element.id, null);
+            } else {
+              sessionStorage.removeItem('algo-param-' + element.id);
+            }
           }
         }
       },
@@ -91,7 +98,10 @@ class V1 {
       event => {
         event.preventDefault();
         event.stopImmediatePropagation();
-        sessionStorage.setItem('algo-param-' + element.id, element.value);
+        sessionStorage.setItem(
+          'algo-param-' + element.id,
+          element.value + ',' + element.dataset.type
+        );
       },
       false
     );
@@ -105,10 +115,17 @@ class V1 {
     const storage = sessionStorage.getItem('algo-param-' + element.id);
 
     if (!(storage === null)) {
-      element.value = storage;
+      element.value = storage.split(',')[0];
     } else {
       if (!(element.value === '')) {
-        sessionStorage.setItem('algo-param-' + element.id, element.value);
+        sessionStorage.setItem(
+          'algo-param-' + element.id,
+          element.value + ',' + element.dataset.type
+        );
+      } else {
+        if (element.required) {
+          sessionStorage.setItem('algo-param-' + element.id, null);
+        }
       }
     }
   }

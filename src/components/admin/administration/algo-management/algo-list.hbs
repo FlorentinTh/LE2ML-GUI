@@ -46,8 +46,9 @@
       <div class="action">
         <div class="form-container">
           <form method="POST" enctype="multipart/form-data">
-            <input type="file" class="import-config" id="{{algorithm.slug}}" name="{{algorithm.slug}}" accept=".json">
-            <label for="{{algorithm.slug}}">
+            <input type="file" class="import-config" id="{{algorithm.container}}.{{algorithm.slug}}"
+              name="{{algorithm.container}}.{{algorithm.slug}}" accept=".json">
+            <label for="{{algorithm.container}}.{{algorithm.slug}}">
               {{#[utils/compare] algorithm.config '===' null}}
               <span>Add conf.</span>
               {{else}}

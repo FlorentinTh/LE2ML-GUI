@@ -3,7 +3,7 @@
   {{#[utils/compare] param.type '===' 'number'}}
   <input type="number" id="{{param.slug}}" name="{{param.slug}}" autocomplete="false" placeholder="{{param.label}}"
     {{#if param.min}}max="{{param.min}}" {{/if}} {{#if param.max}}max="{{param.max}}" {{/if}}
-    {{#if param.default}}value="{{param.default}}" {{/if}} required />
+    {{#if param.default}}value="{{param.default}}" {{/if}} data-type="{{param.type}}" required />
   {{else}}
   {{/[utils/compare]}}
 </div>

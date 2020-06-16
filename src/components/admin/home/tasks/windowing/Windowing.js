@@ -15,7 +15,10 @@ let windowFunctions;
 
 const properties = {
   length: 0,
-  function: 'none',
+  function: {
+    label: 'none',
+    container: null
+  },
   overlap: 0
 };
 
@@ -77,8 +80,11 @@ class Windowing extends Task {
     if (sessionStorage.getItem('windowing-length')) {
       sessionStorage.removeItem('windowing-length');
     }
-    if (sessionStorage.getItem('windowing-function')) {
-      sessionStorage.removeItem('windowing-function');
+    if (sessionStorage.getItem('windowing-function-label')) {
+      sessionStorage.removeItem('windowing-function-label');
+    }
+    if (sessionStorage.getItem('windowing-function-container')) {
+      sessionStorage.removeItem('windowing-function-container');
     }
     if (sessionStorage.getItem('windowing-overlap')) {
       sessionStorage.removeItem('windowing-overlap');
@@ -87,7 +93,8 @@ class Windowing extends Task {
 
   storeWindowingProperties(properties) {
     sessionStorage.setItem('windowing-length', properties.length);
-    sessionStorage.setItem('windowing-function', properties.function);
+    sessionStorage.setItem('windowing-function-label', properties.function.label);
+    sessionStorage.setItem('windowing-function-container', properties.function.container);
     sessionStorage.setItem('windowing-overlap', properties.overlap);
   }
 
@@ -149,9 +156,15 @@ class Windowing extends Task {
     event.stopImmediatePropagation();
 
     const select = event.target;
-    const selected = select.options[select.selectedIndex].value;
+    const selectedValue = select.options[select.selectedIndex].value;
 
-    properties.function = selected;
+    const selected =
+      selectedValue === 'none' ? selectedValue : selectedValue.split('.')[1];
+
+    const container = selectedValue === 'none' ? null : selectedValue.split('.')[0];
+
+    properties.function.label = selected;
+    properties.function.container = container;
     this.storeWindowingProperties(properties);
   }
 
@@ -183,24 +196,27 @@ class Windowing extends Task {
   }
 
   initWindowTypeSelect() {
-    const storedValue = sessionStorage.getItem('windowing-function');
+    const storedValue = sessionStorage.getItem('windowing-function-label');
     const options = windowType.options;
 
-    for (let i = 0; i < options.length; ++i) {
-      const option = options[i];
-      if (storedValue && storedValue === option.value) {
-        if (!option.disabled) {
-          option.selected = true;
-          properties.function = storedValue;
-        } else {
-          options[0].selected = true;
-          properties.function = options[0].value;
-          this.storeWindowingProperties(properties);
+    if (storedValue) {
+      for (let i = 0; i < options.length; ++i) {
+        const option = options[i];
+        const optValue =
+          option.value === 'none' ? option.value : option.value.split('.')[1];
+        if (storedValue === optValue) {
+          if (!option.disabled) {
+            option.selected = true;
+            properties.function.label = storedValue;
+          } else {
+            options[0].selected = true;
+            properties.function.label = options[0].value;
+            properties.function.container = null;
+            this.storeWindowingProperties(properties);
+          }
         }
       }
-    }
-
-    if (!storedValue) {
+    } else {
       options[0].selected = true;
     }
   }

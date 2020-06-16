@@ -35,7 +35,7 @@ class Features extends Task {
         featureItem.classList.remove('item-selected');
       } else {
         featureItem.classList.add('item-selected');
-        features.push(featureItem.dataset.slug);
+        features.push(featureItem.dataset.container + '.' + featureItem.dataset.slug);
       }
     }
 
@@ -75,7 +75,8 @@ class Features extends Task {
     for (let i = 0; i < featureItems.length; i++) {
       const item = featureItems[i];
 
-      if (features.includes(item.dataset.slug)) {
+      const featureName = item.dataset.container + '.' + item.dataset.slug;
+      if (features.includes(featureName)) {
         if (!item.classList.contains('item-selected')) {
           item.classList.add('item-selected');
         }
@@ -101,7 +102,7 @@ class Features extends Task {
       if (!(storedFeatures === null)) {
         const array = storedFeatures
           .split(',')
-          .filter(value => value !== item.dataset.slug);
+          .filter(value => value !== item.dataset.container + '.' + item.dataset.slug);
 
         if (array.length > 0) {
           sessionStorage.setItem('features', array.join(','));
@@ -113,9 +114,15 @@ class Features extends Task {
       item.classList.add('item-selected');
 
       if (!(storedFeatures === null)) {
-        sessionStorage.setItem('features', storedFeatures + ',' + item.dataset.slug);
+        sessionStorage.setItem(
+          'features',
+          storedFeatures + ',' + item.dataset.container + '.' + item.dataset.slug
+        );
       } else {
-        sessionStorage.setItem('features', item.dataset.slug);
+        sessionStorage.setItem(
+          'features',
+          item.dataset.container + '.' + item.dataset.slug
+        );
       }
     }
   }

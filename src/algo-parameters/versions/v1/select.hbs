@@ -1,6 +1,6 @@
 <div class="elem">
   <label for="{{param.slug}}"></label>
-  <select id="{{param.slug}}">
+  <select id="{{param.slug}}" data-type="{{param.values_type}}" required>
     {{#if param.values}}
     <option value="none" disabled>{{param.label}}</option>
     {{#each param.values as |value|}}

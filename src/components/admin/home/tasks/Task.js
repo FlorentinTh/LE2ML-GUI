@@ -3,6 +3,8 @@ import { Versions } from '@ConfVersion';
 import FileHelper from '@FileHelper';
 import axios from 'axios';
 import APIHelper from '@APIHelper';
+import ModalHelper from '@ModalHelper';
+import formConfVersionTemplate from './form-conf-version.hbs';
 
 class Task {
   constructor(context) {
@@ -134,49 +136,101 @@ class Task {
     event.preventDefault();
     event.stopImmediatePropagation();
 
-    const btn =
-      event.target.tagName === 'BUTTON' ? event.target : event.target.parentNode;
+    if (!this.validateAlgoParamsFields()) {
+      ModalHelper.error(
+        'Please select an algorithm or check that all required parameters does not have missing values.'
+      );
+    } else {
+      const content = formConfVersionTemplate();
+      const elems = ['version'];
+      ModalHelper.edit('Choose a Configuration Version', content, 'download', elems).then(
+        result => {
+          if (result.value) {
+            const selectedVersion = result.value.version;
+            if (selectedVersion === 'none') {
+              ModalHelper.error(
+                'You must select a version to download the configuration file.'
+              );
+            } else {
+              const btn =
+                event.target.tagName === 'BUTTON'
+                  ? event.target
+                  : event.target.parentNode;
+              btn.setAttribute('disabled', true);
+              if (!btn.classList.contains('loading')) {
+                btn.classList.add('loading');
+              }
+              let JSONConf;
 
-    btn.setAttribute('disabled', true);
+              switch (selectedVersion) {
+                case '1':
+                  JSONConf = new Configuration().marshall(Versions.v1);
+                  break;
+              }
 
-    if (!btn.classList.contains('loading')) {
-      btn.classList.add('loading');
+              axios
+                .post('/files/convert/conf', JSONConf, {
+                  headers: APIHelper.setAuthHeader()
+                })
+                .then(response => {
+                  if (response) {
+                    const downloadConfBtn = this.context.querySelector(
+                      '#download-config a'
+                    );
+                    FileHelper.enableDownload(
+                      downloadConfBtn,
+                      response.data.data,
+                      'config',
+                      () => {
+                        downloadConfBtn.click();
+                        FileHelper.disableDownload(downloadConfBtn);
+                        btn.removeAttribute('disabled');
+                        if (btn.classList.contains('loading')) {
+                          btn.classList.remove('loading');
+                        }
+                      }
+                    );
+                  }
+                })
+                .catch(error => {
+                  btn.removeAttribute('disabled');
+                  if (btn.classList.contains('loading')) {
+                    btn.classList.remove('loading');
+                  }
+                  APIHelper.errorsHandler(error, true);
+                });
+            }
+          }
+        }
+      );
+    }
+  }
+
+  validateAlgoParamsFields() {
+    const algo = this.context.querySelector('select#algo');
+
+    if (!(algo === null)) {
+      if (algo.value === 'none') {
+        return false;
+      }
     }
 
-    const JSONConf = new Configuration().marshall(Versions.v1);
+    const params = this.context.querySelectorAll('.params-container .elem');
 
-    axios
-      .post('/files/convert/conf', JSONConf, {
-        headers: APIHelper.setAuthHeader()
-      })
-      .then(response => {
-        if (response) {
-          const downloadConfBtn = this.context.querySelector('#download-config a');
-          FileHelper.enableDownload(downloadConfBtn, response.data.data, 'config', () => {
-            downloadConfBtn.click();
-
-            FileHelper.disableDownload(downloadConfBtn);
-            btn.removeAttribute('disabled');
-
-            if (btn.classList.contains('loading')) {
-              btn.classList.remove('loading');
-            }
-          });
+    if (!(params.length === 0)) {
+      for (let i = 0; i < params.length; ++i) {
+        const param = params[i].children[params[i].children.length - 1];
+        if (param.required && param.value === '') {
+          return false;
         }
-      })
-      .catch(error => {
-        btn.removeAttribute('disabled');
+      }
+    }
 
-        if (btn.classList.contains('loading')) {
-          btn.classList.remove('loading');
-        }
-        APIHelper.errorsHandler(error, true);
-      });
+    return true;
   }
 
   run() {
     const disabledItem = sessionStorage.getItem('disabled-nav');
-
     if (!(disabledItem === null)) {
       this.toggleNavItemEnable(disabledItem, false);
     }

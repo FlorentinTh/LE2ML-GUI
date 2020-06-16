@@ -90,9 +90,15 @@ class Learning extends Task {
     }
 
     const select = event.target;
-    const selected = select.options[select.selectedIndex].value;
+    const id = select.options[select.selectedIndex].dataset.algo;
+    const value = select.options[select.selectedIndex].value;
+    const containerInput = this.context.querySelector('#algo-container');
 
-    sessionStorage.setItem('algorithm-name', selected);
+    selectedAlgo = this.getAlgorithmById(id);
+    containerInput.value = selectedAlgo.container;
+
+    sessionStorage.setItem('algorithm-name', value);
+    sessionStorage.setItem('algorithm-container', selectedAlgo.container);
 
     const JSONValues = JSON.parse(JSON.stringify(sessionStorage));
 
@@ -102,51 +108,49 @@ class Learning extends Task {
       }
     });
 
-    const containerInput = this.context.querySelector('#algo-container');
-
-    selectedAlgo = this.getAlgorithmBylabel(selected);
-    containerInput.value = selectedAlgo.container;
-
     this.applyParametersConfig(selectedAlgo.config);
   }
 
   initAlgoSelect() {
     const storedValue = sessionStorage.getItem('algorithm-name');
+    const storedContainer = sessionStorage.getItem('algorithm-container');
     const options = algoSelect.options;
 
     let selected;
-    for (let i = 1; i < options.length; ++i) {
-      const option = options[i];
-      if (storedValue && storedValue === option.value) {
-        selected = option.value;
-        option.selected = true;
+    if (storedValue && storedContainer) {
+      for (let i = 1; i < options.length; ++i) {
+        const option = options[i];
+        const algo = this.getAlgorithmById(option.dataset.algo);
+        if (storedValue === algo.slug && storedContainer === algo.container) {
+          selected = algo;
+          option.selected = true;
+        }
       }
+    } else {
+      options[0].selected = true;
     }
 
     const containerInput = this.context.querySelector('#algo-container');
 
     if (!(selected === undefined)) {
-      selectedAlgo = this.getAlgorithmBylabel(selected);
-      containerInput.value = selectedAlgo.container;
-      this.applyParametersConfig(selectedAlgo.config);
+      selectedAlgo = selected;
+      containerInput.value = selected.container;
+
+      this.applyParametersConfig(selected.config);
     } else {
       containerInput.value = 'None';
     }
-
-    if (!storedValue) {
-      options[0].selected = true;
-    }
   }
 
-  getAlgorithmBylabel(slug) {
+  getAlgorithmById(id) {
     if (supervisedAlgos === undefined && unsupervisedAlgos === undefined) {
       throw new Error('Empty data');
     }
 
-    let res = supervisedAlgos.filter(algo => algo.slug === slug)[0];
+    let res = supervisedAlgos.filter(algo => algo._id === id)[0];
 
     if (res === undefined) {
-      res = unsupervisedAlgos.filter(algo => algo.slug === slug)[0];
+      res = unsupervisedAlgos.filter(algo => algo._id === id)[0];
 
       if (res === undefined) {
         return null;
@@ -192,7 +196,10 @@ class Learning extends Task {
         const params = new AlgoParameters(confParamsStore.data, container);
         params.build(paramsTemplate);
       } else {
-        getAlgoParamsConf('/algos/params/conf/' + config, this.context).then(response => {
+        getAlgoParamsConf(
+          `/algos/params/conf/${config}?container=${selectedAlgo.container}`,
+          this.context
+        ).then(response => {
           if (response) {
             Store.add({
               id: 'conf-params',

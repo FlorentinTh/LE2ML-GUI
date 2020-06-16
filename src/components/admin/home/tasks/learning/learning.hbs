@@ -7,7 +7,7 @@
           <label for="algo">Algo</label>
         </span>
         <select id="algo">
-          <option disabled selected>Select an Algorithm</option>
+          <option value="none" data-algo="none" selected>Select an Algorithm</option>
           <optgroup id="supervised-group" label="Supervised">
             {{#supervised-algo}}{{> algo-list}}{{/supervised-algo}}
           </optgroup>

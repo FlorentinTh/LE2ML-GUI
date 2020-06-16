@@ -249,10 +249,12 @@ class AlgoManagement extends Component {
 
     selectedConfInput.setAttribute('disabled', 'disabled');
 
-    const algo = selectedConfInput.id;
+    const algo = selectedConfInput.id.split('.')[1];
+    const container = selectedConfInput.id.split('.')[0];
+    const id = selectedConfInput.closest('#algo-infos').dataset.algo;
 
     axios
-      .post(`/files/import/conf?algo=${algo}`, data, {
+      .post(`/files/import/conf?id=${id}&algo=${algo}&container=${container}`, data, {
         headers: APIHelper.setAuthHeader()
       })
       .then(response => {
