@@ -8,6 +8,7 @@ import APIHelper from '@APIHelper';
 import Store from '@Store';
 import axios from 'axios';
 import AlgoParameters from '@AlgoParameters';
+import ModalHelper from '@ModalHelper';
 
 let process;
 let algoSelect;
@@ -217,6 +218,16 @@ class Learning extends Task {
     this.renderView(false);
 
     super.initNavBtn('previous', { label: 'feature-extraction', Task: Features });
+
+    super.initFinishBtn(() => {
+      if (super.validateAlgoParamsFields()) {
+        super.finishBtnHandler();
+      } else {
+        ModalHelper.error(
+          'Please select an algorithm or check that all required parameters does not have missing values.'
+        );
+      }
+    });
 
     algoSelect = this.context.querySelector('select#algo');
     this.initAlgoSelect();

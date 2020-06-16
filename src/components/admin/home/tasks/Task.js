@@ -5,6 +5,8 @@ import axios from 'axios';
 import APIHelper from '@APIHelper';
 import ModalHelper from '@ModalHelper';
 import formConfVersionTemplate from './form-conf-version.hbs';
+import formJobStartTemplate from './form-job-start.hbs';
+import SelectProcess from './select-process/SelectProcess';
 
 class Task {
   constructor(context) {
@@ -93,6 +95,67 @@ class Task {
     }
   }
 
+  initFinishBtn(callback) {
+    if (!(typeof callback === 'function')) {
+      throw new Error('Expected type for argument callback is Function.');
+    }
+    const finishBtn = this.context.querySelector('.btn-group-nav .finish button');
+
+    finishBtn.addEventListener(
+      'click',
+      event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        callback();
+      },
+      false
+    );
+  }
+
+  finishBtnHandler() {
+    const content = formJobStartTemplate();
+    const elems = ['label', 'version'];
+    ModalHelper.edit('Job Configuration', content, 'Start Job', elems).then(result => {
+      if (result.value) {
+        const selectedVersion = result.value.version;
+        if (selectedVersion === 'none') {
+          ModalHelper.error('You must select a version to start the job.');
+        } else {
+          let JSONConf;
+          let urlParams;
+          switch (selectedVersion) {
+            case '1':
+              urlParams = '?v=1';
+              JSONConf = new Configuration().marshall(Versions.v1);
+              break;
+          }
+
+          const data = {
+            label: result.value.label.toLowerCase(),
+            conf: JSONConf
+          };
+
+          axios
+            .post('/jobs/start' + urlParams, data, {
+              headers: APIHelper.setAuthHeader()
+            })
+            .then(response => {
+              if (response) {
+                ModalHelper.notification('success', response.data.message);
+                sessionStorage.clear();
+                // eslint-disable-next-line no-new
+                new SelectProcess(this.context);
+                this.setNavActive('select-process');
+              }
+            })
+            .catch(error => {
+              APIHelper.errorsHandler(error, true);
+            });
+        }
+      }
+    });
+  }
+
   initNavBtn(button, options) {
     if (!(typeof button === 'string')) {
       if (!(button === 'next') || !(button === 'previous')) {
@@ -161,15 +224,16 @@ class Task {
                 btn.classList.add('loading');
               }
               let JSONConf;
-
+              let urlParams;
               switch (selectedVersion) {
                 case '1':
+                  urlParams = '?v=1';
                   JSONConf = new Configuration().marshall(Versions.v1);
                   break;
               }
 
               axios
-                .post('/files/convert/conf', JSONConf, {
+                .post('/files/convert/conf' + urlParams, JSONConf, {
                   headers: APIHelper.setAuthHeader()
                 })
                 .then(response => {

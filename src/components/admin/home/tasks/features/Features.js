@@ -196,6 +196,10 @@ class Features extends Task {
         firstNav.classList.add('finish');
       }
 
+      super.initFinishBtn(() => {
+        super.finishBtnHandler();
+      });
+
       const icon = firstNav.children[0].children[0];
 
       if (icon.classList.contains('fa-arrow-right')) {
