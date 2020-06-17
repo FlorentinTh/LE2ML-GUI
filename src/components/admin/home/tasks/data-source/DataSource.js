@@ -27,7 +27,8 @@ class DataSource extends Task {
     const content = this.context.querySelector('input#ws-addr').value;
 
     if (URLHelper.removeProtocol(content) === '') {
-      super.toggleNextBtnEnable(false);
+      super.toggleNavBtnEnable('next', false);
+      super.toggleNavItemsEnabled(['windowing', 'feature-extraction', 'process'], false);
     } else {
       sessionStorage.setItem('input-content', content);
     }
@@ -96,9 +97,17 @@ class DataSource extends Task {
       fileList.on('build', result => {
         if (result) {
           if (this.containsSelected()) {
-            super.toggleNextBtnEnable(true);
+            super.toggleNavBtnEnable('next', true);
+            super.toggleNavItemsEnabled(
+              ['windowing', 'feature-extraction', 'process'],
+              true
+            );
           } else {
-            super.toggleNextBtnEnable(false);
+            super.toggleNavBtnEnable('next', false);
+            super.toggleNavItemsEnabled(
+              ['windowing', 'feature-extraction', 'process'],
+              false
+            );
           }
         }
       });
@@ -113,14 +122,20 @@ class DataSource extends Task {
       );
 
       if (this.containsSelected()) {
-        super.toggleNextBtnEnable(true);
+        super.toggleNavBtnEnable('next', true);
+        super.toggleNavItemsEnabled(['windowing', 'feature-extraction', 'process'], true);
       } else {
-        super.toggleNextBtnEnable(false);
+        super.toggleNavBtnEnable('next', false);
+        super.toggleNavItemsEnabled(
+          ['windowing', 'feature-extraction', 'process'],
+          false
+        );
       }
     }
 
     fileList.on('selected', result => {
-      super.toggleNextBtnEnable(result);
+      super.toggleNavBtnEnable('next', result);
+      super.toggleNavItemsEnabled(['windowing', 'feature-extraction', 'process'], result);
     });
   }
 

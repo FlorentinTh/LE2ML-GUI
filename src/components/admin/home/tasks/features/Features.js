@@ -246,6 +246,8 @@ class Features extends Task {
     if (!(storedFeatures === null)) {
       this.toggleSelected(storedFeatures.split(','));
     }
+
+    super.toggleNavItemsEnabled(['data-source', 'windowing'], true);
   }
 }
 

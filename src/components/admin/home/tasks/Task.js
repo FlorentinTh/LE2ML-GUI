@@ -16,38 +16,6 @@ class Task {
     this.run();
   }
 
-  toggleNavItemEnable(task, enable = false) {
-    if (!(typeof task === 'string')) {
-      throw new Error('Expected type for argument task is String.');
-    }
-
-    if (enable) {
-      const disabledItem = sessionStorage.getItem('disabled-nav');
-
-      if (!(disabledItem === null)) {
-        if (task === disabledItem) {
-          sessionStorage.removeItem('disabled-nav');
-        }
-      }
-    }
-
-    for (let i = 0; i < this.navItems.length; ++i) {
-      const item = this.navItems[i];
-      if (item.dataset.task === task) {
-        if (enable) {
-          if (item.classList.contains('item-disabled')) {
-            item.classList.remove('item-disabled');
-          }
-        } else {
-          if (!item.classList.contains('item-disabled')) {
-            item.classList.add('item-disabled');
-            sessionStorage.setItem('disabled-nav', task);
-          }
-        }
-      }
-    }
-  }
-
   setNavActive(item) {
     if (!(typeof item === 'string')) {
       throw new Error('Expected type for argument item is String.');
@@ -66,6 +34,89 @@ class Task {
     }
   }
 
+  setNavItemEnable(item) {
+    if (!(typeof item === 'object')) {
+      throw new Error('Expected type for argument item is Object.');
+    }
+
+    if (item.classList.contains('item-disabled')) {
+      item.classList.remove('item-disabled');
+    }
+  }
+
+  setNavItemDisabled(item) {
+    if (!(typeof item === 'object')) {
+      throw new Error('Expected type for argument item is Object.');
+    }
+
+    if (!item.classList.contains('item-disabled')) {
+      item.classList.add('item-disabled');
+    }
+  }
+
+  removeStoredAlgoParams() {
+    const storedValues = JSON.parse(JSON.stringify(sessionStorage));
+    Object.keys(storedValues).filter(key => {
+      if (/^algo/.test(key)) {
+        sessionStorage.removeItem(key);
+      }
+    });
+  }
+
+  toggleNavItemsEnabled(itemList, enabled = false) {
+    if (!(typeof itemList === 'object')) {
+      throw new Error('Expected type for argument itemList is Object.');
+    }
+
+    const navItemsElems = this.context.parentNode.querySelectorAll('.task-nav-item');
+
+    for (let i = 0; i < navItemsElems.length; ++i) {
+      for (let j = 0; j < itemList.length; ++j) {
+        if (itemList[j] === navItemsElems[i].dataset.task) {
+          if (enabled) {
+            if (itemList[j] === 'process') {
+              const selectedProcess = sessionStorage.getItem('process-type');
+              if (!(selectedProcess === null) && !(selectedProcess === 'none')) {
+                this.setNavItemEnable(navItemsElems[i]);
+              }
+            } else if (itemList[j] === 'data-source') {
+              const storedInput = sessionStorage.getItem('input-content');
+              if (!(storedInput === null)) {
+                this.setNavItemEnable(navItemsElems[i]);
+                this.toggleNavItemsEnabled(
+                  ['windowing', 'feature-extraction', 'process'],
+                  true
+                );
+              } else {
+                this.setNavItemEnable(navItemsElems[i]);
+              }
+            } else {
+              this.setNavItemEnable(navItemsElems[i]);
+            }
+          } else {
+            if (itemList[j] === 'data-source') {
+              const storedInput = sessionStorage.getItem('input-content');
+              if (!(storedInput === null)) {
+                this.setNavItemDisabled(navItemsElems[i]);
+                this.toggleNavItemsEnabled(
+                  ['windowing', 'feature-extraction', 'process'],
+                  false
+                );
+              } else {
+                this.setNavItemDisabled(navItemsElems[i]);
+              }
+            } else if (itemList[j] === 'process') {
+              // this.removeStoredAlgoParams();
+              this.setNavItemDisabled(navItemsElems[i]);
+            } else {
+              this.setNavItemDisabled(navItemsElems[i]);
+            }
+          }
+        }
+      }
+    }
+  }
+
   disableSection(id) {
     if (!(typeof id === 'string')) {
       throw new Error('Expected type for argument id is String.');
@@ -78,19 +129,39 @@ class Task {
       .insertAdjacentHTML('afterbegin', '<i class="far fa-times-circle"></i>');
   }
 
-  toggleNextBtnEnable(enable) {
+  toggleNavBtnEnable(button, enable) {
+    if (!(typeof button === 'string')) {
+      if (!(button === 'next') || !(button === 'finish')) {
+        throw new Error('Argument button should be one of : next or finish.');
+      }
+    }
+
     if (!(typeof enable === 'boolean')) {
       throw new Error('Expected type for argument enable is Boolean.');
     }
 
     const nextBtn = this.context.querySelector('.btn-group-nav .next button');
+    const finishBtn = this.context.querySelector('.btn-group-nav .finish button');
+
     if (enable) {
-      if (nextBtn.classList.contains('disabled')) {
-        nextBtn.classList.remove('disabled');
+      if (!(nextBtn === null) && button === 'next') {
+        if (nextBtn.classList.contains('disabled')) {
+          nextBtn.classList.remove('disabled');
+        }
+      } else if (!(finishBtn === null) && button === 'finish') {
+        if (finishBtn.classList.contains('disabled')) {
+          finishBtn.classList.remove('disabled');
+        }
       }
     } else {
-      if (!nextBtn.classList.contains('disabled')) {
-        nextBtn.classList.add('disabled');
+      if (!(nextBtn === null) && button === 'next') {
+        if (!nextBtn.classList.contains('disabled')) {
+          nextBtn.classList.add('disabled');
+        }
+      } else if (!(finishBtn === null) && button === 'finish') {
+        if (!finishBtn.classList.contains('disabled')) {
+          finishBtn.classList.add('disabled');
+        }
       }
     }
   }
@@ -106,7 +177,12 @@ class Task {
       event => {
         event.preventDefault();
         event.stopImmediatePropagation();
-        callback();
+        const btn =
+          event.target.tagName === 'BUTTON' ? event.target : event.target.parentNode;
+
+        if (!btn.classList.contains('disabled')) {
+          callback();
+        }
       },
       false
     );
@@ -293,12 +369,7 @@ class Task {
     return true;
   }
 
-  run() {
-    const disabledItem = sessionStorage.getItem('disabled-nav');
-    if (!(disabledItem === null)) {
-      this.toggleNavItemEnable(disabledItem, false);
-    }
-  }
+  run() {}
 }
 
 export default Task;

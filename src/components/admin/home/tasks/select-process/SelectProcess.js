@@ -24,9 +24,11 @@ class SelectProcess extends Task {
     let filename;
     if (!(file === null)) {
       filename = file.split('.')[0];
-      super.toggleNextBtnEnable(true);
+      super.toggleNavBtnEnable('next', true);
+      super.toggleNavItemsEnabled(['data-source'], true);
     } else {
-      super.toggleNextBtnEnable(false);
+      super.toggleNavBtnEnable('next', false);
+      super.toggleNavItemsEnabled(['data-source'], false);
     }
 
     const dataStore = Store.get('model-data');
@@ -63,7 +65,8 @@ class SelectProcess extends Task {
     }
 
     fileList.on('selected', result => {
-      super.toggleNextBtnEnable(result);
+      super.toggleNavBtnEnable('next', result);
+      super.toggleNavItemsEnabled(['data-source'], result);
     });
   }
 
@@ -71,18 +74,17 @@ class SelectProcess extends Task {
     switch (process) {
       case 'test':
         sessionStorage.setItem('process-type', process);
-        super.toggleNavItemEnable('process', true);
         this.makeProcessTest();
         break;
       case 'train':
         sessionStorage.setItem('process-type', process);
-        super.toggleNavItemEnable('process', true);
+        super.toggleNavItemsEnabled(['data-source'], true);
 
         if (sessionStorage.getItem('process-model')) {
           sessionStorage.removeItem('process-model');
         }
 
-        super.toggleNextBtnEnable(true);
+        super.toggleNavBtnEnable('next', true);
         break;
       case 'none':
         sessionStorage.setItem('process-type', process);
@@ -91,8 +93,9 @@ class SelectProcess extends Task {
           sessionStorage.removeItem('process-model');
         }
 
-        super.toggleNavItemEnable('process', false);
-        super.toggleNextBtnEnable(true);
+        super.toggleNavItemsEnabled(['data-source'], true);
+        super.toggleNavItemsEnabled(['process'], false);
+        super.toggleNavBtnEnable('next', true);
     }
   }
 

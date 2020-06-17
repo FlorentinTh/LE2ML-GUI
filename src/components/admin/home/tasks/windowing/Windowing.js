@@ -133,7 +133,8 @@ class Windowing extends Task {
         this.initOverlapSlider();
       } else {
         sessionStorage.setItem('windowing-enabled', false);
-        super.toggleNextBtnEnable(true);
+        super.toggleNavBtnEnable('next', true);
+        super.toggleNavItemsEnabled(['feature-extraction', 'process'], true);
         this.removeStoredProperties();
         this.resetInputs();
       }
@@ -174,10 +175,12 @@ class Windowing extends Task {
 
     const value = event.target.value;
     if (!(value === '') && value >= 0 && value <= 100) {
-      super.toggleNextBtnEnable(true);
+      super.toggleNavBtnEnable('next', true);
+      super.toggleNavItemsEnabled(['feature-extraction', 'process'], true);
       properties.length = value;
     } else {
-      super.toggleNextBtnEnable(false);
+      super.toggleNavBtnEnable('next', false);
+      super.toggleNavItemsEnabled(['feature-extraction', 'process'], false);
       properties.length = 0;
     }
     this.storeWindowingProperties(properties);
@@ -280,6 +283,8 @@ class Windowing extends Task {
       if (radio.checked) {
         this.toggleWindowingEnable(radio.value);
       }
+
+      super.toggleNavItemsEnabled(['data-source'], true);
     }
   }
 }

@@ -6,8 +6,16 @@
 * {
   margin: 0;
   padding: 0;
-  outline: none;
   box-sizing: border-box;
+}
+
+*,
+input,
+select,
+textarea,
+option,
+button {
+  outline: none !important;
 }
 
 body {

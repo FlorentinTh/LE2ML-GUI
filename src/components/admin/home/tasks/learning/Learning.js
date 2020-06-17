@@ -101,6 +101,8 @@ class Learning extends Task {
     sessionStorage.setItem('algorithm-name', value);
     sessionStorage.setItem('algorithm-container', selectedAlgo.container);
 
+    super.toggleNavBtnEnable('finish', true);
+
     const JSONValues = JSON.parse(JSON.stringify(sessionStorage));
 
     Object.keys(JSONValues).filter(key => {
@@ -127,8 +129,10 @@ class Learning extends Task {
           option.selected = true;
         }
       }
+      super.toggleNavBtnEnable('finish', true);
     } else {
       options[0].selected = true;
+      super.toggleNavBtnEnable('finish', false);
     }
 
     const containerInput = this.context.querySelector('#algo-container');
@@ -240,6 +244,8 @@ class Learning extends Task {
       super.downloadBtnClickListener.bind(this),
       false
     );
+
+    super.toggleNavItemsEnabled(['data-source', 'windowing', 'feature-extraction'], true);
   }
 }
 
