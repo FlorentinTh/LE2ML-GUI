@@ -6,7 +6,7 @@ import Data from '@Components/admin/data/Data';
 import DataImport from '@Components/admin/data/data-import/DataImport';
 import FileManagement from '@Components/admin/data/file-management/FileManagement';
 import DataManagement from '@Components/admin/data/data-management/DataManagement';
-import DataViz from '@Components/admin/data/data-viz/DataViz';
+import DataVisualisation from '@Components/admin/data/data-visualisation/DataVisualisation';
 import Jobs from '@Components/admin/jobs/Jobs';
 import Settings from '@Components/admin/settings/Settings';
 import UserPassword from '@Components/admin/settings/user-password/UserPassword';
@@ -56,8 +56,8 @@ const routes = [
             Controller: DataManagement
           },
           {
-            name: 'data-viz',
-            Controller: DataViz
+            name: 'data-visualisation',
+            Controller: DataVisualisation
           }
         ]
       },

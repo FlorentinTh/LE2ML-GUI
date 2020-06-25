@@ -18,12 +18,15 @@
     </div>
     <div class="form-elem inline">
       <span class="label-container">
-        <label for="file">Att.</label>
+        <label for="attribute">Att.</label>
       </span>
-      <select class="no-caps" id="file">
+      <select class="no-caps" id="attribute">
         <option disabled selected>Select an Attribute</option>
         {{#attributes}}{{> attribute-list}}{{/attributes}}
       </select>
     </div>
+  </div>
+  <div class="chart-container">
+    <div id="chart"></div>
   </div>
 </div>
