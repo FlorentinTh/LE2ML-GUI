@@ -2,6 +2,7 @@ import Index from '@Components/authentication/Index';
 import Register from '@Components/authentication/Register';
 import Admin from '@Components/admin/Admin';
 import Home from '@Components/admin/home/Home';
+import MachineLearning from '@Components/admin/home/pipelines/machine-learning/MachineLearning';
 import Data from '@Components/admin/data/Data';
 import DataImport from '@Components/admin/data/data-import/DataImport';
 import FileManagement from '@Components/admin/data/file-management/FileManagement';
@@ -37,7 +38,13 @@ const routes = [
     Components: [
       {
         name: 'home',
-        Controller: Home
+        Controller: Home,
+        SubComponents: [
+          {
+            name: 'machine-learning',
+            Controller: MachineLearning
+          }
+        ]
       },
       {
         name: 'data',
