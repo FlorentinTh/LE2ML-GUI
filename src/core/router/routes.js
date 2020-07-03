@@ -15,7 +15,7 @@ import UserInfo from '@Components/admin/settings/user-info/UserInfo';
 import Administration from '@Components/admin/administration/Administration';
 import UserManagement from '@Components/admin/administration/user-management/UserManagement';
 import TempPassword from '@Components/admin/administration/temp-password/TempPassword';
-import JobManagement from '@Components/admin/administration/job-management/JobManagement';
+import JobsLog from '@Components/admin/administration/jobs-log/JobsLog';
 import WindowingManagement from '@Components/admin/administration/windowing-management/WindowingManagement';
 import FeatureManagement from '@Components/admin/administration/feature-management/FeatureManagement';
 import AlgoManagement from '@Components/admin/administration/algo-management/AlgoManagement';
@@ -99,8 +99,8 @@ const routes = [
             Controller: TempPassword
           },
           {
-            name: 'job-management',
-            Controller: JobManagement
+            name: 'jobs-log',
+            Controller: JobsLog
           },
           {
             name: 'windowing-management',

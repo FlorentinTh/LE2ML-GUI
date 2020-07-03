@@ -1,5 +1,12 @@
 <h1>{{title}}</h1>
-
+<div class="description">
+  <i class="fas fa-info"></i>
+  <p>You can upload any dataset you want as far as it's either a <strong>JSON</strong> or a <strong>CSV</strong> file.
+    If the file is <strong>JSON</strong>, it will be automatically converted to <strong>CSV</strong> since only this
+    format is considered by the system.
+    Your dataset will be validated during the upload process. Hence, it can contains as much columns as needed
+    but it is important for the last one to be named <strong><code>label</code></strong>.</p>
+</div>
 <div class="switch-group switch-large">
   <input type="radio" id="switch-raw" name="files" value="raw" checked />
   <label for="switch-raw">
@@ -11,15 +18,6 @@
     <i class="fas fa-square-root-alt"></i>
     Features
   </label>
-</div>
-
-<div class="description">
-  <i class="fas fa-info"></i>
-  <p>You can upload any dataset you want as far as it's either a <strong>JSON</strong> or a <strong>CSV</strong> file.
-    If the file is <strong>JSON</strong>, it will be automatically converted to <strong>CSV</strong> and only this
-    format will be usable.
-    Your dataset will be validated during the upload process. Hence, such a file can contains as much colomns as needed
-    while the last of them must be named <strong><code>label</code></strong>.</p>
 </div>
 <div class="upload-wrapper">
   <div class="file-upload-container">

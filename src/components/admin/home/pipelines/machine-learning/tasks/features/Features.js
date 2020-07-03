@@ -204,7 +204,7 @@ class Features extends Task {
 
       if (icon.classList.contains('fa-arrow-right')) {
         icon.classList.remove('fa-arrow-right');
-        icon.classList.add('fa-flag-checkered');
+        icon.classList.add('fa-paper-plane');
       }
 
       this.context.insertAdjacentHTML('beforeend', configDownloadTemplate());

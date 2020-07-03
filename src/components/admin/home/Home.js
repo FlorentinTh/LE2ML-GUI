@@ -10,7 +10,7 @@ class Home extends Component {
     this.run();
   }
 
-  run() {
+  async run() {
     super.initGridMenu();
   }
 }

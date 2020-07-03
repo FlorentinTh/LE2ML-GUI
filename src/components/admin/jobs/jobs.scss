@@ -1,0 +1,255 @@
+.auto-update-container {
+  max-width: 900px;
+  margin: 0 auto;
+  margin-top: 45px;
+
+  .wrapper {
+    display: flex;
+
+    .switch-label {
+      line-height: 22px;
+      padding-right: 15px;
+    }
+
+    .switch-auto-update {
+      height: 22px;
+      position: relative;
+      width: 50px;
+
+      @include themify($themes) {
+        background-color: themed('color-text-primary');
+      }
+
+      border-radius: 32px;
+      display: block;
+
+      input:not([type='range']) {
+        height: 19px;
+        left: 0;
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        width: 47px;
+        z-index: 2;
+
+        &:checked ~ .toggle {
+          left: 4px;
+          @include themify($themes) {
+            background-color: themed('color-text-secondary');
+          }
+        }
+
+        & ~ :checked ~ .toggle {
+          left: 28px;
+          @include themify($themes) {
+            background-color: themed('color-accent');
+          }
+        }
+
+        &:checked {
+          z-index: 0;
+        }
+      }
+
+      .toggle {
+        @include themify($themes) {
+          background-color: themed('color-accent');
+        }
+
+        border-radius: 50%;
+        height: 18px;
+        left: 0;
+        position: absolute;
+        top: 2px;
+        transition: left 0.2s ease;
+        width: 18px;
+        z-index: 1;
+      }
+
+      input:hover,
+      label:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.grid-jobs {
+  display: grid;
+  width: 100%;
+  grid-auto-rows: minmax(175px, auto);
+  grid-gap: 1em;
+  max-width: 900px;
+  margin: 0 auto;
+
+  .grid-item {
+    @include themify($themes) {
+      color: themed('color-text-primary');
+      background: themed('color-secondary');
+      border-bottom: 2px solid themed('color-accent');
+    }
+
+    animation: slide-up 0.4s linear;
+    height: 175px;
+    flex: 1 1 150px;
+
+    padding: 0 50px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .left {
+      flex-grow: 1;
+      .label {
+        h3 {
+          font-size: 1.5em;
+          margin-bottom: 20px;
+          text-transform: capitalize;
+        }
+      }
+
+      .infos {
+        font-size: 0.85em;
+        padding: 5px 0 5px 25px;
+        @include themify($themes) {
+          border-left: 1px solid themed('color-text-primary');
+        }
+
+        .info:not(:last-of-type) {
+          margin-bottom: 15px;
+        }
+
+        i {
+          padding-right: 10px;
+        }
+      }
+    }
+
+    .loading-item,
+    .not-found {
+      width: 100%;
+      text-align: center;
+
+      p {
+        font-size: 1.2em;
+      }
+    }
+
+    .actions {
+      div.action {
+        padding-bottom: 8px;
+
+        &:last-of-type {
+          padding-bottom: 0;
+        }
+
+        &:first-child {
+          button {
+            margin-top: 0;
+          }
+        }
+
+        .form-container {
+          height: 26px;
+          margin-top: 5px;
+          width: 150px;
+
+          @include themify($themes) {
+            border: 1px solid themed('color-accent');
+            color: themed('color-accent');
+          }
+
+          transition: all 0.5s ease-in-out;
+
+          &:not(.loading) {
+            &:hover {
+              @include themify($themes) {
+                background-color: themed('color-accent');
+                color: themed('color-text-active');
+              }
+            }
+          }
+
+          &.loading {
+            @include themify($themes) {
+              background-color: themed('color-accent');
+              color: themed('color-text-active');
+            }
+          }
+
+          border-radius: 0.25rem;
+
+          label {
+            float: left;
+            clear: both;
+            width: 100%;
+            height: 100%;
+            user-select: none;
+            text-align: center;
+            cursor: pointer;
+            line-height: 26px;
+
+            span {
+              font-size: 0.95em;
+              text-transform: uppercase;
+            }
+
+            button {
+              display: none;
+            }
+
+            &.loading {
+              cursor: default;
+            }
+
+            i {
+              display: none;
+            }
+
+            &.loading {
+              span {
+                display: none;
+              }
+
+              i {
+                display: inline-block;
+              }
+            }
+          }
+
+          input[type='file'] {
+            display: none;
+          }
+        }
+
+        button {
+          height: 26px;
+          margin-top: 5px;
+          width: 150px;
+          background-color: transparent;
+          text-transform: uppercase;
+
+          @include themify($themes) {
+            border: 1px solid themed('color-accent');
+            color: themed('color-accent');
+          }
+
+          transition: all 0.5s ease-in-out;
+
+          &:hover {
+            @include themify($themes) {
+              background-color: themed('color-accent');
+              border: 1px solid themed('color-accent');
+              color: themed('color-text-active');
+            }
+          }
+        }
+      }
+    }
+  }
+}

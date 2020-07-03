@@ -130,14 +130,7 @@ class Admin extends Controller {
     return new Menu(options);
   }
 
-  run() {
-    menu.listen((hash, link) => {
-      if (hash === '#signout') {
-        Cookies.remove('uuid', { path: '/' });
-        Router.setRoute('/index.html');
-      }
-    });
-  }
+  run() {}
 }
 
 export default Admin;

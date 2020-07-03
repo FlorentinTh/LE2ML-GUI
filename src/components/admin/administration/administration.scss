@@ -77,8 +77,7 @@
 .grid-functions,
 .grid-algos,
 .grid-features,
-.grid-users,
-.grid-jobs {
+.grid-users {
   display: grid;
   width: 100%;
   grid-auto-rows: minmax(175px, auto);
@@ -294,8 +293,7 @@
   }
 }
 
-.grid-users,
-.grid-jobs {
+.grid-users {
   .grid-item {
     display: flex;
     flex-wrap: wrap;
@@ -370,8 +368,7 @@
     display: none;
   }
 
-  .grid-users,
-  .grid-jobs {
+  .grid-users {
     .grid-item {
       .infos {
         @include themify($themes) {

@@ -16,6 +16,10 @@
 
 .custom-scroll {
   padding-right: 10px;
+  scrollbar-width: thin;
+  @include themify($themes) {
+    scrollbar-color: themed('color-secondary') transparent;
+  }
 }
 
 .file-list {

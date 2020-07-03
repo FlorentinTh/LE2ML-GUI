@@ -150,20 +150,24 @@ class Menu {
 
     for (let i = 1; i < list.length; ++i) {
       const li = list[i];
-      li.addEventListener('click', event => {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        const href = li.children[1].getAttribute('href');
-        this.switch(href, (hash, link) => {
-          if (typeof handler === 'function') {
-            handler(hash, link);
-          } else {
-            if (typeof handler !== 'undefined') {
-              throw new Error('Handler must be a function.');
+      li.addEventListener(
+        'click',
+        event => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          const href = li.children[1].getAttribute('href');
+          this.switch(href, (hash, link) => {
+            if (typeof handler === 'function') {
+              handler(hash, link);
+            } else {
+              if (typeof handler !== 'undefined') {
+                throw new Error('Handler must be a function.');
+              }
             }
-          }
-        });
-      });
+          });
+        },
+        false
+      );
     }
   }
 }

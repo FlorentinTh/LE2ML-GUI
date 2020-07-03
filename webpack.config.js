@@ -12,7 +12,6 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const postcssNormalize = require('postcss-normalize');
 const ManifestPlugin = require('webpack-manifest-plugin');
-
 const fs = require('fs');
 
 const config = {

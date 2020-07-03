@@ -30,6 +30,8 @@ class UserPassword extends Component {
         'Temporary Password',
         'Your password is temporary, you must change it before continue.',
         'I understand',
+        'No',
+        false,
         false
       );
     }

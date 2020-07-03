@@ -1,5 +1,7 @@
 import Component from '@Component';
 import signOutTemplate from './sign-out.hbs';
+import Cookies from 'js-cookie';
+import Router from '@Router';
 
 class SignOut extends Component {
   constructor(context = null) {
@@ -13,7 +15,12 @@ class SignOut extends Component {
     this.run();
   }
 
-  run() {}
+  run() {
+    setTimeout(() => {
+      Cookies.remove('uuid', { path: '/' });
+      Router.setRoute('/index.html');
+    }, 1000);
+  }
 }
 
 export default SignOut;
