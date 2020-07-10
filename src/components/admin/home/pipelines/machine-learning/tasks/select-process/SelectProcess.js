@@ -246,8 +246,10 @@ class SelectProcess extends Task {
     } else {
       const fileType = sessionStorage.getItem('input-type');
       if (fileType === 'features-file') {
+        super.toggleNavItemsEnabled(['data-source'], true);
         super.toggleNavItemsEnabled(['windowing', 'feature-extraction'], false);
       } else {
+        super.toggleNavItemsEnabled(['data-source'], true);
         super.toggleNavItemsEnabled(['windowing', 'feature-extraction'], true);
       }
     }
