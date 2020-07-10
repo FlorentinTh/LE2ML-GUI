@@ -8,6 +8,7 @@ import Store from '@Store';
 import URLHelper from '@URLHelper';
 import SelectProcess from '../select-process/SelectProcess';
 import Windowing from '../windowing/Windowing';
+import Learning from '../learning/Learning';
 
 let inputContent;
 
@@ -80,8 +81,17 @@ class DataSource extends Task {
 
     if (fileType === 'raw') {
       sessionStorage.setItem('input-type', 'raw-file');
+      super.clearNavButton('next');
+      super.initNavBtn('next', { label: 'windowing', Task: Windowing });
+
+      if (sessionStorage.getItem('only-learning')) {
+        sessionStorage.removeItem('only-learning');
+      }
     } else {
       sessionStorage.setItem('input-type', 'features-file');
+      sessionStorage.setItem('only-learning', true);
+      super.clearNavButton('next');
+      super.initNavBtn('next', { label: 'process', Task: Learning });
     }
 
     const dataStore = Store.get(fileType + '-file-data');
@@ -97,11 +107,15 @@ class DataSource extends Task {
       fileList.on('build', result => {
         if (result) {
           if (this.containsSelected()) {
+            if (fileType === 'features') {
+              super.toggleNavItemsEnabled(['process'], true);
+            } else {
+              super.toggleNavItemsEnabled(
+                ['windowing', 'feature-extraction', 'process'],
+                true
+              );
+            }
             super.toggleNavBtnEnable('next', true);
-            super.toggleNavItemsEnabled(
-              ['windowing', 'feature-extraction', 'process'],
-              true
-            );
           } else {
             super.toggleNavBtnEnable('next', false);
             super.toggleNavItemsEnabled(
@@ -122,8 +136,15 @@ class DataSource extends Task {
       );
 
       if (this.containsSelected()) {
+        if (fileType === 'features') {
+          super.toggleNavItemsEnabled(['process'], true);
+        } else {
+          super.toggleNavItemsEnabled(
+            ['windowing', 'feature-extraction', 'process'],
+            true
+          );
+        }
         super.toggleNavBtnEnable('next', true);
-        super.toggleNavItemsEnabled(['windowing', 'feature-extraction', 'process'], true);
       } else {
         super.toggleNavBtnEnable('next', false);
         super.toggleNavItemsEnabled(
@@ -134,8 +155,15 @@ class DataSource extends Task {
     }
 
     fileList.on('selected', result => {
+      if (fileType === 'features') {
+        super.toggleNavItemsEnabled(['process'], result);
+      } else {
+        super.toggleNavItemsEnabled(
+          ['windowing', 'feature-extraction', 'process'],
+          result
+        );
+      }
       super.toggleNavBtnEnable('next', result);
-      super.toggleNavItemsEnabled(['windowing', 'feature-extraction', 'process'], result);
     });
   }
 
@@ -167,7 +195,6 @@ class DataSource extends Task {
       title: 'Data Source'
     });
 
-    super.initNavBtn('next', { label: 'windowing', Task: Windowing });
     super.initNavBtn('previous', { label: 'select-process', Task: SelectProcess });
 
     inputContent = this.context.querySelector('.input-content');

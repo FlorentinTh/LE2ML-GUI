@@ -42,6 +42,21 @@ class ModalHelper {
       allowEscapeKey: false,
       allowEnterKey: false,
       stopKeydownPropagation: false,
+      keydownListenerCapture: true,
+      onOpen: () => {
+        formElements.forEach(elem => {
+          const e = document.getElementById(elem);
+          e.addEventListener(
+            'keypress',
+            event => {
+              if (event.which === '13') {
+                event.preventDefault();
+              }
+            },
+            false
+          );
+        });
+      },
       preConfirm: () => {
         const data = {};
 

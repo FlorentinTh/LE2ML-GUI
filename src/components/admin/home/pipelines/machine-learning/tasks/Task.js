@@ -8,6 +8,7 @@ import formConfVersionTemplate from './form-conf-version.hbs';
 import formJobStartTemplate from './form-job-start.hbs';
 import SelectProcess from './select-process/SelectProcess';
 
+let navButtonClickHandler;
 class Task {
   constructor(context) {
     this.context = context;
@@ -69,7 +70,6 @@ class Task {
     }
 
     const navItemsElems = this.context.parentNode.querySelectorAll('.task-nav-item');
-
     for (let i = 0; i < navItemsElems.length; ++i) {
       for (let j = 0; j < itemList.length; ++j) {
         if (itemList[j] === navItemsElems[i].dataset.task) {
@@ -83,10 +83,7 @@ class Task {
               const storedInput = sessionStorage.getItem('input-content');
               if (!(storedInput === null)) {
                 this.setNavItemEnable(navItemsElems[i]);
-                this.toggleNavItemsEnabled(
-                  ['windowing', 'feature-extraction', 'process'],
-                  true
-                );
+                this.toggleNavItemsEnabled(['process'], true);
               } else {
                 this.setNavItemEnable(navItemsElems[i]);
               }
@@ -106,7 +103,6 @@ class Task {
                 this.setNavItemDisabled(navItemsElems[i]);
               }
             } else if (itemList[j] === 'process') {
-              // this.removeStoredAlgoParams();
               this.setNavItemDisabled(navItemsElems[i]);
             } else {
               this.setNavItemDisabled(navItemsElems[i]);
@@ -212,7 +208,7 @@ class Task {
           };
 
           axios
-            .post('/jobs/start' + urlParams, data, {
+            .put('/jobs' + urlParams, data, {
               headers: APIHelper.setAuthHeader()
             })
             .then(response => {
@@ -243,7 +239,7 @@ class Task {
       throw new Error('Expected type for argument options is Object.');
     }
 
-    const btnClickListener = [
+    navButtonClickHandler = [
       'click',
       event => {
         event.preventDefault();
@@ -265,9 +261,26 @@ class Task {
     const previousBtn = this.context.querySelector('.btn-group-nav .previous button');
 
     if (!(nextBtn === null) && button === 'next') {
-      nextBtn.addEventListener(...btnClickListener);
+      nextBtn.addEventListener(...navButtonClickHandler);
     } else if (!(previousBtn === null) && button === 'previous') {
-      previousBtn.addEventListener(...btnClickListener);
+      previousBtn.addEventListener(...navButtonClickHandler);
+    }
+  }
+
+  clearNavButton(button) {
+    if (!(typeof button === 'string')) {
+      if (!(button === 'next') || !(button === 'previous')) {
+        throw new Error('Argument button should be one of : next or previous.');
+      }
+    }
+
+    const nextBtn = this.context.querySelector('.btn-group-nav .next button');
+    const previousBtn = this.context.querySelector('.btn-group-nav .previous button');
+
+    if (!(nextBtn === null) && button === 'next') {
+      nextBtn.removeEventListener(...navButtonClickHandler);
+    } else if (!(previousBtn === null) && button === 'previous') {
+      previousBtn.removeEventListener(...navButtonClickHandler);
     }
   }
 

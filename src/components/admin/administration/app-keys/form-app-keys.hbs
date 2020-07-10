@@ -1,0 +1,27 @@
+<div class="form-infos form-infos-modal">
+  <div class="form form-key">
+    {{#[utils/compare] update '===' false}}
+    <div class="description">
+      <i class="fas fa-info"></i>
+      <p>Generating a key allow your app to access the API. The only scope currently defined restrict your app to update
+        all jobs data exclusively.</p>
+    </div>
+    {{/[utils/compare]}}
+    <form action="#">
+      <label for="name"></label>
+      {{#[utils/compare] name '===' undefined}}
+      <input type="text" id="name" name="name" autocomplete="false" placeholder="Name" required />
+      {{else}}
+      <input type="text" id="name" name="name" autocomplete="false" placeholder="Name" value="{{name}}" required />
+      {{/[utils/compare]}}
+      <label for="description"></label>
+      {{#[utils/compare] description '===' undefined}}
+      <input type="text" id="description" name="description" maxlength="50" autocomplete="false"
+        placeholder="Description" required />
+      {{else}}
+      <input type="text" id="description" name="description" maxlength="50" autocomplete="false"
+        placeholder="Description" value="{{description}}" required />
+      {{/[utils/compare]}}
+    </form>
+  </div>
+</div>

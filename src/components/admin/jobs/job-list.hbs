@@ -1,21 +1,21 @@
 {{#each jobs as |job|}}
-<div class="grid-item" id="job-infos" data-jobId="{{job._id}}">
+<div class="grid-item" id="job-infos" data-job="{{job._id}}">
   <div class="left">
     <div class="label">
       <h3>
         {{~job.label~}}
       </h3>
     </div>
-    <div class="infos">
-      {{~#[utils/compare] job.state '===' 'started'~}}
-      <p class="info">
-        <i class="fas fa-paper-plane"></i>
-        Started on :
-        {{#[format/date] job.startedOn 'DD/MM/YYYY'~}}{{~/[format/date]}}
-        @
-        {{#[format/date] job.startedOn 'HH:mm'~}}{{~/[format/date]~}}
+    {{~#[utils/compare] job.state '===' 'canceled'~}}
+    <div class="job-canceled">
+      <p>
+        <i class="fas fa-ban"></i>
+        Job Canceled
       </p>
-      {{~else~}}
+    </div>
+    {{~/[utils/compare]~}}
+    <div class="infos">
+      {{~#[utils/compare] job.state '===' 'completed'~}}
       <p class="info">
         <i class="fas fa-check"></i>
         Completed on :
@@ -23,13 +23,50 @@
         @
         {{#[format/date] job.completedOn 'HH:mm'~}}{{~/[format/date]~}}
       </p>
+      {{~else~}}
+      <p class="info">
+        <i class="fas fa-paper-plane"></i>
+        Started on :
+        {{#[format/date] job.startedOn 'DD/MM/YYYY'~}}{{~/[format/date]}}
+        @
+        {{#[format/date] job.startedOn 'HH:mm'~}}{{~/[format/date]~}}
+      </p>
       {{~/[utils/compare]~}}
     </div>
   </div>
   <div class="right">
-    <div class="actions">
-
+    {{~#[utils/compare] job.state '===' 'started'~}}
+    <div class="process">
+      <div class="state">
+        <i class="fas fa-circle-notch"></i>
+      </div>
+      <div class="task">
+        {{~#each job.tasks as |task|~}}
+        {{~#[utils/compare] task '!==' 'completed'~}}
+        {{~#[utils/compare] task '===' 'started'~}}
+        <p>Running task <strong>{{[utils/math] @index '+' 1}} / {{[utils/length] job.tasks~}}</strong></p>
+        {{~/[utils/compare]~}}
+        {{~/[utils/compare]~}}
+        {{/each}}
+      </div>
+      {{!-- <button id="cancel">Cancel</button> --}}
     </div>
+    {{~else~}}
+    <div class="actions">
+      {{~#[utils/compare] job.state '===' 'completed'~}}
+      <div class="action">
+        <button id="action">Action</button>
+      </div>
+      {{~else~}}
+      <div class="action">
+        <button id="restart">Restart</button>
+      </div>
+      <div class="action">
+        <button id="delete">Remove</button>
+      </div>
+      {{~/[utils/compare]~}}
+    </div>
+    {{~/[utils/compare]~}}
   </div>
 </div>
 {{else}}

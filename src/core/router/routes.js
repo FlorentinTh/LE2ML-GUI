@@ -19,6 +19,7 @@ import JobsLog from '@Components/admin/administration/jobs-log/JobsLog';
 import WindowingManagement from '@Components/admin/administration/windowing-management/WindowingManagement';
 import FeatureManagement from '@Components/admin/administration/feature-management/FeatureManagement';
 import AlgoManagement from '@Components/admin/administration/algo-management/AlgoManagement';
+import AppKeys from '@Components/admin/administration/app-keys/AppKeys';
 import SignOut from '@Components/admin/sign-out/SignOut';
 
 const routes = [
@@ -113,6 +114,10 @@ const routes = [
           {
             name: 'algo-management',
             Controller: AlgoManagement
+          },
+          {
+            name: 'app-keys',
+            Controller: AppKeys
           }
         ]
       },

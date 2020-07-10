@@ -9,7 +9,7 @@ class V1 {
       process: values['process-type']
     };
 
-    if (values['process-type'] === 'test') {
+    if (!(values['process-type'] === 'none')) {
       result.model = values['process-model'];
     }
 
@@ -29,30 +29,17 @@ class V1 {
     };
 
     if (isWindowingEnabled) {
-      if (values['windowing-function-container'] === 'null') {
-        result.windowing = {
-          ...result.windowing,
-          parameters: {
-            length: Number(values['windowing-length']),
-            function: {
-              label: values['windowing-function-label']
-            },
-            overlap: Number(values['windowing-overlap'])
-          }
-        };
-      } else {
-        result.windowing = {
-          ...result.windowing,
-          parameters: {
-            length: Number(values['windowing-length']),
-            function: {
-              label: values['windowing-function-label'],
-              container: values['windowing-function-container']
-            },
-            overlap: Number(values['windowing-overlap'])
-          }
-        };
-      }
+      result.windowing = {
+        ...result.windowing,
+        parameters: {
+          length: Number(values['windowing-length']),
+          function: {
+            label: values['windowing-function-label'],
+            container: values['windowing-function-container']
+          },
+          overlap: Number(values['windowing-overlap'])
+        }
+      };
     }
 
     const featuresArr = [];
@@ -110,8 +97,17 @@ class V1 {
 
     sessionStorage.setItem('process-type', this.config.process);
 
+    if (!(this.config.process === 'none')) {
+      sessionStorage.setItem('process-model', this.config.model);
+    }
+
     if (inputType === 'file') {
       const type = this.config.input[inputType].type;
+
+      if (type === 'features') {
+        sessionStorage.setItem('only-learning', true);
+      }
+
       sessionStorage.setItem('input-type', type.concat('-', inputType));
       sessionStorage.setItem('input-content', this.config.input[inputType].filename);
     } else {
@@ -122,25 +118,26 @@ class V1 {
     const isWindowingEnable = this.config.windowing.enable;
     sessionStorage.setItem('windowing-enabled', isWindowingEnable);
 
+    const features = this.config.features;
+    const algorithm = this.config.algorithm;
+
     if (isWindowingEnable) {
       const windowingParams = this.config.windowing.parameters;
       sessionStorage.setItem('windowing-length', windowingParams.length);
       const functionLabel = windowingParams.function.label;
       sessionStorage.setItem('windowing-function-label', functionLabel);
-
-      if (functionLabel === 'none') {
-        sessionStorage.setItem('windowing-function-container', null);
-      } else {
-        sessionStorage.setItem(
-          'windowing-function-container',
-          windowingParams.function.container
-        );
-      }
-
+      sessionStorage.setItem(
+        'windowing-function-container',
+        windowingParams.function.container
+      );
       sessionStorage.setItem('windowing-overlap', windowingParams.overlap);
+    } else {
+      if (features === undefined) {
+        if (algorithm === undefined || this.config.process === 'none') {
+          return false;
+        }
+      }
     }
-
-    const features = this.config.features;
 
     if (!(features === undefined)) {
       if (features.length > 0) {
@@ -152,8 +149,6 @@ class V1 {
       }
     }
 
-    const algorithm = this.config.algorithm;
-
     if (!(algorithm === undefined)) {
       sessionStorage.setItem('algorithm-name', algorithm.name);
       sessionStorage.setItem('algorithm-container', algorithm.container);
@@ -164,6 +159,8 @@ class V1 {
         sessionStorage.setItem('algo-param-' + key, value + ',' + typeof value);
       });
     }
+
+    return true;
   }
 }
 

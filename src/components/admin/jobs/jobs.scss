@@ -113,6 +113,15 @@
         }
       }
 
+      .job-canceled {
+        font-size: 0.85em;
+        margin-top: -15px;
+        margin-bottom: 15px;
+        @include themify($themes) {
+          color: #ef5350;
+        }
+      }
+
       .infos {
         font-size: 0.85em;
         padding: 5px 0 5px 25px;
@@ -137,6 +146,40 @@
 
       p {
         font-size: 1.2em;
+      }
+    }
+
+    .process {
+      .state {
+        text-align: center;
+        font-size: 2.25em;
+        margin-bottom: 10px;
+        i {
+          animation: rotate 1.75s linear infinite;
+
+          &:hover {
+            animation: none;
+            @include themify($themes) {
+              color: themed('color-accent');
+            }
+            transition: all 0.2s ease-in;
+            cursor: pointer;
+            &:before {
+              content: '\f05e';
+            }
+          }
+        }
+      }
+
+      .task {
+        font-size: 0.9em;
+        font-style: italic;
+      }
+
+      button#cancel {
+        height: 30px !important;
+        width: 130px !important;
+        margin-top: 10px !important;
       }
     }
 

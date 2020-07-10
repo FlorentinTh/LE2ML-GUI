@@ -3,6 +3,7 @@ import SortHelper from '@SortHelper';
 export const FilterType = {
   FILES: 'files',
   USERS: 'users',
+  APP_KEYS: 'app-keys',
   DEFAULT: 'default'
 };
 
@@ -113,6 +114,9 @@ export class Filters {
       case FilterType.USERS:
         res = this.userSort(filter, order, data);
         break;
+      case FilterType.APP_KEYS:
+        res = this.appKeySort(filter, order, data);
+        break;
       case FilterType.DEFAULT:
         res = this.defaultSort(filter, order, data);
         break;
@@ -138,6 +142,16 @@ export class Filters {
       return SortHelper.sortArrayByDate(data, 'dateCreated', order);
     } else if (filter === 'connection-sort') {
       return SortHelper.sortArrayByDate(data, 'lastConnection', order);
+    }
+  }
+
+  appKeySort(filter, order, data) {
+    if (filter === 'alpha-sort') {
+      return SortHelper.sortArrayAlpha(data, 'name', order);
+    } else if (filter === 'creation-sort') {
+      return SortHelper.sortArrayByDate(data, 'dateCreated', order);
+    } else if (filter === 'user-sort') {
+      return SortHelper.sortArrayAlpha(data, 'user.lastname', order, true);
     }
   }
 

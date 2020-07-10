@@ -57,11 +57,11 @@ class Features extends Task {
     this.toggleSelectedAll(toggle);
 
     if (toggle) {
-      target.children[0].classList.remove('fa-square');
-      target.children[0].classList.add('fa-check-square');
-    } else {
       target.children[0].classList.remove('fa-check-square');
       target.children[0].classList.add('fa-square');
+    } else {
+      target.children[0].classList.remove('fa-square');
+      target.children[0].classList.add('fa-check-square');
     }
 
     target.dataset.toggle = !toggle;

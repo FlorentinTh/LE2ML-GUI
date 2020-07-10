@@ -1,0 +1,67 @@
+.form-key {
+  .description {
+    margin-top: -20px;
+    margin-bottom: 45px;
+    padding: 0 15px 0 10px;
+
+    i {
+      padding-right: 25px;
+    }
+
+    p {
+      font-size: 0.95em;
+      padding: 5px 0 5px 15px;
+      line-height: 1.25em;
+    }
+  }
+}
+
+.form-copy-key {
+  p {
+    font-size: 1.2em;
+
+    &:last-of-type {
+      margin-bottom: 35px;
+    }
+  }
+
+  form {
+    display: flex !important;
+  }
+
+  input#key {
+    text-align: center !important;
+    font-size: 1em !important;
+  }
+
+  button {
+    width: 11% !important;
+    margin-left: 10px !important;
+
+    &:disabled {
+      background-color: transparent !important;
+      cursor: initial;
+      @include themify($themes) {
+        border: 1px solid themed('color-text-secondary');
+        color: themed('color-text-secondary');
+      }
+
+      i {
+        animation: none !important;
+      }
+    }
+
+    @include themify($themes) {
+      background-color: themed('color-accent');
+      color: themed('color-text-active');
+
+      &:hover {
+        background-color: themed('color-accent-darker');
+
+        i {
+          animation: rubber-band 0.6s linear;
+        }
+      }
+    }
+  }
+}

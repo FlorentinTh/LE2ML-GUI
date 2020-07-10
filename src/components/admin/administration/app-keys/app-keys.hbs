@@ -1,0 +1,25 @@
+<h1>
+  {{title}}
+  <span class="badge badge-right">{{total}}</span>
+</h1>
+
+<div class="grid-container" id="app-keys">
+  <div class="outer-grid">
+    <div class="outer-item" id="add">
+      <div class="content">
+        <i class="fas fa-plus"></i>
+        <h3>Generate a new key</h3>
+      </div>
+    </div>
+  </div>
+  {{#> ../../search/search}}{{/../../search/search}}
+  <div class="list-header">
+    {{#> ../../filters/app-keys/filters}}{{/../../filters/app-keys/filters}}
+    <div class="action-whole">
+      <button id="revoke-all" disabled><i class="far fa-trash-alt"></i> Revoke all</button>
+    </div>
+  </div>
+  <div class="grid-app-keys">
+    {{#app-keys}}{{> app-keys-list}}{{/app-keys}}
+  </div>
+</div>

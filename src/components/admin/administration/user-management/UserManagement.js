@@ -167,9 +167,6 @@ class UserManagement extends Component {
     });
     this.buildUserList('#users-normal');
 
-    // this.addFilterClickListener('#users-admin');
-    // this.addFilterClickListener('#users-normal');
-
     Search.addSearchListener(
       usersNormalFull,
       ['firstname', 'lastname', 'email'],

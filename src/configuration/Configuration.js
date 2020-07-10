@@ -20,7 +20,7 @@ class Configuration {
         return new V1().marshall(JSONValues);
       default:
         APIHelper.errorsHandler(
-          { message: 'Unsupported version of the configuration' },
+          { message: 'Still unsupported version of the configuration' },
           true
         );
         break;
@@ -28,16 +28,28 @@ class Configuration {
   }
 
   unmarshall() {
+    this.clean();
     switch (this.version) {
       case '1':
-        new V1(this.config).unmarshall();
-        break;
+        return new V1(this.config).unmarshall();
       default:
         APIHelper.errorsHandler(
-          { message: 'Version : ' + this.version + ' is not supported' },
+          { message: 'Version : ' + this.version + ' is not supported yet.' },
           true
         );
         break;
+    }
+  }
+
+  clean() {
+    const items = Object.keys(sessionStorage);
+
+    for (let i = 0; i < items.length; ++i) {
+      const item = items[i];
+
+      if (!(item === 'active-nav')) {
+        sessionStorage.removeItem(item);
+      }
     }
   }
 }

@@ -1,0 +1,53 @@
+{{#each app-keys as |app-key|}}
+<div class="grid-item" id="app-key-infos" data-key="{{~app-key._id~}}">
+  <div class="left">
+    <div class="label">
+      <h3>
+        {{~app-key.name~}}
+      </h3>
+    </div>
+    <p class="desc">
+      {{~app-key.description~}}
+    </p>
+    <div class="infos">
+      <p class="info">
+        <i class="fas fa-calendar-check"></i>
+        {{#[format/date] app-key.dateCreated 'DD/MM/YYYY'~}}{{~/[format/date]}} @
+        {{#[format/date] app-key.dateCreated 'HH:mm:ss'~}}{{/[format/date]~}}
+      </p>
+      <p class="info info-link">
+        <i class="fas fa-user-alt"></i>
+        <a href="mailto:{{~app-key.user.email~}}">{{~#[format/capitalize-first] app-key.user.firstname}}{{/[format/capitalize-first]}}
+          {{#[format/capitalize-first] app-key.user.lastname~}}{{/[format/capitalize-first]}}</a>
+      </p>
+    </div>
+  </div>
+  <div class="right">
+    <div class="actions">
+      <div class="action">
+        <button id="edit">Edit</button>
+      </div>
+      <div class="action">
+        <button id="revoke">Revoke</button>
+      </div>
+    </div>
+  </div>
+</div>
+{{else}}
+{{#[utils/compare] loading '===' true}}
+<div class="grid-item">
+  <div class="loading-item">
+    <span class="loading">
+      Fetching data...
+      <i class="fas fa-spinner"></i>
+    </span>
+  </div>
+</div>
+{{else}}
+<div class="grid-item">
+  <div class="not-found">
+    <p>No app keys found ☹️</p>
+  </div>
+</div>
+{{/[utils/compare]}}
+{{/each}}

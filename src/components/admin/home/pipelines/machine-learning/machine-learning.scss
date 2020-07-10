@@ -6,6 +6,17 @@
 
 .process-selector {
   user-select: none;
+
+  .process-options {
+    input {
+      width: 60%;
+      height: 45px;
+      border: none;
+      font-weight: lighter;
+      font-size: 1.25em;
+      margin-top: 15px;
+    }
+  }
 }
 
 .tasks {

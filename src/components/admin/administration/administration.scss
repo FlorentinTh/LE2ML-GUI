@@ -29,7 +29,6 @@
       }
 
       display: flex;
-      animation: slide-up 0.4s linear;
       height: 95px;
       flex: 1 1 150px;
       align-items: center;
@@ -42,7 +41,52 @@
 
       h3 {
         font-size: 1em;
-        text-transform: capitalize;
+      }
+    }
+  }
+
+  .list-header {
+    display: flex;
+    max-width: 900px;
+    margin: 0 auto;
+    justify-content: space-between;
+    margin-top: 25px;
+
+    .filters {
+      display: initial;
+      text-align: initial;
+      max-width: initial;
+      margin: initial;
+      line-height: 35px;
+    }
+    .action-whole {
+      button {
+        height: 35px;
+        width: 165px;
+        margin-top: 0;
+
+        i {
+          padding-right: 5px;
+        }
+
+        @include themify($themes) {
+          background-color: themed('color-secondary');
+          color: themed('color-text-primary');
+
+          &:hover {
+            background-color: themed('color-accent');
+            color: themed('color-text-active');
+            transition: background 0.6s ease;
+          }
+
+          &:disabled {
+            background-color: transparent;
+            cursor: initial;
+
+            border: 1px solid themed('color-text-secondary');
+            color: themed('color-text-secondary');
+          }
+        }
       }
     }
   }
@@ -76,6 +120,7 @@
 
 .grid-functions,
 .grid-algos,
+.grid-app-keys,
 .grid-features,
 .grid-users {
   display: grid;
@@ -227,6 +272,7 @@
 
 .grid-functions,
 .grid-algos,
+.grid-app-keys,
 .grid-features {
   .grid-item {
     padding: 0 50px;
@@ -263,9 +309,18 @@
         }
 
         &.state-disabled {
-          @include themify($themes) {
-            color: #ef5350;
-          }
+          color: #ef5350;
+        }
+      }
+
+      .desc {
+        margin-top: 10px;
+        margin-bottom: 15px;
+        font-size: 0.75em;
+        text-transform: uppercase;
+
+        @include themify($themes) {
+          color: themed('color-text-secondary');
         }
       }
 
@@ -278,6 +333,30 @@
 
         .info:not(:last-of-type) {
           margin-bottom: 15px;
+        }
+
+        .info {
+          a {
+            padding-bottom: 2px;
+            @include themify($themes) {
+              border-bottom: 1px solid themed('color-text-primary');
+            }
+          }
+
+          &.info-link {
+            &:hover {
+              @include themify($themes) {
+                a,
+                i {
+                  color: themed('color-accent');
+                }
+
+                a {
+                  border-color: themed('color-accent');
+                }
+              }
+            }
+          }
         }
 
         i {

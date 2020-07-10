@@ -12,8 +12,6 @@ import SortHelper from '@SortHelper';
 
 let rawFiles;
 let featuresFiles;
-// let selectedFile;
-// let selectedFileType;
 
 class DataManagement extends Component {
   constructor(

@@ -3,6 +3,7 @@ import jobsTemplate from './jobs.hbs';
 import axios from 'axios';
 import APIHelper from '@APIHelper';
 import jobListTemplate from './job-list.hbs';
+import ModalHelper from '@ModalHelper';
 
 const REFRESH_DELAY = 60000;
 
@@ -68,6 +69,14 @@ class Jobs extends Component {
               jobType: value,
               loading: opts.loading
             });
+
+            this.setActions(jobs);
+
+            if (value === 'started') {
+              startedJobs = jobs;
+            } else {
+              completedJobs = jobs;
+            }
           }
         });
       } else {
@@ -83,7 +92,94 @@ class Jobs extends Component {
         jobType: value,
         loading: opts.loading
       });
+
+      this.setActions(jobs);
     }
+  }
+
+  setActions(jobs) {
+    this.cancelAction(jobs);
+    this.restartAction(jobs);
+    this.deleteAction(jobs);
+  }
+
+  cancelAction(jobs) {
+    const icons = this.context.querySelectorAll('.state i');
+
+    icons.forEach(icon => {
+      const jobId = icon.closest('#job-infos').dataset.job;
+      const job = jobs.find(elem => elem._id === jobId);
+
+      icon.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const askTitle = 'Cancel job ?';
+        const askMessage = job.label + ' will be canceled.';
+        ModalHelper.confirm(askTitle, askMessage).then(result => {
+          if (result.value) {
+            cancelJob('/jobs/cancel/' + jobId, null, this.context).then(response => {
+              if (response) {
+                ModalHelper.notification(
+                  'success',
+                  job.label + ' successfully canceled.'
+                );
+                this.buildJobList(this.jobState, { refresh: true });
+              }
+            });
+          }
+        });
+      });
+    });
+  }
+
+  restartAction(jobs) {
+    const buttons = this.context.querySelectorAll('button#restart');
+
+    buttons.forEach(button => {
+      const jobId = button.closest('#job-infos').dataset.job;
+      const job = jobs.find(elem => elem._id === jobId);
+
+      button.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        restartJob('/jobs/restart/' + jobId, null, this.context).then(response => {
+          if (response) {
+            ModalHelper.notification('success', job.label + ' successfully started.');
+            this.buildJobList(this.jobState, { refresh: true });
+          }
+        });
+      });
+    });
+  }
+
+  deleteAction(jobs) {
+    const buttons = this.context.querySelectorAll('button#delete');
+
+    buttons.forEach(button => {
+      const jobId = button.closest('#job-infos').dataset.job;
+      const job = jobs.find(elem => elem._id === jobId);
+
+      button.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const askTitle = 'Delete job ?';
+        const askMessage = job.label + ' will be permanently deleted.';
+
+        ModalHelper.confirm(askTitle, askMessage).then(result => {
+          if (result.value) {
+            deleteJob('/jobs/' + jobId, this.context).then(response => {
+              if (response) {
+                ModalHelper.notification('success', job.label + ' successfully deleted.');
+                this.buildJobList(this.jobState, { refresh: true });
+              }
+            });
+          }
+        });
+      });
+    });
   }
 
   jobStateSwitchHandler(event) {
@@ -155,6 +251,39 @@ class Jobs extends Component {
 async function getJobs(url, context) {
   try {
     const response = await axios.get(url, {
+      headers: APIHelper.setAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    APIHelper.errorsHandler(error, true);
+  }
+}
+
+async function cancelJob(url, data, context) {
+  try {
+    const response = await axios.post(url, data, {
+      headers: APIHelper.setAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    APIHelper.errorsHandler(error, true);
+  }
+}
+
+async function restartJob(url, data, context) {
+  try {
+    const response = await axios.post(url, data, {
+      headers: APIHelper.setAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    APIHelper.errorsHandler(error, true);
+  }
+}
+
+async function deleteJob(url, context) {
+  try {
+    const response = await axios.delete(url, {
       headers: APIHelper.setAuthHeader()
     });
     return response.data;

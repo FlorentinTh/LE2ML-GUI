@@ -159,13 +159,8 @@ class Windowing extends Task {
     const select = event.target;
     const selectedValue = select.options[select.selectedIndex].value;
 
-    const selected =
-      selectedValue === 'none' ? selectedValue : selectedValue.split('.')[1];
-
-    const container = selectedValue === 'none' ? null : selectedValue.split('.')[0];
-
-    properties.function.label = selected;
-    properties.function.container = container;
+    properties.function.label = selectedValue.split('.')[1];
+    properties.function.container = selectedValue.split('.')[0];
     this.storeWindowingProperties(properties);
   }
 
@@ -211,16 +206,20 @@ class Windowing extends Task {
           if (!option.disabled) {
             option.selected = true;
             properties.function.label = storedValue;
-          } else {
-            options[0].selected = true;
-            properties.function.label = options[0].value;
-            properties.function.container = null;
+            properties.function.container = option.value.split('.')[0];
             this.storeWindowingProperties(properties);
           }
         }
       }
     } else {
-      options[0].selected = true;
+      for (let i = 0; i < options.length; ++i) {
+        if (!options[i].disabled) {
+          properties.function.label = options[i].value.split('.')[1];
+          properties.function.container = options[i].value.split('.')[0];
+          this.storeWindowingProperties(properties);
+          return (options[i].selected = true);
+        }
+      }
     }
   }
 

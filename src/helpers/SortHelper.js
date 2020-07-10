@@ -1,5 +1,5 @@
 class SortHelper {
-  static sortArrayAlpha(array, prop, order) {
+  static sortArrayAlpha(array, prop, order, subprop = false) {
     if (typeof array === 'object') {
       if (typeof prop === 'string') {
         if (
@@ -8,6 +8,18 @@ class SortHelper {
         ) {
           const asc = order.toUpperCase() === 'ASC';
           if (asc) {
+            if (subprop) {
+              return array.sort((a, b) =>
+                a[prop.split('.')[0]][prop.split('.')[1]].localeCompare(
+                  b[prop.split('.')[0]][prop.split('.')[1]],
+                  undefined,
+                  {
+                    numeric: true,
+                    sensitivity: 'base'
+                  }
+                )
+              );
+            }
             return array.sort((a, b) =>
               a[prop].localeCompare(b[prop], undefined, {
                 numeric: true,
@@ -15,6 +27,22 @@ class SortHelper {
               })
             );
           }
+
+          if (subprop) {
+            return array
+              .sort((a, b) =>
+                a[prop.split('.')[0]][prop.split('.')[1]].localeCompare(
+                  b[prop.split('.')[0]][prop.split('.')[1]],
+                  undefined,
+                  {
+                    numeric: true,
+                    sensitivity: 'base'
+                  }
+                )
+              )
+              .reverse();
+          }
+
           return array
             .sort((a, b) =>
               a[prop].localeCompare(b[prop], undefined, {

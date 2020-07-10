@@ -9,6 +9,7 @@ import Store from '@Store';
 import axios from 'axios';
 import AlgoParameters from '@AlgoParameters';
 import ModalHelper from '@ModalHelper';
+import DataSource from '../data-source/DataSource';
 
 let process;
 let algoSelect;
@@ -221,7 +222,18 @@ class Learning extends Task {
   make() {
     this.renderView(false);
 
-    super.initNavBtn('previous', { label: 'feature-extraction', Task: Features });
+    const isOnlyProcess = sessionStorage.getItem('only-learning');
+    if (isOnlyProcess) {
+      super.initNavBtn('previous', { label: 'data-source', Task: DataSource });
+      super.toggleNavItemsEnabled(['data-source'], true);
+      super.toggleNavItemsEnabled(['windowing', 'feature-extraction'], false);
+    } else {
+      super.initNavBtn('previous', { label: 'features', Task: Features });
+      super.toggleNavItemsEnabled(
+        ['data-source', 'windowing', 'feature-extraction'],
+        true
+      );
+    }
 
     super.initFinishBtn(() => {
       if (super.validateAlgoParamsFields()) {
@@ -244,8 +256,6 @@ class Learning extends Task {
       super.downloadBtnClickListener.bind(this),
       false
     );
-
-    super.toggleNavItemsEnabled(['data-source', 'windowing', 'feature-extraction'], true);
   }
 }
 

@@ -1,5 +1,6 @@
 import Task from '../Task';
 import selectProcessTemplate from './select-process.hbs';
+import trainingProcessTemplate from './training-process.hbs';
 import FileList from '@FileList';
 import axios from 'axios';
 import APIHelper from '@APIHelper';
@@ -7,9 +8,11 @@ import Store from '@Store';
 import ModalHelper from '@ModalHelper';
 import DataSource from '../data-source/DataSource';
 import Configuration from '@Configuration';
+import dayjs from 'dayjs';
 
 let processContainer;
 let fileList;
+let modelNameInput;
 
 class SelectProcess extends Task {
   constructor(context) {
@@ -19,16 +22,32 @@ class SelectProcess extends Task {
   }
 
   makeProcessTest() {
-    const file = sessionStorage.getItem('process-model');
+    const process = sessionStorage.getItem('process-type');
+    const model = sessionStorage.getItem('process-model');
 
+    if (process === 'train' && !(model === undefined)) {
+      sessionStorage.removeItem('process-model');
+    }
+
+    sessionStorage.setItem('process-type', 'test');
+
+    const file = sessionStorage.getItem('process-model');
     let filename;
+
     if (!(file === null)) {
       filename = file.split('.')[0];
       super.toggleNavBtnEnable('next', true);
       super.toggleNavItemsEnabled(['data-source'], true);
+
+      const isOnlyLearning = sessionStorage.getItem('only-learning');
+      if (isOnlyLearning) {
+        super.toggleNavItemsEnabled(['windowing', 'feature-extraction'], false);
+      } else {
+        super.toggleNavItemsEnabled(['windowing', 'feature-extraction'], true);
+      }
     } else {
       super.toggleNavBtnEnable('next', false);
-      super.toggleNavItemsEnabled(['data-source'], false);
+      super.toggleNavItemsEnabled(['data-source', 'windowing', 'features'], false);
     }
 
     const dataStore = Store.get('model-data');
@@ -66,25 +85,86 @@ class SelectProcess extends Task {
 
     fileList.on('selected', result => {
       super.toggleNavBtnEnable('next', result);
-      super.toggleNavItemsEnabled(['data-source'], result);
+      const isOnlyLearning = sessionStorage.getItem('only-learning');
+      if (isOnlyLearning) {
+        super.toggleNavItemsEnabled(['data-source'], result);
+      } else {
+        super.toggleNavItemsEnabled(
+          ['data-source', 'windowing', 'feature-extraction'],
+          result
+        );
+      }
     });
+  }
+
+  makeProcessTrain() {
+    const process = sessionStorage.getItem('process-type');
+
+    let model;
+    if (!(process === null) && !(process === 'test')) {
+      model = sessionStorage.getItem('process-model');
+    } else {
+      model = 'model-' + dayjs().format('YYYYMMDDHHmm');
+    }
+
+    sessionStorage.setItem('process-type', 'train');
+    sessionStorage.setItem('process-model', model);
+
+    super.toggleNavBtnEnable('next', true);
+    super.toggleNavItemsEnabled(['data-source'], true);
+
+    const isOnlyLearning = sessionStorage.getItem('only-learning');
+    if (isOnlyLearning) {
+      super.toggleNavItemsEnabled(['windowing', 'feature-extraction'], false);
+    } else {
+      super.toggleNavItemsEnabled(['windowing', 'feature-extraction'], true);
+    }
+
+    const content = this.context.querySelector('.process-options');
+
+    content.innerHTML = trainingProcessTemplate({
+      title: 'New Trained Model',
+      filename: model
+    });
+
+    modelNameInput = this.context.querySelector('input#model-filename');
+    modelNameInput.addEventListener(
+      'input',
+      event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        modelNameInput.value = modelNameInput.value
+          .replace(/[^0-9a-zA-Z-]/gi, '-')
+          .toLowerCase();
+
+        if (modelNameInput.value === '') {
+          sessionStorage.removeItem('process-model');
+          super.toggleNavBtnEnable('next', false);
+          super.toggleNavItemsEnabled(['data-source'], false);
+        } else {
+          sessionStorage.setItem('process-model', modelNameInput.value);
+          super.toggleNavBtnEnable('next', true);
+          super.toggleNavItemsEnabled(['data-source'], true);
+
+          const isOnlyLearning = sessionStorage.getItem('only-learning');
+          if (isOnlyLearning) {
+            super.toggleNavItemsEnabled(['windowing', 'feature-extraction'], false);
+          } else {
+            super.toggleNavItemsEnabled(['windowing', 'feature-extraction'], true);
+          }
+        }
+      },
+      false
+    );
   }
 
   switchProcessContent(process) {
     switch (process) {
       case 'test':
-        sessionStorage.setItem('process-type', process);
         this.makeProcessTest();
         break;
       case 'train':
-        sessionStorage.setItem('process-type', process);
-        super.toggleNavItemsEnabled(['data-source'], true);
-
-        if (sessionStorage.getItem('process-model')) {
-          sessionStorage.removeItem('process-model');
-        }
-
-        super.toggleNavBtnEnable('next', true);
+        this.makeProcessTrain();
         break;
       case 'none':
         sessionStorage.setItem('process-type', process);
@@ -147,10 +227,30 @@ class SelectProcess extends Task {
       } else {
         this.selectModelFileHandler(conf);
       }
+    } else if (conf.process === 'train') {
+      modelNameInput.value = conf.model;
     }
 
     const configuration = new Configuration(conf);
-    configuration.unmarshall();
+    const unmarshall = configuration.unmarshall();
+
+    if (!unmarshall) {
+      ModalHelper.confirm(
+        'Pipeline Configuration',
+        'The configuration for the pipeline will not do anything as it is right know. You should either complete the pipeline manually, or upload a new file.',
+        'I understand',
+        'No',
+        false,
+        false
+      );
+    } else {
+      const fileType = sessionStorage.getItem('input-type');
+      if (fileType === 'features-file') {
+        super.toggleNavItemsEnabled(['windowing', 'feature-extraction'], false);
+      } else {
+        super.toggleNavItemsEnabled(['windowing', 'feature-extraction'], true);
+      }
+    }
   }
 
   importFileUploadEventSubmit(event) {
@@ -224,6 +324,8 @@ class SelectProcess extends Task {
     const importFileForm = this.context.querySelector('form');
 
     super.initNavBtn('next', { label: 'data-source', Task: DataSource });
+    super.toggleNavBtnEnable('next', false);
+    super.toggleNavItemsEnabled(['data-source'], false);
 
     importFileInput.addEventListener(
       'change',
@@ -240,11 +342,7 @@ class SelectProcess extends Task {
     processContainer = this.context.querySelector('.process-options');
 
     const processSwitchInputs = this.context.querySelectorAll('.switch-group input');
-
     const storedProcess = sessionStorage.getItem('process-type');
-    if (!storedProcess) {
-      processSwitchInputs[0].setAttribute('checked', true);
-    }
 
     for (let i = 0; i < processSwitchInputs.length; ++i) {
       const radio = processSwitchInputs[i];
