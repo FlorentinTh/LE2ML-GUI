@@ -47,7 +47,10 @@ class SelectProcess extends Task {
       }
     } else {
       super.toggleNavBtnEnable('next', false);
-      super.toggleNavItemsEnabled(['data-source', 'windowing', 'features'], false);
+      super.toggleNavItemsEnabled(
+        ['data-source', 'windowing', 'feature-extraction'],
+        false
+      );
     }
 
     const dataStore = Store.get('model-data');
@@ -101,7 +104,7 @@ class SelectProcess extends Task {
     const process = sessionStorage.getItem('process-type');
 
     let model;
-    if (!(process === null) && !(process === 'test')) {
+    if (!(process === null) && !(process === 'test' || process === 'none')) {
       model = sessionStorage.getItem('process-model');
     } else {
       model = 'model-' + dayjs().format('YYYYMMDDHHmm');
@@ -327,7 +330,10 @@ class SelectProcess extends Task {
 
     super.initNavBtn('next', { label: 'data-source', Task: DataSource });
     super.toggleNavBtnEnable('next', false);
-    super.toggleNavItemsEnabled(['data-source'], false);
+    super.toggleNavItemsEnabled(
+      ['data-source', 'windowing', 'feature-extraction', 'process'],
+      false
+    );
 
     importFileInput.addEventListener(
       'change',
