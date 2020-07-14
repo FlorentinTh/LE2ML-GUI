@@ -41,15 +41,12 @@
         <i class="fas fa-circle-notch"></i>
       </div>
       <div class="task">
-        {{~#each job.tasks as |task|~}}
-        {{~#[utils/compare] task '!==' 'completed'~}}
-        {{~#[utils/compare] task '===' 'started'~}}
-        <p>Running task <strong>{{[utils/math] @index '+' 1}} / {{[utils/length] job.tasks~}}</strong></p>
-        {{~/[utils/compare]~}}
-        {{~/[utils/compare]~}}
-        {{/each}}
+        {{~#[jobs/is-started-task] job.tasks~}}
+        <p>Running task <strong>{{this}} / {{[jobs/total-tasks] job.tasks~}}</strong></p>
+        {{else}}
+        <p>Initializing job</p>
+        {{~/[jobs/is-started-task]}}
       </div>
-      {{!-- <button id="cancel">Cancel</button> --}}
     </div>
     {{~else~}}
     <div class="actions">
@@ -62,7 +59,7 @@
         <button id="restart">Restart</button>
       </div>
       <div class="action">
-        <button id="delete">Remove</button>
+        <button id="delete">Delete</button>
       </div>
       {{~/[utils/compare]~}}
     </div>
