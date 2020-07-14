@@ -4,7 +4,6 @@ export default function(tasks, options) {
   let isStarted = false;
 
   // eslint-disable-next-line no-unused-vars
-
   for (const [key, value] of Object.entries(tasks)) {
     if (!(value === null)) {
       ++index;

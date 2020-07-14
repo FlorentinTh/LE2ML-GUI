@@ -4,20 +4,17 @@ import axios from 'axios';
 import APIHelper from '@APIHelper';
 import jobListTemplate from './job-list.hbs';
 import ModalHelper from '@ModalHelper';
-
-const REFRESH_DELAY = 60000;
+import Store from '@Store';
+import EventSource from 'eventsource';
 
 let startedJobs;
 let completedJobs;
 
-let refreshInterval;
-
 class Jobs extends Component {
-  constructor(jobState = 'started', autoUpdates = false, context = null) {
+  constructor(jobState = 'started', context = null) {
     super(context);
     this.jobState = jobState;
     this.title = 'Jobs';
-    this.autoUpdates = autoUpdates;
     this.initData();
   }
 
@@ -191,6 +188,17 @@ class Jobs extends Component {
     }
   }
 
+  jobEventListener(event) {
+    const eventJob = JSON.parse(event.data);
+    const jobs = this.jobState === 'complete' ? completedJobs : startedJobs;
+
+    const isJobExists = jobs.filter(job => job._id === eventJob._id).length === 1;
+
+    if (isJobExists) {
+      this.buildJobList(this.jobState, { refresh: true });
+    }
+  }
+
   run() {
     this.initView();
 
@@ -210,16 +218,39 @@ class Jobs extends Component {
       }
     }
 
-    if (this.autoUpdates) {
+    const push = localStorage.getItem('auto-update');
+
+    if (push === null) {
+      localStorage.setItem('auto-update', false);
+    }
+
+    if (localStorage.getItem('auto-update') === 'true') {
       this.context.querySelector('#switch-on').checked = true;
-      refreshInterval = setInterval(() => {
-        this.buildJobList(this.jobState, { refresh: true });
-      }, REFRESH_DELAY);
+
+      const eventSourceStored = Store.get('event-source');
+
+      if (!(eventSourceStored === undefined)) {
+        eventSourceStored.data.close();
+        Store.remove('event-source');
+      }
+      const eventSource = new EventSource('https://localhost:3000/api/v1/jobs/changes', {
+        headers: APIHelper.setAuthHeader()
+      });
+
+      Store.add({
+        id: 'event-source',
+        data: eventSource
+      });
+
+      eventSource.addEventListener('message', this.jobEventListener.bind(this), false);
     } else {
       this.context.querySelector('#switch-off').checked = true;
 
-      if (!(refreshInterval === undefined)) {
-        clearInterval(refreshInterval);
+      const eventSourceStored = Store.get('event-source');
+
+      if (!(eventSourceStored === undefined)) {
+        eventSourceStored.data.close();
+        Store.remove('event-source');
       }
     }
 
@@ -231,16 +262,45 @@ class Jobs extends Component {
       const input = switchInputs[i];
       input.addEventListener('change', event => {
         if (event.target.id === 'switch-on') {
-          this.autoUpdates = true;
+          this.buildJobList(this.jobState, { refresh: true });
+          localStorage.setItem('auto-update', true);
           this.context.querySelector('#switch-on').checked = true;
-          refreshInterval = setInterval(() => {
-            this.buildJobList(this.jobState, { refresh: true });
-          }, REFRESH_DELAY);
-        } else {
-          this.autoUpdates = false;
 
-          if (!(refreshInterval === undefined)) {
-            clearInterval(refreshInterval);
+          const eventSourceStored = Store.get('event-source');
+
+          if (!(eventSourceStored === undefined)) {
+            eventSourceStored.data.addEventListener(
+              'message',
+              this.jobEventListener.bind(this),
+              false
+            );
+          } else {
+            const eventSource = new EventSource(
+              'https://localhost:3000/api/v1/jobs/changes',
+              {
+                headers: APIHelper.setAuthHeader()
+              }
+            );
+
+            Store.add({
+              id: 'event-source',
+              data: eventSource
+            });
+
+            eventSource.addEventListener(
+              'message',
+              this.jobEventListener.bind(this),
+              false
+            );
+          }
+        } else {
+          localStorage.setItem('auto-update', false);
+
+          const eventSourceStored = Store.get('event-source');
+
+          if (!(eventSourceStored === undefined)) {
+            eventSourceStored.data.close();
+            Store.remove('event-source');
           }
         }
       });
