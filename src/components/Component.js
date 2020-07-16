@@ -39,6 +39,11 @@ class Component {
           event.stopImmediatePropagation();
           const href = item.children[0].children[1].getAttribute('href');
           Router.setRoute(URLHelper.getPage() + href);
+
+          if (href.includes('machine-learning') || href.includes('deep-learning')) {
+            const pipeline = href.substring(1).replace('-', '_');
+            sessionStorage.setItem('pipeline', pipeline);
+          }
         });
       }
     }

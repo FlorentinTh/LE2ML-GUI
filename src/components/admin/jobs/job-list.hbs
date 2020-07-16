@@ -1,5 +1,5 @@
 {{#each jobs as |job|}}
-<div class="grid-item" id="job-infos" data-job="{{job._id}}">
+<div class="grid-item" id="job-infos" data-job="{{~job._id~}}">
   <div class="left">
     <div class="label">
       <h3>
@@ -19,18 +19,27 @@
       <p class="info">
         <i class="fas fa-check"></i>
         Completed on :
-        {{#[format/date] job.completedOn 'DD/MM/YYYY'~}}{{~/[format/date]}}
+        {{[format/date] job.completedOn 'DD/MM/YYYY'}}
         @
-        {{#[format/date] job.completedOn 'HH:mm'~}}{{~/[format/date]~}}
+        {{[format/date] job.completedOn 'HH:mm'~}}
       </p>
       {{~else~}}
       <p class="info">
         <i class="fas fa-paper-plane"></i>
         Started on :
-        {{#[format/date] job.startedOn 'DD/MM/YYYY'~}}{{~/[format/date]}}
+        {{[format/date] job.startedOn 'DD/MM/YYYY'}}
         @
-        {{#[format/date] job.startedOn 'HH:mm'~}}{{~/[format/date]~}}
+        {{[format/date] job.startedOn 'HH:mm'~}}
       </p>
+      {{~/[utils/compare]~}}
+    </div>
+    <div class="infos">
+      {{~#[utils/compare] job.pipeline '===' 'machine_learning'~}}
+      <i class="fas fa-robot"></i>
+      Machine Learning - {{[format/capitalize-first] job.process~}}
+      {{~else~}}
+      <i class="fas fa-brain"></i>
+      Deep Learning - {{[format/capitalize-first] job.process~}}
       {{~/[utils/compare]~}}
     </div>
   </div>

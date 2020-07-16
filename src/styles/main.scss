@@ -135,6 +135,9 @@ main.content {
   padding: 50px 50px 50px $menu-width-desktop + 50px;
   text-align: center;
   width: 100%;
+  h1 {
+    font-family: 'Roboto Mono', monospace;
+  }
 }
 
 input[type='file']::-webkit-file-upload-button {

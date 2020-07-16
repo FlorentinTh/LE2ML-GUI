@@ -40,7 +40,9 @@ class SelectProcess extends Task {
       super.toggleNavItemsEnabled(['data-source'], true);
 
       const isOnlyLearning = sessionStorage.getItem('only-learning');
-      if (isOnlyLearning) {
+      const selectedInput = sessionStorage.getItem('input-content');
+
+      if (isOnlyLearning || selectedInput === null) {
         super.toggleNavItemsEnabled(['windowing', 'feature-extraction'], false);
       } else {
         super.toggleNavItemsEnabled(['windowing', 'feature-extraction'], true);
@@ -89,7 +91,9 @@ class SelectProcess extends Task {
     fileList.on('selected', result => {
       super.toggleNavBtnEnable('next', result);
       const isOnlyLearning = sessionStorage.getItem('only-learning');
-      if (isOnlyLearning) {
+      const selectedInput = sessionStorage.getItem('input-content');
+
+      if (isOnlyLearning || selectedInput === null) {
         super.toggleNavItemsEnabled(['data-source'], result);
       } else {
         super.toggleNavItemsEnabled(
@@ -117,7 +121,8 @@ class SelectProcess extends Task {
     super.toggleNavItemsEnabled(['data-source'], true);
 
     const isOnlyLearning = sessionStorage.getItem('only-learning');
-    if (isOnlyLearning) {
+    const selectedInput = sessionStorage.getItem('input-content');
+    if (isOnlyLearning || selectedInput === null) {
       super.toggleNavItemsEnabled(['windowing', 'feature-extraction'], false);
     } else {
       super.toggleNavItemsEnabled(['windowing', 'feature-extraction'], true);
@@ -150,7 +155,9 @@ class SelectProcess extends Task {
           super.toggleNavItemsEnabled(['data-source'], true);
 
           const isOnlyLearning = sessionStorage.getItem('only-learning');
-          if (isOnlyLearning) {
+          const selectedInput = sessionStorage.getItem('input-content');
+
+          if (isOnlyLearning || selectedInput === null) {
             super.toggleNavItemsEnabled(['windowing', 'feature-extraction'], false);
           } else {
             super.toggleNavItemsEnabled(['windowing', 'feature-extraction'], true);
@@ -176,7 +183,18 @@ class SelectProcess extends Task {
           sessionStorage.removeItem('process-model');
         }
 
-        super.toggleNavItemsEnabled(['data-source'], true);
+        if (
+          !(sessionStorage.getItem('input-content') === null) &&
+          !sessionStorage.getItem('only-learning')
+        ) {
+          super.toggleNavItemsEnabled(
+            ['data-source', 'windowing', 'feature-extraction'],
+            true
+          );
+        } else {
+          super.toggleNavItemsEnabled(['data-source'], true);
+        }
+
         super.toggleNavItemsEnabled(['process'], false);
         super.toggleNavBtnEnable('next', true);
     }

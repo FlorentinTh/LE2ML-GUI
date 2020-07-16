@@ -1,6 +1,6 @@
 <option disabled selected>Select an Attribute</option>
 {{#each attributes as |attribute|}}
-<option value="{{attribute.label}}">{{attribute.label}}</option>
+<option value="{{~attribute.label~}}">{{~attribute.label~}}</option>
 {{else}}
 {{#[utils/compare] loading '===' true}}
 <option disabled>Fetching data...</option>

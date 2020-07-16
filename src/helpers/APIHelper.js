@@ -10,8 +10,7 @@ class APIHelper {
       throw new Error('Expected type for argument url is Boolean.');
     } else {
       if (proxy) {
-        const proxyURL = 'https://cors-anywhere.herokuapp.com/';
-        axios.defaults.baseURL = proxyURL + url;
+        axios.defaults.baseURL = window.env.API_PROXY + '/' + url;
       } else {
         axios.defaults.baseURL = url;
       }

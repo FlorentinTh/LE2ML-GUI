@@ -7,6 +7,7 @@ import ModalHelper from '@ModalHelper';
 import formConfVersionTemplate from './form-conf-version.hbs';
 import formJobStartTemplate from './form-job-start.hbs';
 import SelectProcess from './select-process/SelectProcess';
+import URLHelper from '@URLHelper';
 
 let navButtonClickHandler;
 class Task {
@@ -187,6 +188,13 @@ class Task {
   finishBtnHandler() {
     const content = formJobStartTemplate();
     const elems = ['label', 'version'];
+
+    const pipelineStored = sessionStorage.getItem('pipeline');
+
+    if (pipelineStored === null) {
+      sessionStorage.setItem('pipeline', URLHelper.getHash().replace('-', '_'));
+    }
+
     ModalHelper.edit('Job Configuration', content, 'Start Job', elems).then(result => {
       if (result.value) {
         const selectedVersion = result.value.version;

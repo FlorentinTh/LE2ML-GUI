@@ -1,0 +1,48 @@
+{{#each log-entries as |log-entry|}}
+<p>
+  <i class="fas fa-chevron-right"></i>
+  <span class="date">[{{~log-entry.date~}}]: </span>
+  <a href="mailto:{{~log-entry.job.user.email~}}">
+    {{~log-entry.job.user.firstname}}
+    {{log-entry.job.user.lastname~}}
+  </a>
+  {{~#[utils/compare] log-entry.action '===' 'updated'~}}
+  's
+  {{else}}
+  {{~#[utils/compare] log-entry.action '===' 'completed'~}}
+  's
+  {{/[utils/compare]}}
+  {{/[utils/compare]}}
+  {{#[utils/compare] log-entry.action '!==' 'updated'}}
+  {{#[utils/compare] log-entry.action '!==' 'completed'}}
+  <strong>{{~log-entry.action~}}</strong>
+  {{/[utils/compare]}}
+  {{/[utils/compare]}}
+  job :
+  <span class="job">
+    <strong>{{~log-entry.job.label~}}</strong>
+  </span>
+  <span class="job-id">
+    (#{{~log-entry.job._id~}})
+  </span>
+  {{~#[utils/compare] log-entry.action '===' 'updated'~}}
+  was <strong>{{~log-entry.action~}}</strong>
+  {{else}}
+  {{~#[utils/compare] log-entry.action '===' 'completed'~}}
+  was <strong>{{~log-entry.action~}}</strong>
+  {{/[utils/compare]}}
+  {{/[utils/compare]}}
+</p>
+{{else}}
+{{#[utils/compare] loading '===' true}}
+<div class="load-content">
+  <i class="fas fa-spinner"></i>
+  <p>Logs entries are loading...</p>
+</div>
+{{else}}
+<div class="no-content">
+  <i class="fas fa-frown"></i>
+  <p>No log entry found !</p>
+</div>
+{{/[utils/compare]}}
+{{/each}}

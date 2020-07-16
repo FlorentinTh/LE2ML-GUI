@@ -6,6 +6,7 @@ class V1 {
   marshall(values) {
     const result = {
       version: '1',
+      pipeline: values.pipeline,
       process: values['process-type']
     };
 
@@ -93,13 +94,14 @@ class V1 {
   }
 
   unmarshall() {
-    const inputType = Object.keys(this.config.input)[0];
-
+    sessionStorage.setItem('pipeline', this.config.pipeline);
     sessionStorage.setItem('process-type', this.config.process);
 
     if (!(this.config.process === 'none')) {
       sessionStorage.setItem('process-model', this.config.model);
     }
+
+    const inputType = Object.keys(this.config.input)[0];
 
     if (inputType === 'file') {
       const type = this.config.input[inputType].type;

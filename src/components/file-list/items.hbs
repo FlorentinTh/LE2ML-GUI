@@ -1,10 +1,10 @@
 {{#each files as |file|}}
 <tr>
   <td></td>
-  <td>{{file.filename}}</td>
-  <td class="center">{{file.type}}</td>
-  <td class="center">{{~#[format/bytes] file.size~}}{{/[format/bytes]~}}</td>
-  <td>{{~#[format/date] file.dateCreated 'DD/MM/YYYY HH:mm'~}}{{/[format/date]~}}</td>
+  <td>{{~file.filename~}}</td>
+  <td class="center">{{~file.type~}}</td>
+  <td class="center">{{~[format/bytes] file.size~}}</td>
+  <td>{{~[format/date] file.dateCreated 'DD/MM/YYYY HH:mm'~}}</td>
 </tr>
 {{else}}
 {{#[utils/compare] loading '===' true}}

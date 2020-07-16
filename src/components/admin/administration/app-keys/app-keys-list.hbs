@@ -12,13 +12,14 @@
     <div class="infos">
       <p class="info">
         <i class="fas fa-calendar-check"></i>
-        {{#[format/date] app-key.dateCreated 'DD/MM/YYYY'~}}{{~/[format/date]}} @
-        {{#[format/date] app-key.dateCreated 'HH:mm:ss'~}}{{/[format/date]~}}
+        {{~[format/date] app-key.dateCreated 'DD/MM/YYYY'}} @
+        {{[format/date] app-key.dateCreated 'HH:mm:ss'~}}
       </p>
       <p class="info info-link">
         <i class="fas fa-user-alt"></i>
-        <a href="mailto:{{~app-key.user.email~}}">{{~#[format/capitalize-first] app-key.user.firstname}}{{/[format/capitalize-first]}}
-          {{#[format/capitalize-first] app-key.user.lastname~}}{{/[format/capitalize-first]}}</a>
+        <a href="mailto:{{~app-key.user.email~}}">
+          {{~[format/capitalize-first] app-key.user.firstname}}
+          {{[format/capitalize-first] app-key.user.lastname~}}</a>
       </p>
     </div>
   </div>

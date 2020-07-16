@@ -3,18 +3,17 @@
   <div class="left">
     <div class="label">
       <h3>
-        {{file.filename~}}.{{~file.type}}
+        {{~file.filename~}}.{{~file.type~}}
       </h3>
     </div>
     <div class="infos">
       <p class="info">
         <i class="fas fa-weight-hanging"></i>
-        {{#[format/bytes] file.size~}}
-        {{~/[format/bytes]}}
+        {{~[format/bytes] file.size~}}
       </p>
       <p class="info">
         <i class="fas fa-calendar-check"></i>
-        created on : {{#[format/date] file.dateCreated 'DD/MM/YYYY'~}}{{~/[format/date]~}}
+        created on : {{[format/date] file.dateCreated 'DD/MM/YYYY'~}}
       </p>
     </div>
   </div>

@@ -83,12 +83,12 @@ $themes: (
   }
 
   input:not([type='range']) {
-    height: 19px;
+    height: 23px;
     left: 0;
     opacity: 0;
     position: absolute;
     top: 0;
-    width: 47px;
+    width: 57px;
     z-index: 2;
 
     &:checked ~ label:nth-of-type(1) {
@@ -116,11 +116,11 @@ $themes: (
     }
 
     &:checked ~ .toggle {
-      left: 4px;
+      left: 6px;
     }
 
     & ~ :checked ~ .toggle {
-      left: 28px;
+      left: 34px;
     }
 
     &:checked {
@@ -134,12 +134,12 @@ $themes: (
     }
 
     border-radius: 50%;
-    height: 15px;
+    height: 18px;
     left: 0;
     position: absolute;
     top: 2px;
     transition: left 0.2s ease;
-    width: 15px;
+    width: 18px;
     z-index: 1;
   }
 }

@@ -2,7 +2,9 @@
 <div class="grid-item" id="attribute-infos">
   <div class="left">
     <div class="label" data-att="{{~attribute.label~}}">
-      <h3>{{~#[format/truncate] attribute.label 18 '_'}}{{/[format/truncate]~}}
+      <h3>
+        {{!-- {{~attribute.label~}} --}}
+        {{~[format/truncate] attribute.label 22 '_'~}}
       </h3>
     </div>
     <div class="position" data-pos="{{~attribute.pos~}}">

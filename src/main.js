@@ -4,7 +4,7 @@ import '@Styles';
 import Router from '@Router';
 import APIHelper from '@APIHelper';
 
-const baseApiUrl = 'https://localhost:3000/api/v1';
+const baseApiUrl = window.env.API_URL + '/v' + window.env.API_VERSION;
 APIHelper.setBaseURL(baseApiUrl);
 
 Router.route();

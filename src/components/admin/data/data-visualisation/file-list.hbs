@@ -1,5 +1,5 @@
 {{#each files as |file|}}
-<option value="{{file.filename}}.{{~file.type}}">{{file.filename}}.{{~file.type}}</option>
+<option value="{{~file.filename~}}.{{~file.type~}}">{{~file.filename~}}.{{~file.type~}}</option>
 {{else}}
 {{#[utils/compare] loading '===' true}}
 <option disabled>Fetching data...</option>

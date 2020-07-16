@@ -461,7 +461,21 @@
           &:first-of-type {
             display: block;
             font-size: 1.2em;
+            text-transform: capitalize;
           }
+        }
+      }
+    }
+  }
+
+  .grid-app-keys {
+    .grid-item {
+      .left {
+        .desc {
+          width: 320px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }

@@ -8,7 +8,7 @@
     {{~else~}}
     Models
     {{~/[utils/compare]~}}
-    <span class="badge badge-inverse badge-right">{{totalModel}}</span>
+    <span class="badge badge-inverse badge-right">{{~totalModel~}}</span>
   </label>
   <input type="radio" id="switch-raw" name="files" value="raw" />
   <label for="switch-raw">
@@ -17,7 +17,7 @@
     {{~else~}}
     Raw Files
     {{~/[utils/compare]~}}
-    <span class="badge badge-inverse badge-right">{{totalRaw}}</span>
+    <span class="badge badge-inverse badge-right">{{~totalRaw~}}</span>
   </label>
   <input type="radio" id="switch-features" name="files" value="features" />
   <label for="switch-features">
@@ -26,13 +26,13 @@
     {{~else~}}
     Feat. Files
     {{~/[utils/compare]~}}
-    <span class="badge badge-inverse badge-right">{{totalFeature}}</span>
+    <span class="badge badge-inverse badge-right">{{~totalFeature~}}</span>
   </label>
 </div>
 
-{{#> ../../search/search}}{{/../../search/search}}
+{{> ../../search/search}}
 <div class="grid-container" id="files">
-  {{#> ../../filters/files/filters}}{{/../../filters/files/filters}}
+  {{> ../../filters/files/filters}}
   <div class="grid-files">
     {{#files}}{{> file-list}}{{/files}}
   </div>

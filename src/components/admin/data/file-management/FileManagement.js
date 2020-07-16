@@ -9,7 +9,6 @@ import APIHelper from '@APIHelper';
 import { Filters, FilterType } from '@Filters';
 import Search from '@Search';
 import ModalHelper from '@ModalHelper';
-import FileHelper from '@FileHelper';
 
 let fileModels;
 let fileRaw;
@@ -411,7 +410,7 @@ class FileManagement extends Component {
                 if (response) {
                   loader.close();
                   window.open(
-                    new URL(FileHelper.getFileServerURL() + response.data),
+                    new URL(window.env.FILE_SERVER_URL + '/' + response.data),
                     '_blank'
                   );
                 }

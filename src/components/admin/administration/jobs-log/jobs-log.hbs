@@ -1,29 +1,25 @@
 <h1>{{title}}</h1>
-
+<div class="auto-update-container">
+  <div class="wrapper">
+    <div class="switch-label">
+      <span>Enable auto-updates ?</span>
+    </div>
+    <div class="switch-auto-update">
+      <input type="radio" name="switch-au" id="switch-off" checked />
+      <input type="radio" name="switch-au" id="switch-on" />
+      <span class="toggle"></span>
+    </div>
+  </div>
+</div>
 <div class="logs-container">
   <div class="download-container">
     <i class="fas fa-file-download"></i>
   </div>
   <div class="logs-wrapper">
-    <div class="content custom-scroll-accent">
-      <p>
-        <i class="fas fa-chevron-right"></i>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-      </p>
-      <p>
-        <i class="fas fa-chevron-right"></i>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. At sunt, velit dicta, ad laborum repellat.
-      </p>
-      <p>
-        <i class="fas fa-chevron-right"></i>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-      </p>
-      <p>
-        <i class="fas fa-chevron-right"></i>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. At sunt, velit dicta, ad laborum repellat, quasi
-        quaerat
-        quisquam incidunt veritatis beatae autem?
-      </p>
+    <div class="content">
+      <div id="log-entries" class="custom-scroll-logs">
+        {{#log-entries}}{{> log-list}}{{/log-entries}}
+      </div>
     </div>
   </div>
 </div>

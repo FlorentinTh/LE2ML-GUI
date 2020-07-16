@@ -71,7 +71,7 @@ class Menu {
 
   build() {
     this.options.context.innerHTML = menuTemplate({
-      title: 'Dashboard',
+      title: 'I.A. Workbench',
       items: this.options.items
     });
 

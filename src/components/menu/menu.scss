@@ -1,3 +1,25 @@
+.menu-custom-scroll::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.menu-custom-scroll::-webkit-scrollbar {
+  width: 3px;
+  background-color: transparent;
+}
+
+.menu-custom-scroll::-webkit-scrollbar-thumb {
+  @include themify($themes) {
+    background-color: themed('color-accent');
+  }
+}
+
+.menu-custom-scroll {
+  scrollbar-width: thin;
+  @include themify($themes) {
+    scrollbar-color: themed('color-accent') transparent;
+  }
+}
+
 .menu {
   @include themify($themes) {
     background-color: themed('color-secondary');
@@ -5,6 +27,7 @@
   }
 
   height: 100vh;
+  overflow-y: auto;
   width: $menu-width-desktop;
   position: fixed;
   top: 0;
@@ -18,22 +41,27 @@
 
     a {
       width: 264px;
+      content: url($logo-liara-large-light);
+      content: url($logo-liara-large-dark);
+
       @include themify($themes) {
         content: url(themed('logo-liara-large'));
       }
-      overflow: hidden;
       transition: all 0.05s linear;
     }
 
     h2 {
-      margin: 0.75em 0 0 0;
+      margin: 0.75em 0 0.75em 0;
       font-weight: normal;
+      text-transform: capitalize;
+      font-family: 'Roboto Mono', monospace;
     }
   }
 
   ul {
     list-style: none;
     margin: 0;
+    height: 340px;
 
     li {
       font-size: 1.05em;
@@ -86,9 +114,9 @@
       }
 
       .switch-theme {
-        height: 19px;
+        height: 23px;
         position: relative;
-        width: 47px;
+        width: 57px;
         margin: 0 auto 30px auto;
 
         input:hover,
@@ -106,7 +134,7 @@
   }
 }
 
-@media screen and (max-height: 750px) and (min-width: 900px) {
+@media screen and (max-height: 800px) and (min-width: 900px) {
   .menu {
     .logo {
       a {
@@ -116,7 +144,7 @@
     }
     ul {
       li {
-        font-size: 0.95em;
+        font-size: 1em;
 
         a {
           height: 55px;
@@ -141,6 +169,10 @@
 
       a {
         width: $menu-width-tablet - 30px;
+
+        content: url($logo-liara-small-light);
+        content: url($logo-liara-small-dark);
+
         @include themify($themes) {
           content: url(themed('logo-liara-small'));
         }

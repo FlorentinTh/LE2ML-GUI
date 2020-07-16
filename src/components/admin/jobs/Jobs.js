@@ -82,15 +82,15 @@ class Jobs extends Component {
         } else {
           jobs = completedJobs;
         }
+
+        container.innerHTML = jobListTemplate({
+          jobs: jobs,
+          jobType: value,
+          loading: opts.loading
+        });
+
+        this.setActions(jobs);
       }
-
-      container.innerHTML = jobListTemplate({
-        jobs: jobs,
-        jobType: value,
-        loading: opts.loading
-      });
-
-      this.setActions(jobs);
     }
   }
 
@@ -184,18 +184,57 @@ class Jobs extends Component {
     if (event.target.checked) {
       const value = event.target.value;
       this.jobState = value;
-      this.buildJobList(value);
+      this.buildJobList(value, { refresh: true });
     }
   }
 
   jobEventListener(event) {
     const eventJob = JSON.parse(event.data);
-    const jobs = this.jobState === 'complete' ? completedJobs : startedJobs;
+
+    let jobs;
+    if (eventJob.state === 'completed') {
+      jobs = completedJobs;
+    } else if (eventJob.state === 'started') {
+      jobs = startedJobs;
+    }
 
     const isJobExists = jobs.filter(job => job._id === eventJob._id).length === 1;
 
-    if (isJobExists) {
+    if (isJobExists && this.jobState === eventJob.state) {
       this.buildJobList(this.jobState, { refresh: true });
+    }
+  }
+
+  openEventSource(close = false) {
+    if (close) {
+      this.closeEventSource();
+    }
+
+    const eventSourceStored = Store.get('event-source');
+
+    let eventSource;
+    if (eventSourceStored === undefined) {
+      eventSource = new EventSource('https://localhost:3000/api/v1/jobs/changes', {
+        headers: APIHelper.setAuthHeader()
+      });
+
+      Store.add({
+        id: 'event-source',
+        data: eventSource
+      });
+    } else {
+      eventSource = eventSourceStored.data;
+    }
+
+    eventSource.addEventListener('message', this.jobEventListener.bind(this), false);
+  }
+
+  closeEventSource() {
+    const eventSourceStored = Store.get('event-source');
+
+    if (!(eventSourceStored === undefined)) {
+      eventSourceStored.data.close();
+      Store.remove('event-source');
     }
   }
 
@@ -218,40 +257,18 @@ class Jobs extends Component {
       }
     }
 
-    const push = localStorage.getItem('auto-update');
+    const push = localStorage.getItem('user-jobs-au');
 
     if (push === null) {
-      localStorage.setItem('auto-update', false);
+      localStorage.setItem('user-jobs-au', false);
     }
 
-    if (localStorage.getItem('auto-update') === 'true') {
+    if (localStorage.getItem('user-jobs-au') === 'true') {
       this.context.querySelector('#switch-on').checked = true;
-
-      const eventSourceStored = Store.get('event-source');
-
-      if (!(eventSourceStored === undefined)) {
-        eventSourceStored.data.close();
-        Store.remove('event-source');
-      }
-      const eventSource = new EventSource('https://localhost:3000/api/v1/jobs/changes', {
-        headers: APIHelper.setAuthHeader()
-      });
-
-      Store.add({
-        id: 'event-source',
-        data: eventSource
-      });
-
-      eventSource.addEventListener('message', this.jobEventListener.bind(this), false);
+      this.openEventSource(true);
     } else {
       this.context.querySelector('#switch-off').checked = true;
-
-      const eventSourceStored = Store.get('event-source');
-
-      if (!(eventSourceStored === undefined)) {
-        eventSourceStored.data.close();
-        Store.remove('event-source');
-      }
+      this.closeEventSource();
     }
 
     const switchInputs = this.context.querySelectorAll(
@@ -263,45 +280,12 @@ class Jobs extends Component {
       input.addEventListener('change', event => {
         if (event.target.id === 'switch-on') {
           this.buildJobList(this.jobState, { refresh: true });
-          localStorage.setItem('auto-update', true);
+          localStorage.setItem('user-jobs-au', true);
           this.context.querySelector('#switch-on').checked = true;
-
-          const eventSourceStored = Store.get('event-source');
-
-          if (!(eventSourceStored === undefined)) {
-            eventSourceStored.data.addEventListener(
-              'message',
-              this.jobEventListener.bind(this),
-              false
-            );
-          } else {
-            const eventSource = new EventSource(
-              'https://localhost:3000/api/v1/jobs/changes',
-              {
-                headers: APIHelper.setAuthHeader()
-              }
-            );
-
-            Store.add({
-              id: 'event-source',
-              data: eventSource
-            });
-
-            eventSource.addEventListener(
-              'message',
-              this.jobEventListener.bind(this),
-              false
-            );
-          }
+          this.openEventSource(false);
         } else {
-          localStorage.setItem('auto-update', false);
-
-          const eventSourceStored = Store.get('event-source');
-
-          if (!(eventSourceStored === undefined)) {
-            eventSourceStored.data.close();
-            Store.remove('event-source');
-          }
+          localStorage.setItem('user-jobs-au', false);
+          this.closeEventSource();
         }
       });
     }
