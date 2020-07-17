@@ -1,7 +1,7 @@
 {
   "name": "cluster-gui",
   "version": "1.0.0",
-  "description": "GUI to interact with the Raspberry Pi cluster.",
+  "description": "GUI for the PiCluster project",
   "scripts": {
     "file-server": "http-server ../PiCluster-data --silent",
     "dev": "webpack-dev-server --env=development",
