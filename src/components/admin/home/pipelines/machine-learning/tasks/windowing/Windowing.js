@@ -200,8 +200,7 @@ class Windowing extends Task {
     if (storedValue) {
       for (let i = 0; i < options.length; ++i) {
         const option = options[i];
-        const optValue =
-          option.value === 'none' ? option.value : option.value.split('.')[1];
+        const optValue = option.value.split('.')[1];
         if (storedValue === optValue) {
           if (!option.disabled) {
             option.selected = true;
@@ -212,14 +211,9 @@ class Windowing extends Task {
         }
       }
     } else {
-      for (let i = 0; i < options.length; ++i) {
-        if (!options[i].disabled) {
-          properties.function.label = options[i].value.split('.')[1];
-          properties.function.container = options[i].value.split('.')[0];
-          this.storeWindowingProperties(properties);
-          return (options[i].selected = true);
-        }
-      }
+      properties.function.label = options[options.selectedIndex].value.split('.')[1];
+      properties.function.container = options[options.selectedIndex].value.split('.')[0];
+      this.storeWindowingProperties(properties);
     }
   }
 
