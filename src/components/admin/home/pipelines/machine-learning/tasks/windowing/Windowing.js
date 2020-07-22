@@ -110,9 +110,11 @@ class Windowing extends Task {
           elem.children[1].setAttribute('disabled', true);
         }
       } else if (enable === 'on') {
-        if (elem.classList.contains('disabled')) {
-          elem.classList.remove('disabled');
-          elem.children[1].removeAttribute('disabled');
+        if (!elem.classList.contains('range')) {
+          if (elem.classList.contains('disabled')) {
+            elem.classList.remove('disabled');
+            elem.children[1].removeAttribute('disabled');
+          }
         }
       }
     }
@@ -277,7 +279,7 @@ class Windowing extends Task {
         this.toggleWindowingEnable(radio.value);
       }
 
-      super.toggleNavItemsEnabled(['data-source'], true);
+      super.toggleNavItemsEnabled(['data-source', 'feature-extraction', 'process'], true);
     }
   }
 }

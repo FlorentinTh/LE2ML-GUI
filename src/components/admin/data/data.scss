@@ -75,7 +75,15 @@
     }
   }
 
-  .block {
+  .inline-large {
+    input[type='text'],
+    input[type='number'],
+    select {
+      width: 80% !important;
+    }
+  }
+
+  .range {
     label {
       display: block;
       font-size: 1.2em;
@@ -109,10 +117,6 @@
           color: themed('color-text-secondary');
         }
       }
-    }
-
-    select {
-      text-transform: capitalize;
     }
 
     input[type='number'] {
@@ -173,6 +177,26 @@
         &:active::-moz-range-thumb {
           background: themed('color-accent-darker');
         }
+      }
+    }
+  }
+}
+
+.source-select {
+  margin: 0 auto 45px auto;
+
+  .inline {
+    .label-container {
+      width: 100px !important;
+    }
+
+    input[type='text'],
+    input[type='number'],
+    select {
+      max-width: 900px;
+      padding-left: 110px !important;
+      &::placeholder {
+        font-size: 0.8em !important;
       }
     }
   }

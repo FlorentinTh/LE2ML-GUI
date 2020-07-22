@@ -139,13 +139,17 @@ class FeatureManagement extends Component {
     const content = formFeatureTemplate();
     const elems = ['label', 'domain', 'container', 'enabled'];
 
+    const sourceSelect = this.context.querySelector('#source');
+    const sourceValue = sourceSelect.options[sourceSelect.selectedIndex].value;
+
     ModalHelper.edit('Add a new feature', content, 'add', elems).then(result => {
       if (result.value) {
         const data = {
           label: result.value.label.toLowerCase(),
           domain: result.value.domain,
           container: result.value.container,
-          enabled: result.value.enabled === 'true'
+          enabled: result.value.enabled === 'true',
+          source: sourceValue.toLowerCase()
         };
 
         addFeature('/features', data, this.context).then(response => {

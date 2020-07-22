@@ -5,6 +5,17 @@
 </div>
 <div class="task-content">
   <h2>{{title}}</h2>
+  <div class="form-elems source-select">
+    <div class="form-elem inline">
+      <span class="label-container">
+        <label for="source">Source</label>
+      </span>
+      <select id="source">
+        <option value="none" data-source="none" disabled>Select a Source</option>
+        <option value="inertial" data-source="inertial" selected>Inertial</option>
+      </select>
+    </div>
+  </div>
   <section id="feature-list">
     <div class="feature-container" id="time-features">
       <h3>

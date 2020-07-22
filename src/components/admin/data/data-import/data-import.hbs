@@ -1,4 +1,15 @@
 <h1>{{title}}</h1>
+<div class="form-elems source-select">
+  <div class="form-elem inline">
+    <span class="label-container">
+      <label for="source">Source</label>
+    </span>
+    <select id="source">
+      <option value="none" data-source="none" disabled>Select a Source</option>
+      <option value="inertial" data-source="inertial" selected>Inertial</option>
+    </select>
+  </div>
+</div>
 <div class="description">
   <i class="fas fa-info"></i>
   <p>You can upload any dataset you want as far as it's either a <strong>JSON</strong> or a <strong>CSV</strong> file.
