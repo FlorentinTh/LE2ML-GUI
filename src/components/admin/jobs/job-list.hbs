@@ -13,7 +13,7 @@
         Job Canceled
       </p>
     </div>
-    {{else}}
+    {{~/[utils/compare]~}}
     {{~#[utils/compare] job.state '===' 'error'~}}
     <div class="job-not-started">
       <p>
@@ -23,7 +23,6 @@
         failed
       </p>
     </div>
-    {{~/[utils/compare]~}}
     {{~/[utils/compare]~}}
     <div class="infos">
       {{~#[utils/compare] job.state '===' 'completed'~}}
