@@ -194,13 +194,13 @@ class Jobs extends Component {
     let jobs;
     if (eventJob.state === 'completed') {
       jobs = completedJobs;
-    } else if (eventJob.state === 'started') {
+    } else if (eventJob.state === 'started' || eventJob.state === 'error') {
       jobs = startedJobs;
     }
 
     const isJobExists = jobs.filter(job => job._id === eventJob._id).length === 1;
 
-    if (isJobExists && this.jobState === eventJob.state) {
+    if (isJobExists && (this.jobState === eventJob.state || eventJob.state === 'error')) {
       this.buildJobList(this.jobState, { refresh: true });
     }
   }
