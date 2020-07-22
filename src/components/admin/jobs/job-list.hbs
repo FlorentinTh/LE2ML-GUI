@@ -7,12 +7,23 @@
       </h3>
     </div>
     {{~#[utils/compare] job.state '===' 'canceled'~}}
-    <div class="job-canceled">
+    <div class="job-not-started">
       <p>
         <i class="fas fa-ban"></i>
         Job Canceled
       </p>
     </div>
+    {{else}}
+    {{~#[utils/compare] job.state '===' 'error'~}}
+    <div class="job-not-started">
+      <p>
+        <i class="fas fa-exclamation-circle"></i>
+        Job Error. Task:
+        "{{[jobs/failed-task] job.tasks}}"
+        failed
+      </p>
+    </div>
+    {{~/[utils/compare]~}}
     {{~/[utils/compare]~}}
     <div class="infos">
       {{~#[utils/compare] job.state '===' 'completed'~}}
