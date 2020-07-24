@@ -91,7 +91,7 @@
     "handlebars-utils": "^1.0.6",
     "jquery": "^3.5.1",
     "js-cookie": "^2.2.1",
-    "plotly.js-cartesian-dist": "^1.54.6",
+    "plotly.js-cartesian-dist": "^1.54.7",
     "sweetalert2": "^9.17.0"
   }
 }
