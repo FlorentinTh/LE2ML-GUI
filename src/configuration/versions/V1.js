@@ -7,6 +7,7 @@ class V1 {
     const result = {
       version: '1',
       pipeline: values.pipeline,
+      source: values['data-source'],
       process: values['process-type']
     };
 
@@ -95,6 +96,7 @@ class V1 {
 
   unmarshall() {
     sessionStorage.setItem('pipeline', this.config.pipeline);
+    sessionStorage.setItem('data-source', this.config.source);
     sessionStorage.setItem('process-type', this.config.process);
 
     if (!(this.config.process === 'none')) {

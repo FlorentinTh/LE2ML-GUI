@@ -1,0 +1,42 @@
+<div class="form-infos form-infos-modal">
+  <div class="form">
+    <form action="#">
+      <label for="label"></label>
+      {{#[utils/compare] label '===' undefined}}
+      <input type="text" id="label" name="label" autocomplete="false" placeholder="Label" required />
+      {{else}}
+      <input type="text" id="label" name="label" autocomplete="false" value="{{label}}" required />
+      {{/[utils/compare]}}
+      <label for="enabled"></label>
+      <select id="enabled">
+        {{#[utils/compare] enabled '===' undefined}}
+        <option value="true" selected>Enabled</option>
+        <option value="false">Disabled</option>
+        {{else}}
+        {{#[utils/compare] enabled '===' true}}
+        <option value="true" selected>Enabled</option>
+        <option value="false">Disabled</option>
+        {{else}}
+        <option value="true">Enabled</option>
+        <option value="false" selected>Disabled</option>
+        {{/[utils/compare]}}
+        {{/[utils/compare]}}
+      </select>
+      <label for="editable-files"></label>
+      <select id="editable-files">
+        {{#[utils/compare] editableFiles '===' undefined}}
+        <option value="false" selected>Not Editable</option>
+        <option value="true">Editable</option>
+        {{else}}
+        {{#[utils/compare] editableFiles '===' true}}
+        <option value="true" selected>Editable</option>
+        <option value="false">Not Editable</option>
+        {{else}}
+        <option value="true">Editable</option>
+        <option value="false" selected>Not Editable</option>
+        {{/[utils/compare]}}
+        {{/[utils/compare]}}
+      </select>
+    </form>
+  </div>
+</div>

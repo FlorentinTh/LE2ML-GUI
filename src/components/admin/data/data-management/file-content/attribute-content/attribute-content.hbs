@@ -1,0 +1,21 @@
+<div class="att-content">
+  <div class="grid-container" id="attributes">
+    <h2>
+      {{~#[utils/compare] total '===' 1~}}
+      Attribute
+      {{~else~}}
+      Attributes
+      {{~/[utils/compare]~}}
+      <span class="badge badge-right">{{total}}</span>
+    </h2>
+    <div class="grid-attributes">
+      {{#attributes}}{{> attribute-list}}{{/attributes}}
+    </div>
+  </div>
+  <div class="save-btn">
+    <button class="disabled" id="save" disabled>
+      Save file
+      <i class="fas fa-file-download"></i>
+    </button>
+  </div>
+</div>

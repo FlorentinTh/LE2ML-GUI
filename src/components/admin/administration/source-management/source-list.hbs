@@ -1,0 +1,68 @@
+{{#each sources as |source|}}
+<div class="grid-item" id="source-infos" data-source="{{source._id}}">
+  <div class="left">
+    <div class="label">
+      <h3>
+        {{source.label}}
+      </h3>
+    </div>
+    {{#[utils/compare] source.enabled '===' true}}
+    <p class="state-indic state-enabled">
+      <i class="fas fa-circle"></i>
+      Enabled
+    </p>
+    {{else}}
+    <p class="state-indic state-disabled">
+      <i class="fas fa-circle"></i>
+      Disabled
+    </p>
+    {{/[utils/compare]}}
+    {{#[utils/compare] source.default '===' true}}
+    <div class="infos">
+      <p class="info">
+        <i class="fas fa-feather-alt"></i>
+        default data source
+      </p>
+    </div>
+    {{/[utils/compare]}}
+    <div class="infos">
+      <p class="info">
+        <i class="fas fa-pen"></i>
+        {{#[utils/compare] source.editableFiles '===' true}}
+        files are editable
+        {{else}}
+        files are not editable
+        {{/[utils/compare]}}
+      </p>
+    </div>
+  </div>
+  <div class="right">
+    <div class="actions">
+      <div class="action">
+        {{#[utils/compare] source.enabled '===' true}}
+        <button id="state">Disable</button>
+        {{else}}
+        <button id="state">Enable</button>
+        {{/[utils/compare]}}
+      </div>
+    </div>
+  </div>
+</div>
+{{else}}
+{{#[utils/compare] loading '===' true}}
+<div class="grid-item">
+  <div class="loading-item">
+    <span class="loading">
+      Fetching data...
+      <i class="fas fa-spinner"></i>
+    </span>
+  </div>
+</div>
+{{else}}
+<div class="grid-item">
+  <div class="not-found">
+    <p>No data sources found ☹️</p>
+  </div>
+</div>
+{{/[utils/compare]}}
+{{/each}}

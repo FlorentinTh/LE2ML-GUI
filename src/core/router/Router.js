@@ -50,6 +50,15 @@ class Router {
                   if (sc.name === hash) {
                     parent = c;
                     route = sc;
+                  } else {
+                    if (!(sc.SubComponents === undefined)) {
+                      sc.SubComponents.forEach(sc => {
+                        if (sc.name === hash) {
+                          parent = c;
+                          route = sc;
+                        }
+                      });
+                    }
                   }
                 });
               }

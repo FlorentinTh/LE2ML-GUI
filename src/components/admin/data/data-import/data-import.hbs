@@ -4,51 +4,11 @@
     <span class="label-container">
       <label for="source">Source</label>
     </span>
-    <select id="source">
-      <option value="none" data-source="none" disabled>Select a Source</option>
-      <option value="inertial" data-source="inertial" selected>Inertial</option>
+    <select id="sources">
+      <option disabled selected>Select a Data Source</option>
+      {{#sources}}{{> source-list}}{{/sources}}
     </select>
   </div>
 </div>
-<div class="description">
-  <i class="fas fa-info"></i>
-  <p>You can upload any dataset you want as far as it's either a <strong>JSON</strong> or a <strong>CSV</strong> file.
-    If the file is <strong>JSON</strong>, it will be automatically converted to <strong>CSV</strong> since only this
-    format is considered by the system.
-    Your dataset will be validated during the upload process. Hence, it can contains as much columns as needed
-    but it is important for the last one to be named <strong><code>label</code></strong>.</p>
-</div>
-<div class="switch-group switch-large">
-  <input type="radio" id="switch-raw" name="files" value="raw" checked />
-  <label for="switch-raw">
-    <i class="fas fa-file-alt"></i>
-    Raw
-  </label>
-  <input type="radio" id="switch-features" name="files" value="features" />
-  <label for="switch-features">
-    <i class="fas fa-square-root-alt"></i>
-    Features
-  </label>
-</div>
-<div class="upload-wrapper">
-  <div class="file-upload-container">
-    <form method="POST" enctype="multipart/form-data">
-      <input type="file" id="file-input" name="file-input">
-      <label id="file-upload-label" for="file-input">
-        <div class="infos">
-          <i class="fas fa-upload"></i>
-          <p>Drag and drop or click to upload a file</p>
-          <p></p>
-        </div>
-        <button type="submit">Upload</button>
-        <div class="progress-container">
-          <p id="value"></p>
-          <progress class="progress" max="100"></progress>
-          <p id="cancel">
-            <a href="#">Cancel</a>
-          </p>
-        </div>
-      </label>
-    </form>
-  </div>
+<div id="import-content">
 </div>

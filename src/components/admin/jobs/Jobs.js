@@ -246,10 +246,6 @@ class Jobs extends Component {
     for (let i = 0; i < jobStateSwitchInputs.length; ++i) {
       const radio = jobStateSwitchInputs[i];
 
-      if (radio.value === this.jobState) {
-        radio.setAttribute('checked', true);
-      }
-
       radio.addEventListener('change', this.jobStateSwitchHandler.bind(this), false);
 
       if (radio.checked) {

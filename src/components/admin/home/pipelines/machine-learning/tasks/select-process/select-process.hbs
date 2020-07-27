@@ -11,6 +11,17 @@
 </div>
 <div class="task-content">
   <h2>{{title}}</h2>
+  <div class="form-elems source-select">
+    <div class="form-elem inline">
+      <span class="label-container">
+        <label for="source">Source</label>
+      </span>
+      <select id="sources">
+        <option value="none" data-source="none" disabled selected>Select a Source</option>
+        {{#sources}}{{> source-list}}{{/sources}}
+      </select>
+    </div>
+  </div>
   <div class="process-selector">
     <div class="switch-group">
       <input type="radio" id="switch-train" name="process" value="train" />

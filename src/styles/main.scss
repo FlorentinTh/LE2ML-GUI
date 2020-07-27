@@ -147,7 +147,7 @@ input[type='file']::-webkit-file-upload-button {
 .loading {
   font-style: italic;
   i {
-    animation: rotate 1s linear infinite;
+    animation: fa-spin 1.5s linear infinite;
   }
 }
 
@@ -203,6 +203,16 @@ input[type='file']::-webkit-file-upload-button {
     padding: 8px 16px;
     margin-right: -1px;
     width: 135px;
+
+    &.disabled {
+      @include themify($themes) {
+        color: themed('color-text-secondary');
+      }
+
+      &:hover {
+        cursor: default;
+      }
+    }
 
     &:first-of-type {
       border-radius: 4px 0 0 4px;

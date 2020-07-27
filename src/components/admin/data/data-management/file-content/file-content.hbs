@@ -1,0 +1,33 @@
+<h1>{{title}}</h1>
+
+<div class="file-content-wrapper">
+  <div class="form-elems source-select">
+    <div class="form-elem inline">
+      <span class="label-container">
+        <label for="source">Source</label>
+      </span>
+      <select id="sources">
+        <option disabled selected>Select a Data Source</option>
+        {{#sources}}{{> source-list}}{{/sources}}
+      </select>
+    </div>
+  </div>
+  <div class="form-elems label-large">
+    <div class="form-elem inline inline-large disabled">
+      <span class="label-container">
+        <label for="file">File</label>
+      </span>
+      <select class="no-caps" id="file" disabled>
+        <option value="none" disabled selected>Select a file</option>
+        <optgroup id="raw" label="Raw Datasets">
+          {{#raw-files}}{{> file-list}}{{/raw-files}}
+        </optgroup>
+        <optgroup id="features" label="Features Datasets">
+          {{#features-files}}{{> file-list}}{{/features-files}}
+        </optgroup>
+      </select>
+    </div>
+  </div>
+  <div id="att-content">
+  </div>
+</div>

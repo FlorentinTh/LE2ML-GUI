@@ -1,5 +1,5 @@
-import dataSourceTemplate from './data-source.hbs';
 import Task from '../Task';
+import dataSourceTemplate from './data-source.hbs';
 import FileList from '@FileList';
 import websocketTemplate from './websocket.hbs';
 import axios from 'axios';
@@ -16,6 +16,7 @@ class DataSource extends Task {
   constructor(context) {
     super(context);
     this.context = context;
+    this.title = 'Input Source';
     this.make();
   }
 
@@ -35,32 +36,36 @@ class DataSource extends Task {
     }
   }
 
-  initFileList(filename, fileType) {
+  initFileList(filename, inputType) {
     const fileList = new FileList(
       inputContent,
-      fileType === 'raw' ? 'Existing Raw Datasets' : 'Existing Features Datasets',
+      inputType === 'raw' ? 'Existing Raw Datasets' : 'Existing Features Datasets',
       [],
       'input-content',
       filename || null
     );
 
-    getFiles('/files?type=' + fileType, this.context).then(response => {
-      if (response) {
-        const dataStore = Store.get(fileType + '-file-data');
+    const storedDataSource = sessionStorage.getItem('data-source');
 
-        if (!(dataStore === undefined)) {
-          Store.remove(fileType + '-file-data');
+    getFiles(`/files?source=${storedDataSource}&type=${inputType}`, this.context).then(
+      response => {
+        if (response) {
+          const dataStore = Store.get(inputType + '-file-data');
+
+          if (!(dataStore === undefined)) {
+            Store.remove(inputType + '-file-data');
+          }
+
+          Store.add({
+            id: inputType + '-file-data',
+            data: response.data
+          });
+
+          fileList.setData(response.data);
+          fileList.make();
         }
-
-        Store.add({
-          id: fileType + '-file-data',
-          data: response.data
-        });
-
-        fileList.setData(response.data);
-        fileList.make();
       }
-    });
+    );
 
     return fileList;
   }
@@ -76,10 +81,10 @@ class DataSource extends Task {
     return false;
   }
 
-  makeInputFile(fileType) {
+  makeInputFile(inputType) {
     const file = sessionStorage.getItem('input-content');
 
-    if (fileType === 'raw') {
+    if (inputType === 'raw') {
       sessionStorage.setItem('input-type', 'raw-file');
       super.clearNavButton('next');
       super.initNavBtn('next', { label: 'windowing', Task: Windowing });
@@ -94,7 +99,7 @@ class DataSource extends Task {
       super.initNavBtn('next', { label: 'process', Task: Learning });
     }
 
-    const dataStore = Store.get(fileType + '-file-data');
+    const dataStore = Store.get(inputType + '-file-data');
 
     let filename;
     if (!(file === null)) {
@@ -103,11 +108,11 @@ class DataSource extends Task {
 
     let fileList;
     if (dataStore === undefined) {
-      fileList = this.initFileList(filename, fileType);
+      fileList = this.initFileList(filename, inputType);
       fileList.on('build', result => {
         if (result) {
           if (this.containsSelected()) {
-            if (fileType === 'features') {
+            if (inputType === 'features') {
               super.toggleNavItemsEnabled(['process'], true);
             } else {
               super.toggleNavItemsEnabled(
@@ -128,7 +133,7 @@ class DataSource extends Task {
     } else {
       fileList = new FileList(
         inputContent,
-        fileType === 'raw' ? 'Existing Raw Datasets' : 'Existing Features Datasets',
+        inputType === 'raw' ? 'Existing Raw Datasets' : 'Existing Features Datasets',
         dataStore.data,
         'input-content',
         filename || null,
@@ -136,7 +141,7 @@ class DataSource extends Task {
       );
 
       if (this.containsSelected()) {
-        if (fileType === 'features') {
+        if (inputType === 'features') {
           super.toggleNavItemsEnabled(['process'], true);
         } else {
           super.toggleNavItemsEnabled(
@@ -155,7 +160,7 @@ class DataSource extends Task {
     }
 
     fileList.on('selected', result => {
-      if (fileType === 'features') {
+      if (inputType === 'features') {
         super.toggleNavItemsEnabled(['process'], result);
       } else {
         super.toggleNavItemsEnabled(
@@ -192,7 +197,7 @@ class DataSource extends Task {
 
   make() {
     this.context.innerHTML = dataSourceTemplate({
-      title: 'Data Source'
+      title: this.title
     });
 
     super.initNavBtn('previous', { label: 'select-process', Task: SelectProcess });
@@ -200,7 +205,22 @@ class DataSource extends Task {
     inputContent = this.context.querySelector('.input-content');
 
     const inputTypeSwitch = this.context.querySelectorAll('.switch-group input');
-    const storedInput = sessionStorage.getItem('input-type');
+
+    const storedProcess = sessionStorage.getItem('process-type');
+
+    let storedInput = sessionStorage.getItem('input-type');
+
+    if (storedProcess === 'none') {
+      inputTypeSwitch[1].setAttribute('disabled', true);
+
+      const label = this.context.querySelector('label[for=switch-feature-file]');
+      label.classList.add('disabled');
+
+      if (storedInput) {
+        sessionStorage.removeItem('input-type');
+        storedInput = sessionStorage.getItem('input-type');
+      }
+    }
 
     if (!storedInput) {
       inputTypeSwitch[0].setAttribute('checked', true);

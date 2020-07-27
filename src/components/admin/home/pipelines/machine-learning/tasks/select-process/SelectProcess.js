@@ -1,5 +1,6 @@
 import Task from '../Task';
 import selectProcessTemplate from './select-process.hbs';
+import sourceListTemplate from './source-list.hbs';
 import trainingProcessTemplate from './training-process.hbs';
 import FileList from '@FileList';
 import axios from 'axios';
@@ -10,15 +11,104 @@ import DataSource from '../data-source/DataSource';
 import Configuration from '@Configuration';
 import dayjs from 'dayjs';
 
+let allSources;
 let processContainer;
 let fileList;
 let modelNameInput;
+
+let importFileInputChange;
+let importFileFormSubmit;
+let processSwitchChange;
 
 class SelectProcess extends Task {
   constructor(context) {
     super(context);
     this.context = context;
-    this.make();
+    this.title = 'Learning Process to Complete';
+    this.dataSource = undefined;
+    this.initData();
+  }
+
+  initData() {
+    const storedSources = Store.get('home-data-sources');
+
+    if (storedSources === undefined) {
+      this.render(true);
+
+      getSources('/sources', this.context).then(response => {
+        if (response) {
+          allSources = response.data.sources;
+
+          Store.add({
+            id: 'home-data-sources',
+            data: allSources
+          });
+
+          this.make();
+        }
+      });
+    } else {
+      allSources = storedSources.data;
+      this.make();
+    }
+  }
+
+  render(loading = true) {
+    this.context.innerHTML = selectProcessTemplate({
+      title: this.title
+    });
+
+    this.buildSourceList('#sources', loading);
+  }
+
+  buildSourceList(id, loading = true) {
+    const select = this.context.querySelector(id);
+    select.innerHTML += sourceListTemplate({
+      sources: allSources,
+      loading: loading
+    });
+  }
+
+  make() {
+    this.render(false);
+
+    const sourceSelect = this.context.querySelector('#sources');
+
+    const storedDataSource = sessionStorage.getItem('data-source');
+    if (storedDataSource === null) {
+      this.dataSource = sourceSelect.options[sourceSelect.selectedIndex].value;
+      sessionStorage.setItem('data-source', this.dataSource);
+    } else {
+      for (let i = 0; i < sourceSelect.options.length; ++i) {
+        const option = sourceSelect.options[i];
+        if (!(option === 'none') && option.value === storedDataSource) {
+          option.selected = true;
+          this.dataSource = option.value;
+        }
+      }
+    }
+
+    importFileInputChange = ['change', this.importFileInputListener.bind(this), false];
+    importFileFormSubmit = ['submit', this.importFileUploadEventSubmit.bind(this), false];
+    processSwitchChange = ['change', this.processSwitchHandler.bind(this), false];
+
+    this.makeSelectProcess();
+
+    sourceSelect.addEventListener('change', this.sourceChangeHandler.bind(this), false);
+  }
+
+  sourceChangeHandler(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this.dataSource = event.target.value;
+    sessionStorage.setItem('data-source', this.dataSource);
+
+    const dataStore = Store.get('model-data');
+    if (!(dataStore === undefined)) {
+      Store.remove('model-data');
+    }
+
+    this.makeSelectProcess();
   }
 
   makeProcessTest() {
@@ -65,17 +155,19 @@ class SelectProcess extends Task {
         filename || null
       );
 
-      getFiles('/files?type=models', this.context).then(response => {
-        if (response) {
-          Store.add({
-            id: 'model-data',
-            data: response.data
-          });
+      getFiles(`/files?source=${this.dataSource}&type=models`, this.context).then(
+        response => {
+          if (response) {
+            Store.add({
+              id: 'model-data',
+              data: response.data
+            });
 
-          fileList.setData(response.data);
-          fileList.make();
+            fileList.setData(response.data);
+            fileList.make();
+          }
         }
-      });
+      );
     } else {
       const context = this.context.querySelector('.process-options');
       fileList = new FileList(
@@ -228,12 +320,18 @@ class SelectProcess extends Task {
   }
 
   applyConfigHandler(conf) {
+    const sources = this.context.querySelector('#sources');
+    for (let i = 0; i < sources.length; ++i) {
+      if (sources[i].value === conf.source) {
+        sources[i].selected = true;
+      }
+    }
+
     const radios = this.context.querySelectorAll('.switch-group input[type=radio]');
 
     for (let i = 0; i < radios.length; ++i) {
-      const radio = radios[i];
-      if (radio.value === conf.process) {
-        radio.click();
+      if (radios[i].value === conf.process) {
+        radios[i].click();
       }
     }
 
@@ -338,11 +436,7 @@ class SelectProcess extends Task {
     }
   }
 
-  make() {
-    this.context.innerHTML = selectProcessTemplate({
-      title: 'Learning Process to Complete'
-    });
-
+  makeSelectProcess() {
     const importFileInput = this.context.querySelector('input#import-config');
     const importFileForm = this.context.querySelector('form');
 
@@ -353,22 +447,20 @@ class SelectProcess extends Task {
       false
     );
 
-    importFileInput.addEventListener(
-      'change',
-      this.importFileInputListener.bind(this),
-      false
-    );
+    importFileInput.removeEventListener(...importFileInputChange);
+    importFileInput.addEventListener(...importFileInputChange);
 
-    importFileForm.addEventListener(
-      'submit',
-      this.importFileUploadEventSubmit.bind(this),
-      false
-    );
+    importFileForm.removeEventListener(...importFileFormSubmit);
+    importFileForm.addEventListener(...importFileFormSubmit);
 
     processContainer = this.context.querySelector('.process-options');
 
     const processSwitchInputs = this.context.querySelectorAll('.switch-group input');
     const storedProcess = sessionStorage.getItem('process-type');
+
+    if (!storedProcess) {
+      processSwitchInputs[0].setAttribute('checked', true);
+    }
 
     for (let i = 0; i < processSwitchInputs.length; ++i) {
       const radio = processSwitchInputs[i];
@@ -379,12 +471,24 @@ class SelectProcess extends Task {
         }
       }
 
-      radio.addEventListener('change', this.processSwitchHandler.bind(this), false);
+      radio.removeEventListener(...processSwitchChange);
+      radio.addEventListener(...processSwitchChange);
 
       if (radio.checked) {
         this.switchProcessContent(radio.value);
       }
     }
+  }
+}
+
+async function getSources(url, context) {
+  try {
+    const response = await axios.get(url, {
+      headers: APIHelper.setAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    APIHelper.errorsHandler(error, true);
   }
 }
 

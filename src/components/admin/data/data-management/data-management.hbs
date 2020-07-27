@@ -1,39 +1,16 @@
 <h1>{{title}}</h1>
 
-<div class="file-content-wrapper">
-  <div class="form-elems">
-    <div class="form-elem inline inline-large">
-      <span class="label-container">
-        <label for="file">File</label>
-      </span>
-      <select class="no-caps" id="file">
-        <option value="none" disabled selected>Select a file</option>
-        <optgroup id="raw" label="Raw Datasets">
-          {{#raw-files}}{{> file-list}}{{/raw-files}}
-        </optgroup>
-        <optgroup id="features" label="Features Datasets">
-          {{#features-files}}{{> file-list}}{{/features-files}}
-        </optgroup>
-      </select>
+<div class="grid-settings">
+  <div class="grid-item">
+    <div class="content">
+      <i class="fas fa-align-left"></i>
+      <a href="#file-content">File Content</a>
     </div>
   </div>
-  <div class="grid-container" id="attributes">
-    <h2>
-      {{~#[utils/compare] total '===' 1~}}
-      Attribute
-      {{~else~}}
-      Attributes
-      {{~/[utils/compare]~}}
-      <span class="badge badge-right">{{total}}</span>
-    </h2>
-    <div class="grid-attributes">
-      {{#attributes}}{{> attribute-list}}{{/attributes}}
+  <div class="grid-item item-disabled">
+    <div class="content">
+      <i class="fas fa-shapes"></i>
+      <a href="#data-fusion">Data Fusion</a>
     </div>
-  </div>
-  <div class="save-btn">
-    <button class="disabled" id="save" disabled>
-      Save file
-      <i class="fas fa-file-download"></i>
-    </button>
   </div>
 </div>

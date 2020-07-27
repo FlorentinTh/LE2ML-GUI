@@ -72,7 +72,7 @@ class Features extends Task {
       throw new Error('Argument features must be an Array.');
     }
 
-    for (let i = 0; i < featureItems.length; i++) {
+    for (let i = 0; i < featureItems.length; ++i) {
       const item = featureItems[i];
 
       const featureName = item.dataset.container + '.' + item.dataset.slug;

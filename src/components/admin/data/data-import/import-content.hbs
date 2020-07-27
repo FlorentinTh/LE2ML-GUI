@@ -1,0 +1,36 @@
+<div class="description">
+</div>
+<div class="switch-group switch-large">
+  <input type="radio" id="switch-raw" name="files" value="raw" checked />
+  <label for="switch-raw">
+    <i class="fas fa-file-alt"></i>
+    Raw
+  </label>
+  <input type="radio" id="switch-features" name="files" value="features" />
+  <label for="switch-features">
+    <i class="fas fa-square-root-alt"></i>
+    Features
+  </label>
+</div>
+<div class="upload-wrapper">
+  <div class="file-upload-container">
+    <form method="POST" enctype="multipart/form-data">
+      <input type="file" id="file-input" name="file-input">
+      <label id="file-upload-label" for="file-input">
+        <div class="infos">
+          <i class="fas fa-upload"></i>
+          <p>Drag and drop or click to upload a file</p>
+          <p></p>
+        </div>
+        <button type="submit">Upload</button>
+        <div class="progress-container">
+          <p id="value"></p>
+          <progress class="progress" max="100"></progress>
+          <p id="cancel">
+            <a href="#">Cancel</a>
+          </p>
+        </div>
+      </label>
+    </form>
+  </div>
+</div>

@@ -1,12 +1,23 @@
 <h1>{{title}}</h1>
 
 <div class="data-viz-wrapper">
-  <div class="form-elems">
+  <div class="form-elems source-select">
     <div class="form-elem inline">
+      <span class="label-container">
+        <label for="source">Source</label>
+      </span>
+      <select id="sources">
+        <option disabled selected>Select a Data Source</option>
+        {{#sources}}{{> source-list}}{{/sources}}
+      </select>
+    </div>
+  </div>
+  <div class="form-elems label-large">
+    <div class="form-elem inline disabled">
       <span class="label-container">
         <label for="file">File</label>
       </span>
-      <select class="no-caps" id="file">
+      <select class="no-caps" id="file" disabled>
         <option disabled selected>Select a file</option>
         <optgroup id="raw" label="Raw Datasets">
           {{#raw-files}}{{> file-list}}{{/raw-files}}
@@ -16,11 +27,11 @@
         </optgroup>
       </select>
     </div>
-    <div class="form-elem inline">
+    <div class="form-elem inline disabled">
       <span class="label-container">
-        <label for="attribute">Att.</label>
+        <label for="attribute">Attribute</label>
       </span>
-      <select class="no-caps" id="attribute">
+      <select class="no-caps" id="attribute" disabled>
         <option disabled selected>Select an attribute</option>
         {{#attributes}}{{> attribute-list}}{{/attributes}}
       </select>

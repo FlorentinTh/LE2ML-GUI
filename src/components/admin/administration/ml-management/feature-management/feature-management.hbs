@@ -1,0 +1,15 @@
+<h1>{{title}}</h1>
+<div class="form-elems source-select">
+  <div class="form-elem inline">
+    <span class="label-container">
+      <label for="source">Source</label>
+    </span>
+    <select id="sources">
+      <option disabled selected>Select a Data Source</option>
+      {{#sources}}{{> source-list}}{{/sources}}
+    </select>
+  </div>
+</div>
+
+<div class="grid-container" id="features">
+</div>

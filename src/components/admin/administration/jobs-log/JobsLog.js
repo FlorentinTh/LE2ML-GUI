@@ -35,7 +35,7 @@ class JobsLog extends Component {
           const data = response.data;
           const dataArr = [];
 
-          for (let i = 0; i < data.length; i++) {
+          for (let i = 0; i < data.length; ++i) {
             dataArr.push(JSON.parse(data[i]));
           }
           logEntries = dataArr;
@@ -128,7 +128,7 @@ class JobsLog extends Component {
               const data = response.data;
               const dataArr = [];
 
-              for (let i = 0; i < data.length; i++) {
+              for (let i = 0; i < data.length; ++i) {
                 dataArr.push(JSON.parse(data[i]));
               }
 

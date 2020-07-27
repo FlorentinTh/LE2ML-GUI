@@ -1,5 +1,5 @@
 import Component from '@Component';
-import featureManagementTemplate from './feature-management.hbs';
+import featureContentTemplate from './feature-content.hbs';
 import featureListTemplate from './feature-list.hbs';
 import formFeatureTemplate from './form-feature.hbs';
 import Store from '@Store';
@@ -12,30 +12,28 @@ import Search from '@Search';
 let allFeatures;
 let featuresFilters;
 
-class FeatureManagement extends Component {
-  constructor(reload = false, context = null) {
+class FeatureContent extends Component {
+  constructor(dataSource, reload = false, context = null) {
     super(context);
-    this.title = 'Manage Features';
+    this.dataSource = dataSource;
     this.isFiltersDisabled = false;
     this.reload = reload;
     this.mount();
   }
 
   mount() {
-    const menu = Store.get('menu-admin').data;
-    menu.setActive('administration');
     this.initData();
   }
 
   initData() {
-    const featureStore = Store.get('features');
+    const featureStore = Store.get('feature-content');
 
     if (this.reload || featureStore === undefined) {
       this.initView(true);
-      getFeatures('/features', this.context).then(response => {
+      getFeatures(`/features?source=${this.dataSource}`, this.context).then(response => {
         if (response) {
           Store.add({
-            id: 'features',
+            id: 'feature-content',
             data: response.data
           });
           allFeatures = response.data;
@@ -49,8 +47,7 @@ class FeatureManagement extends Component {
 
   initView(loading = false) {
     const total = allFeatures === undefined ? 0 : allFeatures.total;
-    this.context.innerHTML = featureManagementTemplate({
-      title: this.title,
+    this.context.innerHTML = featureContentTemplate({
       total: total
     });
 
@@ -80,7 +77,7 @@ class FeatureManagement extends Component {
   }
 
   buildFeatureList(id, opts = { defaultSort: true, loading: false }) {
-    const container = document.querySelector(id + ' > .grid-features');
+    const container = document.querySelector('.grid-features');
 
     let features;
     if (opts.loading) {
@@ -139,9 +136,6 @@ class FeatureManagement extends Component {
     const content = formFeatureTemplate();
     const elems = ['label', 'domain', 'container', 'enabled'];
 
-    const sourceSelect = this.context.querySelector('#source');
-    const sourceValue = sourceSelect.options[sourceSelect.selectedIndex].value;
-
     ModalHelper.edit('Add a new feature', content, 'add', elems).then(result => {
       if (result.value) {
         const data = {
@@ -149,7 +143,7 @@ class FeatureManagement extends Component {
           domain: result.value.domain,
           container: result.value.container,
           enabled: result.value.enabled === 'true',
-          source: sourceValue.toLowerCase()
+          source: this.dataSource.toLowerCase()
         };
 
         addFeature('/features', data, this.context).then(response => {
@@ -160,7 +154,7 @@ class FeatureManagement extends Component {
             );
             this.removeTaskFeatureListStore();
             // eslint-disable-next-line no-new
-            new FeatureManagement(true);
+            new FeatureContent(this.dataSource, true, '#features');
           }
         });
       }
@@ -229,7 +223,7 @@ class FeatureManagement extends Component {
                 );
                 this.removeTaskFeatureListStore();
                 // eslint-disable-next-line no-new
-                new FeatureManagement(true);
+                new FeatureContent(this.dataSource, true, '#features');
               }
             });
           }
@@ -279,7 +273,7 @@ class FeatureManagement extends Component {
                   ModalHelper.notification('success', confirmMessage);
                   this.removeTaskFeatureListStore();
                   // eslint-disable-next-line no-new
-                  new FeatureManagement(true);
+                  new FeatureContent(this.dataSource, true, '#features');
                 }
               }
             );
@@ -311,7 +305,7 @@ class FeatureManagement extends Component {
                 );
                 this.removeTaskFeatureListStore();
                 // eslint-disable-next-line no-new
-                new FeatureManagement(true);
+                new FeatureContent(this.dataSource, true, '#features');
               }
             });
           }
@@ -378,4 +372,4 @@ async function deleteFeature(url, context) {
   }
 }
 
-export default FeatureManagement;
+export default FeatureContent;

@@ -210,7 +210,7 @@ class WindowingManagement extends Component {
           result => {
             if (result.value) {
               const data = result.value;
-              updateFunction('/windows/' + funcId, data, this.context).then(response => {
+              update('/windows/' + funcId, data, this.context).then(response => {
                 if (response) {
                   ModalHelper.notification(
                     'success',
@@ -264,7 +264,7 @@ class WindowingManagement extends Component {
             const confirmMessage = func.enabled
               ? func.label + ' is now disabled.'
               : func.label + ' is now enabled.';
-            updateState('/windows/state/' + funcId, data, this.context).then(response => {
+            update('/windows/state/' + funcId, data, this.context).then(response => {
               if (response) {
                 ModalHelper.notification('success', confirmMessage);
                 this.removeTaskWindowTypeStore();
@@ -332,18 +332,7 @@ async function addFunction(url, data, context) {
   }
 }
 
-async function updateFunction(url, data, context) {
-  try {
-    const response = await axios.post(url, data, {
-      headers: APIHelper.setAuthHeader()
-    });
-    return response.data;
-  } catch (error) {
-    APIHelper.errorsHandler(error, true);
-  }
-}
-
-async function updateState(url, data, context) {
+async function update(url, data, context) {
   try {
     const response = await axios.post(url, data, {
       headers: APIHelper.setAuthHeader()

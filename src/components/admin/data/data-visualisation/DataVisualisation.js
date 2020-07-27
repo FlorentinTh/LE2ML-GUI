@@ -1,6 +1,7 @@
 import Component from '@Component';
 import dataVizTemplate from './data-visualisation.hbs';
 import fileListTemplate from './file-list.hbs';
+import sourceListTemplate from './source-list.hbs';
 import attributeListTemplate from './attribute-list.hbs';
 import Store from '@Store';
 import axios from 'axios';
@@ -9,6 +10,8 @@ import SortHelper from '@SortHelper';
 import ChartHelper from '@ChartHelper';
 import ModalHelper from '@ModalHelper';
 
+let allSources;
+let sourceSelect;
 let rawFiles;
 let featuresFiles;
 let attributes;
@@ -17,6 +20,7 @@ class DataVisualisation extends Component {
   constructor(context = null) {
     super(context);
     this.title = 'Data Visualisation';
+    this.dataSource = undefined;
     this.selectedFile = null;
     this.selectedFileType = null;
     this.selectedAttribute = null;
@@ -26,51 +30,119 @@ class DataVisualisation extends Component {
   mount() {
     const menu = Store.get('menu-admin').data;
     menu.setActive('data');
+    this.initData();
+  }
+
+  initData() {
+    const storedSources = Store.get('data-viz-sources');
+
+    if (storedSources === undefined) {
+      this.render(true);
+
+      getSources('/sources', this.context).then(response => {
+        if (response) {
+          allSources = response.data.sources;
+
+          Store.add({
+            id: 'data-viz-sources',
+            data: allSources
+          });
+
+          this.make();
+        }
+      });
+    } else {
+      allSources = storedSources.data;
+      this.make();
+    }
+  }
+
+  render(loading = true) {
+    this.context.innerHTML = dataVizTemplate({
+      title: this.title
+    });
+
+    this.buildSourceList('#sources', loading);
+  }
+
+  buildSourceList(id, loading = true) {
+    const select = this.context.querySelector(id);
+    select.innerHTML += sourceListTemplate({
+      sources: allSources,
+      loading: loading
+    });
+  }
+
+  make() {
+    this.render(false);
+
+    sourceSelect = this.context.querySelector('#sources');
+    this.dataSource = sourceSelect.options[sourceSelect.selectedIndex].value;
+
+    sourceSelect.addEventListener('change', this.sourceChangeHandler.bind(this), false);
+
     this.initFileData();
   }
 
-  initFileData() {
+  sourceChangeHandler(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this.dataSource = event.target.value;
+    this.initFileData(true);
+  }
+
+  initFileData(refresh = false) {
     const rawStore = Store.get('raw-files');
     const featuredStore = Store.get('features-files');
 
     if (rawStore === undefined || featuredStore === undefined) {
       this.renderFileList(true);
 
-      getFiles('/files?type=raw', this.context).then(response => {
-        if (response) {
-          rawFiles = SortHelper.sortArrayAlpha(response.data, 'filename', 'asc');
+      getFiles(`/files?source=${this.dataSource}&type=raw`, this.context).then(
+        response => {
+          if (response) {
+            rawFiles = SortHelper.sortArrayAlpha(response.data, 'filename', 'asc');
 
-          Store.add({
-            id: 'raw-files',
-            data: rawFiles
-          });
+            Store.add({
+              id: 'raw-files',
+              data: rawFiles
+            });
 
-          getFiles('/files?type=features', this.context).then(response => {
-            if (response) {
-              featuresFiles = SortHelper.sortArrayAlpha(response.data, 'filename', 'asc');
+            getFiles(`/files?source=${this.dataSource}&type=features`, this.context).then(
+              response => {
+                if (response) {
+                  featuresFiles = SortHelper.sortArrayAlpha(
+                    response.data,
+                    'filename',
+                    'asc'
+                  );
 
-              Store.add({
-                id: 'features-files',
-                data: featuresFiles
-              });
+                  Store.add({
+                    id: 'features-files',
+                    data: featuresFiles
+                  });
 
-              this.make();
-            }
-          });
+                  this.makeContent();
+                }
+              }
+            );
+          }
         }
-      });
+      );
     } else {
-      rawFiles = rawStore.data;
-      featuresFiles = featuredStore.data;
-      this.make();
+      if (!refresh) {
+        rawFiles = rawStore.data;
+        featuresFiles = featuredStore.data;
+        this.makeContent();
+      } else {
+        Store.remove('raw-files');
+        Store.remove('features-files');
+        this.initFileData();
+      }
     }
   }
 
   renderFileList(loading = true) {
-    this.context.innerHTML = dataVizTemplate({
-      title: this.title
-    });
-
     this.buildFileList('#raw', loading);
     this.buildFileList('#features', loading);
   }
@@ -83,6 +155,10 @@ class DataVisualisation extends Component {
       files: files,
       loading: loading
     });
+
+    const selectFile = this.context.querySelector('select#file');
+    selectFile.removeAttribute('disabled');
+    selectFile.parentNode.classList.remove('disabled');
   }
 
   fileSelectHandler(event) {
@@ -117,7 +193,7 @@ class DataVisualisation extends Component {
     this.renderAttributeList(true);
 
     getFileHeaders(
-      `/files/headers/${this.selectedFile}?type=${this.selectedFileType}`,
+      `/files/headers/${this.selectedFile}?source=${this.dataSource}&type=${this.selectedFileType}`,
       this.context
     ).then(response => {
       if (response) {
@@ -147,18 +223,22 @@ class DataVisualisation extends Component {
     this.selectedAttribute = event.target.value;
 
     const selectFile = this.context.querySelector('select#file');
-    const selectAttribute = this.context.querySelector('select#attribute');
-
     selectFile.setAttribute('disabled', true);
     selectFile.parentNode.classList.add('disabled');
+
+    const selectAttribute = this.context.querySelector('select#attribute');
     selectAttribute.setAttribute('disabled', true);
     selectAttribute.parentNode.classList.add('disabled');
+
+    const selectSource = this.context.querySelector('select#sources');
+    selectSource.setAttribute('disabled', true);
+    selectSource.parentNode.classList.add('disabled');
 
     ChartHelper.initChart(this.selectedAttribute);
 
     axios
       .get(
-        `/files/stream/data/${this.selectedFile}?type=${this.selectedFileType}&att=${this.selectedAttribute}`,
+        `/files/stream/data/${this.selectedFile}?source=${this.dataSource}&type=${this.selectedFileType}&att=${this.selectedAttribute}`,
         {
           headers: APIHelper.setAuthHeader(),
           onDownloadProgress: progressEvent => {
@@ -186,8 +266,13 @@ class DataVisualisation extends Component {
           }
           selectFile.removeAttribute('disabled');
           selectFile.parentNode.classList.remove('disabled');
+
           selectAttribute.removeAttribute('disabled');
           selectAttribute.parentNode.classList.remove('disabled');
+
+          selectSource.removeAttribute('disabled');
+          selectSource.parentNode.classList.remove('disabled');
+
           ChartHelper.chartDone(this.selectedAttribute);
         }
       })
@@ -197,21 +282,46 @@ class DataVisualisation extends Component {
       });
   }
 
-  make() {
+  makeContent() {
     this.renderFileList(false);
 
     const fileSelect = this.context.querySelector('select#file');
-    fileSelect.addEventListener('change', this.fileSelectHandler.bind(this), false);
-
     const attributeSelect = this.context.querySelector('select#attribute');
+
+    if (rawFiles.length === 0 && featuresFiles.length === 0) {
+      fileSelect.options[1].selected = true;
+      this.selectedFile = null;
+      this.selectedFileType = null;
+      fileSelect.setAttribute('disabled', true);
+      fileSelect.parentNode.classList.add('disabled');
+      this.selectAttribute = null;
+      attributeSelect.options[0].selected = true;
+      ChartHelper.clearChart();
+      Store.remove('raw-files');
+      Store.remove('features-files');
+    } else {
+      fileSelect.addEventListener('change', this.fileSelectHandler.bind(this), false);
+
+      attributeSelect.addEventListener(
+        'change',
+        this.attributeSelectHandler.bind(this),
+        false
+      );
+    }
+
     attributeSelect.setAttribute('disabled', true);
     attributeSelect.parentNode.classList.add('disabled');
+  }
+}
 
-    attributeSelect.addEventListener(
-      'change',
-      this.attributeSelectHandler.bind(this),
-      false
-    );
+async function getSources(url, context) {
+  try {
+    const response = await axios.get(url, {
+      headers: APIHelper.setAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    APIHelper.errorsHandler(error, true);
   }
 }
 
