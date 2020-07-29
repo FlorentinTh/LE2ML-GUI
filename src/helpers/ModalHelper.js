@@ -98,12 +98,13 @@ class ModalHelper {
     confirmText = 'Yes',
     cancelText = 'No',
     cancelable = true,
-    esc = true
+    esc = true,
+    icon = 'warning'
   ) {
     return Swal.fire({
       title: title,
       text: message,
-      icon: 'warning',
+      icon: icon,
       position: 'top',
       confirmButtonText: confirmText,
       showCancelButton: cancelable,

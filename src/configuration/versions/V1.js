@@ -34,7 +34,7 @@ class V1 {
       result.windowing = {
         ...result.windowing,
         parameters: {
-          length: Number(values['windowing-length']),
+          length: values['windowing-length'] + values['windowing-unit'],
           function: {
             label: values['windowing-function-label'],
             container: values['windowing-function-container']
@@ -127,7 +127,12 @@ class V1 {
 
     if (isWindowingEnable) {
       const windowingParams = this.config.windowing.parameters;
-      sessionStorage.setItem('windowing-length', windowingParams.length);
+      sessionStorage.setItem(
+        'windowing-length',
+        windowingParams.length.replace(/\D/g, '')
+      );
+
+      sessionStorage.setItem('windowing-unit', windowingParams.unit);
       const functionLabel = windowingParams.function.label;
       sessionStorage.setItem('windowing-function-label', functionLabel);
       sessionStorage.setItem(

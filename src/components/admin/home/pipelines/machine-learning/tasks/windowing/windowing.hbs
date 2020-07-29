@@ -18,10 +18,23 @@
         <span class="label-container">
           <label for="window-length">Length</label>
         </span>
+        <span class="info" id="window-length-info">
+          <i class="fas fa-info-circle"></i>
+        </span>
         <input type="number" id="window-length" name="length" value="0" autocomplete="false"
           placeholder="Enter the size of the window">
       </div>
-      <div class="form-elem inline">
+      <div class="form-elem inline caps">
+        <span class="label-container">
+          <label for="window-unit">Unit</label>
+        </span>
+        <select id="window-unit">
+          <option value="Hz">hz</option>
+          <option value="s" disabled>seconds</option>
+          <option value="m" disabled>minutes</option>
+        </select>
+      </div>
+      <div class="form-elem inline caps">
         <span class="label-container">
           <label for="window-length">Func</label>
         </span>
