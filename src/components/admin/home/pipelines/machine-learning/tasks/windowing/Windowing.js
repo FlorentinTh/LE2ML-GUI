@@ -221,7 +221,7 @@ class Windowing extends Task {
     const storedValue = sessionStorage.getItem('windowing-function-label');
     const options = windowType.options;
 
-    if (storedValue) {
+    if (storedValue && !(storedValue === 'none')) {
       for (let i = 0; i < options.length; ++i) {
         const option = options[i];
         const optValue = option.value.split('.')[1];
