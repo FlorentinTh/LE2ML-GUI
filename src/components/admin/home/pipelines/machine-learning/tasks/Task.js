@@ -330,7 +330,7 @@ class Task {
               }
 
               axios
-                .post('/files/convert/conf' + urlParams, JSONConf, {
+                .post('/files/conf/convert' + urlParams, JSONConf, {
                   headers: APIHelper.setAuthHeader()
                 })
                 .then(response => {

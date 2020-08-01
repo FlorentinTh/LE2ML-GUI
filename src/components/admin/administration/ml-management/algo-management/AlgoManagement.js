@@ -254,7 +254,7 @@ class AlgoManagement extends Component {
     const id = selectedConfInput.closest('#algo-infos').dataset.algo;
 
     axios
-      .post(`/files/import/conf?id=${id}&algo=${algo}&container=${container}`, data, {
+      .post(`/files/conf/import?id=${id}&algo=${algo}&container=${container}`, data, {
         headers: APIHelper.setAuthHeader()
       })
       .then(response => {

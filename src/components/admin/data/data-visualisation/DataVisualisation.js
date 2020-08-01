@@ -193,7 +193,7 @@ class DataVisualisation extends Component {
     this.renderAttributeList(true);
 
     getFileHeaders(
-      `/files/headers/${this.selectedFile}?source=${this.dataSource}&type=${this.selectedFileType}`,
+      `/files/${this.selectedFile}/headers?source=${this.dataSource}&type=${this.selectedFileType}`,
       this.context
     ).then(response => {
       if (response) {
@@ -238,7 +238,7 @@ class DataVisualisation extends Component {
 
     axios
       .get(
-        `/files/stream/data/${this.selectedFile}?source=${this.dataSource}&type=${this.selectedFileType}&att=${this.selectedAttribute}`,
+        `/files/${this.selectedFile}/stream?source=${this.dataSource}&type=${this.selectedFileType}&att=${this.selectedAttribute}`,
         {
           headers: APIHelper.setAuthHeader(),
           onDownloadProgress: progressEvent => {

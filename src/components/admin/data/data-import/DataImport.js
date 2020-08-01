@@ -243,7 +243,7 @@ class DataImport extends Component {
 
     axios
       .post(
-        `/files/upload/${this.dataSource}?type=${fileType}&override=${override}`,
+        `/files/${this.dataSource}/upload/?type=${fileType}&override=${override}`,
         data,
         {
           headers: APIHelper.setAuthHeader(),
@@ -323,7 +323,7 @@ class DataImport extends Component {
     const filename = Object.values(Object.fromEntries(formData))[0].name;
 
     axios
-      .get(`/files/exists/${filename}?source=${this.dataSource}&type=${fileType}`, {
+      .get(`/files/${filename}/exists?source=${this.dataSource}&type=${fileType}`, {
         headers: APIHelper.setAuthHeader()
       })
       .then(response => {

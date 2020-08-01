@@ -386,7 +386,7 @@ class SelectProcess extends Task {
     input.setAttribute('disabled', 'disabled');
 
     axios
-      .post('/files/import/conf', data, {
+      .post('/files/conf/import', data, {
         headers: APIHelper.setAuthHeader()
       })
       .then(response => {

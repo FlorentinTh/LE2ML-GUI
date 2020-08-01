@@ -62,7 +62,7 @@ class UserPassword extends Component {
         newPasswordConfirm: jsonData.newPasswordConfirm.trim()
       };
 
-      changePassword('/users/password/' + user._id, data, this.context).then(response => {
+      changePassword(`/users/${user._id}/password`, data, this.context).then(response => {
         if (response) {
           const inputs = changePasswordForm.querySelectorAll('input:not([type=email])');
           inputs.forEach(input => {

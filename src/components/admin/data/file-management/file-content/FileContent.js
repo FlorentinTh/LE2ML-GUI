@@ -256,7 +256,7 @@ class FileContent extends Component {
                 'Your download will begin automatically'
               );
               downloadFile(
-                `/files/download/${filename}?source=${this.dataSource}&type=${this.fileType}&from=${fileFormat}&to=${selectedFormat}`,
+                `/files/${filename}/download?source=${this.dataSource}&type=${this.fileType}&from=${fileFormat}&to=${selectedFormat}`,
                 this.context
               ).then(response => {
                 if (response) {

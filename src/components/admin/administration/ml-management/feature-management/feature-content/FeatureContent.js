@@ -267,7 +267,7 @@ class FeatureContent extends Component {
             const confirmMessage = feature.enabled
               ? feature.label + ' is now disabled.'
               : feature.label + ' is now enabled.';
-            updateState('/features/state/' + featureId, data, this.context).then(
+            updateState(`/features/${featureId}/state`, data, this.context).then(
               response => {
                 if (response) {
                   ModalHelper.notification('success', confirmMessage);

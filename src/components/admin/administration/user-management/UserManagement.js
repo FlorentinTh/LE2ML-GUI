@@ -276,7 +276,7 @@ class UserManagement extends Component {
                 ? 'Admin privileges revoked.'
                 : 'Admin privileges granted.';
 
-            updateRole('/admin/users/role/' + userId, data, this.context).then(
+            updateRole(`/admin/users/${userId}/role`, data, this.context).then(
               response => {
                 if (response) {
                   ModalHelper.notification('success', confirmMessage);

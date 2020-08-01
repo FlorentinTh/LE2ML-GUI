@@ -264,7 +264,7 @@ class WindowingManagement extends Component {
             const confirmMessage = func.enabled
               ? func.label + ' is now disabled.'
               : func.label + ' is now enabled.';
-            update('/windows/state/' + funcId, data, this.context).then(response => {
+            update(`/windows/${funcId}/state`, data, this.context).then(response => {
               if (response) {
                 ModalHelper.notification('success', confirmMessage);
                 this.removeTaskWindowTypeStore();

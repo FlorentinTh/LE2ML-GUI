@@ -179,9 +179,12 @@ class JobsLog extends Component {
 
     let eventSource;
     if (eventSourceStored === undefined) {
-      eventSource = new EventSource('https://localhost:3000/api/v1/jobs/admin/changes', {
-        headers: APIHelper.setAuthHeader()
-      });
+      eventSource = new EventSource(
+        window.env.API_URL + '/v' + window.env.API_VERSION + '/jobs/log/changes',
+        {
+          headers: APIHelper.setAuthHeader()
+        }
+      );
 
       Store.add({
         id: 'event-source-admin',

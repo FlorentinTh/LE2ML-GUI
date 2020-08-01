@@ -46,7 +46,7 @@ class AttributeContent extends Component {
 
     if (!(this.attributes.length > 0)) {
       getFileHeaders(
-        `/files/headers/${this.selectedFile}?source=${this.dataSource}&type=${this.selectedFileType}`,
+        `/files/${this.selectedFile}/headers?source=${this.dataSource}&type=${this.selectedFileType}`,
         this.context
       ).then(response => {
         if (response) {
@@ -103,7 +103,7 @@ class AttributeContent extends Component {
         storedEdit.data.clear();
       }
       getFileHeaders(
-        `/files/headers/${this.selectedFile}?source=${this.dataSource}&type=${this.selectedFileType}`,
+        `/files/${this.selectedFile}/headers?source=${this.dataSource}&type=${this.selectedFileType}`,
         this.context
       ).then(response => {
         if (response) {
@@ -221,7 +221,7 @@ class AttributeContent extends Component {
               'Please wait while the file is begin saved'
             );
             saveFile(
-              `/files/edit/${this.selectedFile}?source=${this.dataSource}&type=${this.selectedFileType}&override=true`,
+              `/files/${this.selectedFile}/edit?source=${this.dataSource}&type=${this.selectedFileType}&override=true`,
               data,
               this.context
             ).then(response => {
@@ -252,7 +252,7 @@ class AttributeContent extends Component {
                 data.newFilename =
                   result.value.filename + '.' + this.selectedFile.split('.').pop();
                 saveFile(
-                  `/files/edit/${this.selectedFile}?source=${this.dataSource}&type=${this.selectedFileType}&override=false`,
+                  `/files/${this.selectedFile}/edit?source=${this.dataSource}&type=${this.selectedFileType}&override=false`,
                   data,
                   this.context
                 ).then(response => {

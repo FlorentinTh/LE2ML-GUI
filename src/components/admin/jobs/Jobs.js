@@ -115,7 +115,7 @@ class Jobs extends Component {
         const askMessage = job.label + ' will be canceled.';
         ModalHelper.confirm(askTitle, askMessage).then(result => {
           if (result.value) {
-            cancelJob('/jobs/cancel/' + jobId, null, this.context).then(response => {
+            cancelJob(`/jobs/${jobId}/cancel/`, null, this.context).then(response => {
               if (response) {
                 ModalHelper.notification(
                   'success',
@@ -141,7 +141,7 @@ class Jobs extends Component {
         event.preventDefault();
         event.stopImmediatePropagation();
 
-        restartJob('/jobs/restart/' + jobId, null, this.context).then(response => {
+        restartJob(`/jobs/${jobId}/restart/`, null, this.context).then(response => {
           if (response) {
             ModalHelper.notification('success', job.label + ' successfully started.');
             this.buildJobList(this.jobState, { refresh: true });
@@ -214,9 +214,12 @@ class Jobs extends Component {
 
     let eventSource;
     if (eventSourceStored === undefined) {
-      eventSource = new EventSource('https://localhost:3000/api/v1/jobs/changes', {
-        headers: APIHelper.setAuthHeader()
-      });
+      eventSource = new EventSource(
+        window.env.API_URL + '/v' + window.env.API_VERSION + '/jobs/changes',
+        {
+          headers: APIHelper.setAuthHeader()
+        }
+      );
 
       Store.add({
         id: 'event-source',

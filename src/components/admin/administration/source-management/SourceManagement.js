@@ -197,7 +197,7 @@ class SourceManagement extends Component {
               ? source.label + ' is now disabled.'
               : source.label + ' is now enabled.';
 
-            updateState('/sources/state/' + sourceId, data, this.context).then(
+            updateState(`/sources/${sourceId}/state`, data, this.context).then(
               response => {
                 if (response) {
                   ModalHelper.notification('success', confirmMessage);
