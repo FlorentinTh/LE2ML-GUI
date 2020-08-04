@@ -2,6 +2,7 @@ import Component from '@Component';
 import dataImportTemplate from './data-import.hbs';
 import sourceListTemplate from './source-list.hbs';
 import inertialInfoTemplate from './inertial-data/info.hbs';
+import defaultInfoTemplate from './default/info.hbs';
 import importContentTemplate from './import-content.hbs';
 import axios from 'axios';
 import APIHelper from '@APIHelper';
@@ -119,9 +120,8 @@ class DataImport extends Component {
       case 'inertial':
         container.innerHTML = inertialInfoTemplate();
         break;
-
       default:
-        container.innerHTML = inertialInfoTemplate();
+        container.innerHTML = defaultInfoTemplate();
         break;
     }
   }
