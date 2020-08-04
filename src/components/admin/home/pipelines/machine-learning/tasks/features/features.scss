@@ -1,3 +1,79 @@
+.save-file-container {
+  max-width: 900px;
+  margin: 0 auto;
+  margin: 45px 0 35px 0;
+
+  .wrapper {
+    display: flex;
+
+    .switch-label {
+      line-height: 22px;
+      padding-right: 15px;
+    }
+
+    .switch-save-file {
+      height: 22px;
+      position: relative;
+      width: 50px;
+
+      @include themify($themes) {
+        background-color: themed('color-text-primary');
+      }
+
+      border-radius: 32px;
+      display: block;
+
+      input:not([type='range']) {
+        height: 19px;
+        left: 0;
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        width: 47px;
+        z-index: 2;
+
+        &:checked ~ .toggle {
+          left: 4px;
+          @include themify($themes) {
+            background-color: themed('color-text-secondary');
+          }
+        }
+
+        & ~ :checked ~ .toggle {
+          left: 28px;
+          @include themify($themes) {
+            background-color: themed('color-accent');
+          }
+        }
+
+        &:checked {
+          z-index: 0;
+        }
+      }
+
+      .toggle {
+        @include themify($themes) {
+          background-color: themed('color-accent');
+        }
+
+        border-radius: 50%;
+        height: 18px;
+        left: 0;
+        position: absolute;
+        top: 2px;
+        transition: left 0.2s ease;
+        width: 18px;
+        z-index: 1;
+      }
+
+      input:hover,
+      label:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
 .feature-container {
   &:not(:last-of-type) {
     margin-bottom: 45px;

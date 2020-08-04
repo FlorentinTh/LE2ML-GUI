@@ -255,6 +255,34 @@ class Features extends Task {
     this.renderView(false);
     this.initNav();
 
+    const storedSaveFeatures = sessionStorage.getItem('features-save');
+
+    if (storedSaveFeatures === null) {
+      localStorage.setItem('features-save', false);
+    }
+
+    if (storedSaveFeatures === 'true') {
+      this.context.querySelector('#switch-on').checked = true;
+    } else {
+      this.context.querySelector('#switch-off').checked = true;
+    }
+
+    const switchInputs = this.context.querySelectorAll(
+      'div.switch-save-file input[name="switch-save"]'
+    );
+
+    for (let i = 0; i < switchInputs.length; ++i) {
+      const input = switchInputs[i];
+      input.addEventListener('change', event => {
+        if (event.target.id === 'switch-on') {
+          sessionStorage.setItem('features-save', true);
+          this.context.querySelector('#switch-on').checked = true;
+        } else {
+          sessionStorage.setItem('features-save', false);
+        }
+      });
+    }
+
     featureItems = this.context.querySelectorAll('.feature-item');
 
     for (let i = 0; i < featureItems.length; ++i) {

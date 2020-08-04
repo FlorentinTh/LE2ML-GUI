@@ -44,6 +44,13 @@ class V1 {
       };
     }
 
+    const isSaveFeatures = values['features-save'] === 'true';
+
+    result.features = {
+      save: isSaveFeatures,
+      list: []
+    };
+
     const featuresArr = [];
 
     if (!(values.features === undefined)) {
@@ -56,7 +63,7 @@ class V1 {
         };
         featuresArr.push(featureObj);
       }
-      result.features = featuresArr;
+      result.features.list = featuresArr;
     }
 
     if (values['process-type'] === 'train' || values['process-type'] === 'test') {
@@ -132,7 +139,10 @@ class V1 {
         windowingParams.length.replace(/\D/g, '')
       );
 
-      sessionStorage.setItem('windowing-unit', windowingParams.unit);
+      sessionStorage.setItem(
+        'windowing-unit',
+        windowingParams.length.replace(/[0-9]+/g, '')
+      );
       const functionLabel = windowingParams.function.label;
       sessionStorage.setItem('windowing-function-label', functionLabel);
       sessionStorage.setItem(
@@ -148,11 +158,14 @@ class V1 {
       }
     }
 
-    if (!(features === undefined)) {
-      if (features.length > 0) {
+    const isSaveFeatures = this.config.features.save;
+    sessionStorage.setItem('features-save', isSaveFeatures);
+
+    if (!(features.list === undefined)) {
+      if (features.list.length > 0) {
         const featuresArr = [];
-        for (let i = 0; i < features.length; ++i) {
-          featuresArr.push(features[i].container + '.' + features[i].label);
+        for (let i = 0; i < features.list.length; ++i) {
+          featuresArr.push(features.list[i].container + '.' + features.list[i].label);
         }
         sessionStorage.setItem('features', featuresArr);
       }
