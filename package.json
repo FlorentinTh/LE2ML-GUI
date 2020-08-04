@@ -72,19 +72,19 @@
     "progress-bar-webpack-plugin": "^2.1.0",
     "sass-loader": "^9.0.2",
     "style-loader": "^1.2.1",
-    "terser-webpack-plugin": "^3.0.8",
+    "terser-webpack-plugin": "^3.1.0",
     "url-loader": "^4.1.0",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
     "webpack-manifest-plugin": "^2.2.0",
-    "webpack-merge": "^5.0.9"
+    "webpack-merge": "^5.1.1"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@openfonts/roboto-mono_latin": "^1.44.1",
     "axios": "^0.19.2",
-    "dayjs": "^1.8.31",
+    "dayjs": "^1.8.32",
     "email-validator": "^2.0.4",
     "eventsource": "^1.0.7",
     "handlebars": "^4.7.6",
