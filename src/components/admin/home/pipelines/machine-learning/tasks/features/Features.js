@@ -1,4 +1,6 @@
 import featuresTemplate from './features.hbs';
+import inertialContainerTemplate from './inertial-data/inertial-container.hbs';
+import defaultContainerTemplate from './default/default-container.hbs';
 import featureListTemplate from './feature-list.hbs';
 import Task from '../Task';
 import axios from 'axios';
@@ -8,8 +10,9 @@ import Learning from '../learning/Learning';
 import Windowing from '../windowing/Windowing';
 import configDownloadTemplate from '../config-download.hbs';
 
-let timeFeatures = [];
-let freqFeatures = [];
+let allFeatures = [];
+// const timeFeatures = [];
+// const freqFeatures = [];
 let featureItems;
 
 class Features extends Task {
@@ -128,7 +131,21 @@ class Features extends Task {
   }
 
   buildFeatureList(id, loading = true) {
-    const features = id.includes('time') ? timeFeatures.features : freqFeatures.features;
+    let features = [];
+
+    if (allFeatures.features) {
+      if (id.includes('time')) {
+        features = allFeatures.features.filter(feature => {
+          return feature.domain === 'time';
+        });
+      } else if (id.includes('freq')) {
+        features = allFeatures.features.filter(feature => {
+          return feature.domain === 'frequential';
+        });
+      } else {
+        features = allFeatures.features;
+      }
+    }
 
     const container = this.context.querySelector(id + ' > .list-container');
 
@@ -139,50 +156,62 @@ class Features extends Task {
   }
 
   initData() {
-    const timeStore = Store.get('time-features');
-    const freqStore = Store.get('freq-features');
-
-    if (timeStore === undefined && freqStore === undefined) {
+    const featuresStore = Store.get('features-source');
+    const dataSource = sessionStorage.getItem('data-source');
+    if (featuresStore === undefined) {
       this.renderView(true);
-
-      getFeatures('/features/time', this.context).then(response => {
+      getFeatures(`/features/source/${dataSource}`, this.context).then(response => {
         if (response) {
           Store.add({
-            id: 'time-features',
+            id: 'features-source',
             data: response.data
           });
 
-          timeFeatures = response.data;
-
-          getFeatures('/features/frequential', this.context).then(response => {
-            if (response) {
-              Store.add({
-                id: 'freq-features',
-                data: response.data
-              });
-
-              freqFeatures = response.data;
-              this.make();
-            }
-          });
+          allFeatures = response.data;
+          this.make();
         }
       });
     } else {
-      timeFeatures = timeStore.data;
-      freqFeatures = freqStore.data;
+      allFeatures = featuresStore.data;
       this.make();
     }
   }
 
   renderView(loading = true) {
     this.context.innerHTML = featuresTemplate({
-      title: this.title,
-      totalTimeFeatures: timeFeatures.total === undefined ? 0 : timeFeatures.total,
-      totalFreqFeatures: freqFeatures.total === undefined ? 0 : freqFeatures.total
+      title: this.title
     });
 
-    this.buildFeatureList('#time-features', loading);
-    this.buildFeatureList('#freq-features', loading);
+    const dataSource = sessionStorage.getItem('data-source');
+    const container = this.context.querySelector('#feature-list-container');
+
+    if (dataSource === 'inertial') {
+      let timeFeatures = [];
+      let freqFeatures = [];
+
+      if (allFeatures.features) {
+        timeFeatures = allFeatures.features.filter(feature => {
+          return feature.domain === 'time';
+        });
+        freqFeatures = allFeatures.features.filter(feature => {
+          return feature.domain === 'frequential';
+        });
+      }
+
+      container.innerHTML = inertialContainerTemplate({
+        totalTimeFeatures: timeFeatures.total === undefined ? 0 : timeFeatures.total,
+        totalFreqFeatures: freqFeatures.total === undefined ? 0 : freqFeatures.total
+      });
+
+      this.buildFeatureList('#time-features', loading);
+      this.buildFeatureList('#freq-features', loading);
+    } else {
+      container.innerHTML = defaultContainerTemplate({
+        totalFeatures: allFeatures.total === undefined ? 0 : allFeatures.total
+      });
+
+      this.buildFeatureList('#all-features', loading);
+    }
   }
 
   initNav() {

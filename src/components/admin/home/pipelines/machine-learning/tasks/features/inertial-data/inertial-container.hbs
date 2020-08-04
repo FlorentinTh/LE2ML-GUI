@@ -1,0 +1,18 @@
+<div class="feature-container" id="time-features">
+  <h3>
+    Time Domain
+    <span class="badge badge-right">{{~totalTimeFeatures~}}</span>
+  </h3>
+  <div class="list-container">
+    {{#time-features}}{{> ../feature-list}}{{/time-features}}
+  </div>
+</div>
+<div class="feature-container" id="freq-features">
+  <h3>
+    Frequential Domain
+    <span class="badge badge-right">{{~totalFreqFeatures~}}</span>
+  </h3>
+  <div class="list-container">
+    {{#freq-features}}{{> ../feature-list}}{{/freq-features}}
+  </div>
+</div>

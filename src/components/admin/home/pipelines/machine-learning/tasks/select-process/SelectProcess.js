@@ -108,6 +108,16 @@ class SelectProcess extends Task {
       Store.remove('model-data');
     }
 
+    const storedFeatures = Store.get('features-source');
+    if (!(storedFeatures === undefined)) {
+      Store.remove('features-source');
+    }
+
+    const sessionFeatures = sessionStorage.getItem('features');
+    if (!(sessionFeatures === null)) {
+      sessionStorage.removeItem('features');
+    }
+
     this.makeSelectProcess();
   }
 
