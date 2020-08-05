@@ -48,6 +48,7 @@ class V1 {
 
     result.features = {
       save: isSaveFeatures,
+      filename: values['features-file'],
       list: []
     };
 
@@ -160,6 +161,12 @@ class V1 {
 
     const isSaveFeatures = this.config.features.save;
     sessionStorage.setItem('features-save', isSaveFeatures);
+
+    const featuresFilename = this.config.features.filename;
+
+    if (!(featuresFilename === undefined)) {
+      sessionStorage.setItem('features-file', featuresFilename);
+    }
 
     if (!(features.list === undefined)) {
       if (features.list.length > 0) {

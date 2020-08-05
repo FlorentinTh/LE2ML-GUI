@@ -145,7 +145,25 @@ class Windowing extends Task {
       } else {
         sessionStorage.setItem('windowing-enabled', false);
         super.toggleNavBtnEnable('next', true);
-        super.toggleNavItemsEnabled(['feature-extraction', 'process'], true);
+
+        const isFeaturesFileSave = sessionStorage.getItem('features-save');
+        const isFileNameValid = sessionStorage.getItem('features-file');
+
+        super.toggleNavItemsEnabled(['feature-extraction'], true);
+
+        if (!(isFeaturesFileSave === null)) {
+          if (
+            (isFeaturesFileSave === 'true' && !(isFileNameValid === null)) ||
+            isFeaturesFileSave === 'false'
+          ) {
+            super.toggleNavItemsEnabled(['process'], true);
+          } else {
+            super.toggleNavItemsEnabled(['process'], false);
+          }
+        } else {
+          super.toggleNavItemsEnabled(['process'], true);
+        }
+
         this.removeStoredProperties();
         this.resetInputs();
       }
@@ -174,7 +192,25 @@ class Windowing extends Task {
     const value = event.target.value;
     if (!(value === '') && value > 1 && value <= 200) {
       super.toggleNavBtnEnable('next', true);
-      super.toggleNavItemsEnabled(['feature-extraction', 'process'], true);
+
+      const isFeaturesFileSave = sessionStorage.getItem('features-save');
+      const isFileNameValid = sessionStorage.getItem('features-file');
+
+      super.toggleNavItemsEnabled(['feature-extraction'], true);
+
+      if (!(isFeaturesFileSave === null)) {
+        if (
+          (isFeaturesFileSave === 'true' && !(isFileNameValid === null)) ||
+          isFeaturesFileSave === 'false'
+        ) {
+          super.toggleNavItemsEnabled(['process'], true);
+        } else {
+          super.toggleNavItemsEnabled(['process'], false);
+        }
+      } else {
+        super.toggleNavItemsEnabled(['process'], true);
+      }
+
       properties.length = value;
     } else {
       super.toggleNavBtnEnable('next', false);
@@ -282,7 +318,23 @@ class Windowing extends Task {
     super.initNavBtn('next', { label: 'feature-extraction', Task: Features });
     super.initNavBtn('previous', { label: 'data-source', Task: DataSource });
 
-    super.toggleNavItemsEnabled(['data-source', 'feature-extraction', 'process'], true);
+    super.toggleNavItemsEnabled(['data-source', 'feature-extraction'], true);
+
+    const isFeaturesFileSave = sessionStorage.getItem('features-save');
+    const isFileNameValid = sessionStorage.getItem('features-file');
+
+    if (!(isFeaturesFileSave === null)) {
+      if (
+        (isFeaturesFileSave === 'true' && !(isFileNameValid === null)) ||
+        isFeaturesFileSave === 'false'
+      ) {
+        super.toggleNavItemsEnabled(['process'], true);
+      } else {
+        super.toggleNavItemsEnabled(['process'], false);
+      }
+    } else {
+      super.toggleNavItemsEnabled(['process'], true);
+    }
 
     lengthInput = this.context.querySelector('input#window-length');
     unitSelect = this.context.querySelector('select#window-unit');
@@ -353,7 +405,23 @@ class Windowing extends Task {
 
         if (radio.value === 'off' && storedState === 'false') {
           super.toggleNavBtnEnable('next', true);
-          super.toggleNavItemsEnabled(['feature-extraction', 'process'], true);
+          const isFeaturesFileSave = sessionStorage.getItem('features-save');
+          const isFileNameValid = sessionStorage.getItem('features-file');
+
+          super.toggleNavItemsEnabled(['feature-extraction'], true);
+
+          if (!(isFeaturesFileSave === null)) {
+            if (
+              (isFeaturesFileSave === 'true' && !(isFileNameValid === null)) ||
+              isFeaturesFileSave === 'false'
+            ) {
+              super.toggleNavItemsEnabled(['process'], true);
+            } else {
+              super.toggleNavItemsEnabled(['process'], false);
+            }
+          } else {
+            super.toggleNavItemsEnabled(['process'], true);
+          }
         }
       }
 

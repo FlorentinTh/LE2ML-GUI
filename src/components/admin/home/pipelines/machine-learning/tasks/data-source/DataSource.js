@@ -115,10 +115,37 @@ class DataSource extends Task {
             if (inputType === 'features') {
               super.toggleNavItemsEnabled(['process'], true);
             } else {
-              super.toggleNavItemsEnabled(
-                ['windowing', 'feature-extraction', 'process'],
-                true
-              );
+              const isWindowingEnable = sessionStorage.getItem('windowing-enabled');
+              const isWindowLengthValid = sessionStorage.getItem('windowing-length') > 0;
+
+              super.toggleNavItemsEnabled(['windowing'], true);
+              if (!(isWindowingEnable === null)) {
+                if (
+                  (isWindowingEnable === 'true' && isWindowLengthValid) ||
+                  isWindowingEnable === 'false'
+                ) {
+                  super.toggleNavItemsEnabled(['feature-extraction'], true);
+                  const isFeaturesFileSave = sessionStorage.getItem('features-save');
+                  const isFileNameValid = sessionStorage.getItem('features-file');
+
+                  if (!(isFeaturesFileSave === null)) {
+                    if (
+                      (isFeaturesFileSave === 'true' && !(isFileNameValid === null)) ||
+                      isFeaturesFileSave === 'false'
+                    ) {
+                      super.toggleNavItemsEnabled(['process'], true);
+                    } else {
+                      super.toggleNavItemsEnabled(['process'], false);
+                    }
+                  } else {
+                    super.toggleNavItemsEnabled(['process'], true);
+                  }
+                } else {
+                  super.toggleNavItemsEnabled(['process'], false);
+                }
+              } else {
+                super.toggleNavItemsEnabled(['feature-extraction', 'process'], false);
+              }
             }
             super.toggleNavBtnEnable('next', true);
           } else {
@@ -127,6 +154,10 @@ class DataSource extends Task {
               ['windowing', 'feature-extraction', 'process'],
               false
             );
+
+            if (!(sessionStorage.getItem('input-content') === null)) {
+              sessionStorage.removeItem('input-content');
+            }
           }
         }
       });
@@ -144,10 +175,37 @@ class DataSource extends Task {
         if (inputType === 'features') {
           super.toggleNavItemsEnabled(['process'], true);
         } else {
-          super.toggleNavItemsEnabled(
-            ['windowing', 'feature-extraction', 'process'],
-            true
-          );
+          const isWindowingEnable = sessionStorage.getItem('windowing-enabled');
+          const isWindowLengthValid = sessionStorage.getItem('windowing-length') > 0;
+
+          super.toggleNavItemsEnabled(['windowing'], true);
+          if (!(isWindowingEnable === null)) {
+            if (
+              (isWindowingEnable === 'true' && isWindowLengthValid) ||
+              isWindowingEnable === 'false'
+            ) {
+              super.toggleNavItemsEnabled(['feature-extraction'], true);
+              const isFeaturesFileSave = sessionStorage.getItem('features-save');
+              const isFileNameValid = sessionStorage.getItem('features-file');
+
+              if (!(isFeaturesFileSave === null)) {
+                if (
+                  (isFeaturesFileSave === 'true' && !(isFileNameValid === null)) ||
+                  isFeaturesFileSave === 'false'
+                ) {
+                  super.toggleNavItemsEnabled(['process'], true);
+                } else {
+                  super.toggleNavItemsEnabled(['process'], false);
+                }
+              } else {
+                super.toggleNavItemsEnabled(['process'], true);
+              }
+            } else {
+              super.toggleNavItemsEnabled(['process'], false);
+            }
+          } else {
+            super.toggleNavItemsEnabled(['feature-extraction', 'process'], false);
+          }
         }
         super.toggleNavBtnEnable('next', true);
       } else {
@@ -156,6 +214,10 @@ class DataSource extends Task {
           ['windowing', 'feature-extraction', 'process'],
           false
         );
+
+        if (!(sessionStorage.getItem('input-content') === null)) {
+          sessionStorage.removeItem('input-content');
+        }
       }
     }
 
@@ -163,10 +225,44 @@ class DataSource extends Task {
       if (inputType === 'features') {
         super.toggleNavItemsEnabled(['process'], result);
       } else {
-        super.toggleNavItemsEnabled(
-          ['windowing', 'feature-extraction', 'process'],
-          result
-        );
+        if (result) {
+          const isWindowingEnable = sessionStorage.getItem('windowing-enabled');
+          const isWindowLengthValid = sessionStorage.getItem('windowing-length') > 0;
+
+          super.toggleNavItemsEnabled(['windowing'], true);
+          if (!(isWindowingEnable === null)) {
+            if (
+              (isWindowingEnable === 'true' && isWindowLengthValid) ||
+              isWindowingEnable === 'false'
+            ) {
+              super.toggleNavItemsEnabled(['feature-extraction'], true);
+              const isFeaturesFileSave = sessionStorage.getItem('features-save');
+              const isFileNameValid = sessionStorage.getItem('features-file');
+
+              if (!(isFeaturesFileSave === null)) {
+                if (
+                  (isFeaturesFileSave === 'true' && !(isFileNameValid === null)) ||
+                  isFeaturesFileSave === 'false'
+                ) {
+                  super.toggleNavItemsEnabled(['process'], true);
+                } else {
+                  super.toggleNavItemsEnabled(['process'], false);
+                }
+              } else {
+                super.toggleNavItemsEnabled(['process'], true);
+              }
+            } else {
+              super.toggleNavItemsEnabled(['process'], false);
+            }
+          } else {
+            super.toggleNavItemsEnabled(['feature-extraction', 'process'], false);
+          }
+        } else {
+          super.toggleNavItemsEnabled(
+            ['windowing', 'feature-extraction', 'process'],
+            result
+          );
+        }
       }
       super.toggleNavBtnEnable('next', result);
     });

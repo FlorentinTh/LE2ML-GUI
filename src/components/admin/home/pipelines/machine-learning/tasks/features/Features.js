@@ -11,8 +11,6 @@ import Windowing from '../windowing/Windowing';
 import configDownloadTemplate from '../config-download.hbs';
 
 let allFeatures = [];
-// const timeFeatures = [];
-// const freqFeatures = [];
 let featureItems;
 
 class Features extends Task {
@@ -251,20 +249,62 @@ class Features extends Task {
     super.initNavBtn('previous', { label: 'windowing', Task: Windowing });
   }
 
+  filenameInputListener(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const value = event.target.value;
+
+    if (!(value === '')) {
+      super.toggleNavBtnEnable('next', true);
+      super.toggleNavItemsEnabled(['process'], true);
+      sessionStorage.setItem('features-file', value + '.csv');
+    } else {
+      super.toggleNavBtnEnable('next', false);
+      super.toggleNavItemsEnabled(['process'], false);
+      sessionStorage.removeItem('features-file');
+    }
+  }
+
   make() {
     this.renderView(false);
     this.initNav();
 
+    super.toggleNavItemsEnabled(['data-source', 'windowing'], true);
+
     const storedSaveFeatures = sessionStorage.getItem('features-save');
+    const storedFeaturesFile = sessionStorage.getItem('features-file');
+
+    const filenameInput = this.context.querySelector('input#save-filename');
 
     if (storedSaveFeatures === null) {
-      localStorage.setItem('features-save', false);
+      if (!(storedFeaturesFile === null)) {
+        sessionStorage.removeItem('features-file');
+      }
+      sessionStorage.setItem('features-save', false);
     }
 
     if (storedSaveFeatures === 'true') {
       this.context.querySelector('#switch-on').checked = true;
+      filenameInput.style.display = 'block';
+
+      if (storedFeaturesFile === null) {
+        super.toggleNavBtnEnable('next', false);
+        super.toggleNavItemsEnabled(['process'], false);
+      } else {
+        filenameInput.value = storedFeaturesFile.split('.')[0];
+        super.toggleNavBtnEnable('next', true);
+        super.toggleNavItemsEnabled(['process'], true);
+      }
     } else {
       this.context.querySelector('#switch-off').checked = true;
+      filenameInput.style.display = 'none';
+      super.toggleNavBtnEnable('next', true);
+      super.toggleNavItemsEnabled(['process'], true);
+
+      if (!(storedFeaturesFile === null)) {
+        sessionStorage.removeItem('features-file');
+      }
     }
 
     const switchInputs = this.context.querySelectorAll(
@@ -277,11 +317,27 @@ class Features extends Task {
         if (event.target.id === 'switch-on') {
           sessionStorage.setItem('features-save', true);
           this.context.querySelector('#switch-on').checked = true;
+          filenameInput.style.display = 'block';
+
+          if (filenameInput.value === '') {
+            super.toggleNavBtnEnable('next', false);
+            super.toggleNavItemsEnabled(['process'], false);
+          }
         } else {
           sessionStorage.setItem('features-save', false);
+          filenameInput.style.display = 'none';
+          super.toggleNavBtnEnable('next', true);
+          super.toggleNavItemsEnabled(['process'], true);
+
+          if (!(sessionStorage.getItem('features-file') === null)) {
+            sessionStorage.removeItem('features-file');
+            filenameInput.value = '';
+          }
         }
       });
     }
+
+    filenameInput.addEventListener('input', this.filenameInputListener.bind(this), false);
 
     featureItems = this.context.querySelectorAll('.feature-item');
 
@@ -303,8 +359,6 @@ class Features extends Task {
     if (!(storedFeatures === null)) {
       this.toggleSelected(storedFeatures.split(','));
     }
-
-    super.toggleNavItemsEnabled(['data-source', 'windowing'], true);
   }
 }
 
