@@ -222,15 +222,17 @@ class Task {
             .then(response => {
               if (response) {
                 ModalHelper.notification('success', response.data.message);
-                sessionStorage.clear();
-                // eslint-disable-next-line no-new
-                new SelectProcess(this.context);
-                this.setNavActive('select-process');
               }
             })
+            // eslint-disable-next-line handle-callback-err
             .catch(error => {
-              APIHelper.errorsHandler(error, true);
+              ModalHelper.notification('error', 'Job created but failed to start', 3500);
             });
+
+          sessionStorage.clear();
+          // eslint-disable-next-line no-new
+          new SelectProcess(this.context);
+          this.setNavActive('select-process');
         }
       }
     });

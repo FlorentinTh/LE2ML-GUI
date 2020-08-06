@@ -1,8 +1,13 @@
 import Swal from 'sweetalert2';
 
 class ModalHelper {
-  static notification(type, message) {
-    const timer = type === 'error' ? undefined : 3500;
+  static notification(type, message, timer = undefined) {
+    let notifTimer;
+    if (timer === undefined) {
+      notifTimer = type === 'error' ? undefined : 3500;
+    } else {
+      notifTimer = timer;
+    }
     return Swal.fire({
       target: document.getElementById('root'),
       position: 'top-end',
@@ -10,7 +15,7 @@ class ModalHelper {
       toast: true,
       title: message,
       showConfirmButton: false,
-      timer: timer
+      timer: notifTimer
     });
   }
 
