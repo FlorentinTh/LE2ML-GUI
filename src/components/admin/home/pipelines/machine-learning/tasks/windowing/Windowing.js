@@ -15,20 +15,19 @@ let slider;
 let sliderTooltip;
 let windowFunctions;
 
-const properties = {
-  length: 0,
-  unit: 'Hz',
-  function: {
-    label: 'none',
-    container: null
-  },
-  overlap: 0
-};
-
 class Windowing extends Task {
   constructor(context) {
     super(context);
     this.context = context;
+    this.properties = {
+      length: 0,
+      unit: 'Hz',
+      function: {
+        label: 'none',
+        container: null
+      },
+      overlap: 0
+    };
     this.initData();
   }
 
@@ -137,7 +136,7 @@ class Windowing extends Task {
       if (enable === 'on') {
         sessionStorage.setItem('windowing-enabled', true);
         lengthInput = this.context.querySelector('input#window-length');
-        this.storeWindowingProperties(properties);
+        this.storeWindowingProperties(this.properties);
         this.initLengthInput();
         this.initWindowUnitSelect();
         this.initWindowTypeSelect();
@@ -174,9 +173,9 @@ class Windowing extends Task {
     const storedValue = sessionStorage.getItem('windowing-length');
     if (storedValue) {
       lengthInput.value = storedValue;
-      properties.length = storedValue;
+      this.properties.length = storedValue;
     } else {
-      lengthInput.value = properties.length;
+      lengthInput.value = this.properties.length;
     }
 
     if (lengthInput.value === '0' || lengthInput.value === '1') {
@@ -211,13 +210,13 @@ class Windowing extends Task {
         super.toggleNavItemsEnabled(['process'], true);
       }
 
-      properties.length = value;
+      this.properties.length = value;
     } else {
       super.toggleNavBtnEnable('next', false);
       super.toggleNavItemsEnabled(['feature-extraction', 'process'], false);
-      properties.length = 0;
+      this.properties.length = 0;
     }
-    this.storeWindowingProperties(properties);
+    this.storeWindowingProperties(this.properties);
   }
 
   initWindowUnitSelect() {
@@ -231,14 +230,14 @@ class Windowing extends Task {
         if (storedValue === optValue) {
           if (!option.disabled) {
             option.selected = true;
-            properties.unit = storedValue;
-            this.storeWindowingProperties(properties);
+            this.properties.unit = storedValue;
+            this.storeWindowingProperties(this.properties);
           }
         }
       }
     } else {
-      properties.unit = options[options.selectedIndex].value;
-      this.storeWindowingProperties(properties);
+      this.properties.unit = options[options.selectedIndex].value;
+      this.storeWindowingProperties(this.properties);
     }
   }
 
@@ -249,8 +248,8 @@ class Windowing extends Task {
     const select = event.target;
     const selectedValue = select.options[select.selectedIndex].value;
 
-    properties.unit = selectedValue;
-    this.storeWindowingProperties(properties);
+    this.properties.unit = selectedValue;
+    this.storeWindowingProperties(this.properties);
   }
 
   initWindowTypeSelect() {
@@ -264,16 +263,18 @@ class Windowing extends Task {
         if (storedValue === optValue) {
           if (!option.disabled) {
             option.selected = true;
-            properties.function.label = storedValue;
-            properties.function.container = option.value.split('.')[0];
-            this.storeWindowingProperties(properties);
+            this.properties.function.label = storedValue;
+            this.properties.function.container = option.value.split('.')[0];
+            this.storeWindowingProperties(this.properties);
           }
         }
       }
     } else {
-      properties.function.label = options[options.selectedIndex].value.split('.')[1];
-      properties.function.container = options[options.selectedIndex].value.split('.')[0];
-      this.storeWindowingProperties(properties);
+      this.properties.function.label = options[options.selectedIndex].value.split('.')[1];
+      this.properties.function.container = options[options.selectedIndex].value.split(
+        '.'
+      )[0];
+      this.storeWindowingProperties(this.properties);
     }
   }
 
@@ -284,9 +285,9 @@ class Windowing extends Task {
     const select = event.target;
     const selectedValue = select.options[select.selectedIndex].value;
 
-    properties.function.label = selectedValue.split('.')[1];
-    properties.function.container = selectedValue.split('.')[0];
-    this.storeWindowingProperties(properties);
+    this.properties.function.label = selectedValue.split('.')[1];
+    this.properties.function.container = selectedValue.split('.')[0];
+    this.storeWindowingProperties(this.properties);
   }
 
   initOverlapSlider() {
@@ -294,10 +295,10 @@ class Windowing extends Task {
     if (storedValue) {
       slider.value = storedValue;
       sliderTooltip.textContent = storedValue + ' %';
-      properties.overlap = storedValue;
+      this.properties.overlap = storedValue;
     } else {
-      slider.value = properties.overlap;
-      sliderTooltip.textContent = properties.overlap + ' %';
+      slider.value = this.properties.overlap;
+      sliderTooltip.textContent = this.properties.overlap + ' %';
     }
   }
 
@@ -307,9 +308,9 @@ class Windowing extends Task {
 
     const slider = event.target;
     sliderTooltip.textContent = slider.value + ' %';
-    properties.overlap = slider.value;
+    this.properties.overlap = slider.value;
 
-    this.storeWindowingProperties(properties);
+    this.storeWindowingProperties(this.properties);
   }
 
   make() {
@@ -389,7 +390,7 @@ class Windowing extends Task {
     if (storedState === null) {
       inputStateSwitch[0].setAttribute('checked', true);
       sessionStorage.setItem('windowing-enabled', true);
-      this.storeWindowingProperties(properties);
+      this.storeWindowingProperties(this.properties);
     }
 
     for (let i = 0; i < inputStateSwitch.length; ++i) {
