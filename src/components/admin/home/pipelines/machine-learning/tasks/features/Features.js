@@ -62,10 +62,21 @@ class Features extends Task {
       target.children[0].classList.remove('fa-check-square');
       target.children[0].classList.add('fa-square');
       this.selectedFeaturesCount = 0;
+
+      const fileSave = sessionStorage.getItem('features-save');
+      if (fileSave === 'true') {
+        super.toggleNavItemsEnabled(['process'], false);
+      }
     } else {
       target.children[0].classList.remove('fa-square');
       target.children[0].classList.add('fa-check-square');
       this.selectedFeaturesCount = allFeatures.total;
+
+      const fileSave = sessionStorage.getItem('features-save');
+      const fileSaveInput = this.context.querySelector('#save-filename');
+      if (fileSave === 'true' && !(fileSaveInput.value === '')) {
+        super.toggleNavItemsEnabled(['process'], true);
+      }
     }
 
     target.dataset.toggle = !toggle;
