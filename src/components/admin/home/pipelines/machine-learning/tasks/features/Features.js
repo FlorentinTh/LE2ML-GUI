@@ -12,13 +12,13 @@ import configDownloadTemplate from '../config-download.hbs';
 
 let allFeatures = [];
 let featureItems;
-let selectedFeaturesCount = 0;
 
 class Features extends Task {
   constructor(context) {
     super(context);
     this.context = context;
     this.title = 'Feature Extraction';
+    this.selectedFeaturesCount = 0;
     this.initData();
   }
 
@@ -61,11 +61,11 @@ class Features extends Task {
     if (toggle) {
       target.children[0].classList.remove('fa-check-square');
       target.children[0].classList.add('fa-square');
-      selectedFeaturesCount = 0;
+      this.selectedFeaturesCount = 0;
     } else {
       target.children[0].classList.remove('fa-square');
       target.children[0].classList.add('fa-check-square');
-      selectedFeaturesCount = allFeatures.total;
+      this.selectedFeaturesCount = allFeatures.total;
     }
 
     target.dataset.toggle = !toggle;
@@ -102,7 +102,7 @@ class Features extends Task {
 
     if (item.classList.contains('item-selected')) {
       item.classList.remove('item-selected');
-      selectedFeaturesCount--;
+      this.selectedFeaturesCount--;
 
       if (!(storedFeatures === null)) {
         const array = storedFeatures
@@ -117,7 +117,7 @@ class Features extends Task {
       }
     } else {
       item.classList.add('item-selected');
-      selectedFeaturesCount++;
+      this.selectedFeaturesCount++;
 
       if (!(storedFeatures === null)) {
         sessionStorage.setItem(
@@ -133,7 +133,7 @@ class Features extends Task {
     }
 
     const toggleAllBtn = this.context.querySelector('#select-all-toggle');
-    if (allFeatures.total === selectedFeaturesCount) {
+    if (allFeatures.total === this.selectedFeaturesCount) {
       if (toggleAllBtn.dataset.toggle === 'false') {
         toggleAllBtn.dataset.toggle = 'true';
         toggleAllBtn.children[0].classList.remove('fa-square');
@@ -379,10 +379,10 @@ class Features extends Task {
 
     if (!(storedFeatures === null)) {
       this.toggleSelected(storedFeatures.split(','));
-      selectedFeaturesCount = storedFeatures.split(',').length;
+      this.selectedFeaturesCount = storedFeatures.split(',').length;
 
       const toggleAllBtn = this.context.querySelector('#select-all-toggle');
-      if (allFeatures.total === selectedFeaturesCount) {
+      if (allFeatures.total === this.selectedFeaturesCount) {
         if (toggleAllBtn.dataset.toggle === 'false') {
           toggleAllBtn.dataset.toggle = 'true';
           toggleAllBtn.children[0].classList.remove('fa-square');
