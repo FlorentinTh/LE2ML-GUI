@@ -132,6 +132,16 @@ class Features extends Task {
       }
     }
 
+    const fileSave = sessionStorage.getItem('features-save');
+    const fileSaveInput = this.context.querySelector('#save-filename');
+    if (fileSave === 'true' && !(fileSaveInput.value === '')) {
+      if (this.selectedFeaturesCount > 0) {
+        super.toggleNavItemsEnabled(['process'], true);
+      } else {
+        super.toggleNavItemsEnabled(['process'], false);
+      }
+    }
+
     const toggleAllBtn = this.context.querySelector('#select-all-toggle');
     if (allFeatures.total === this.selectedFeaturesCount) {
       if (toggleAllBtn.dataset.toggle === 'false') {
@@ -278,7 +288,11 @@ class Features extends Task {
 
     if (!(value === '')) {
       super.toggleNavBtnEnable('next', true);
-      super.toggleNavItemsEnabled(['process'], true);
+
+      if (this.selectedFeaturesCount > 0) {
+        super.toggleNavItemsEnabled(['process'], true);
+      }
+
       sessionStorage.setItem('features-file', value + '.csv');
     } else {
       super.toggleNavBtnEnable('next', false);
