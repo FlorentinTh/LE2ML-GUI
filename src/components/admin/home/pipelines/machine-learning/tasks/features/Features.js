@@ -191,14 +191,15 @@ class Features extends Task {
         timeFeatures = allFeatures.features.filter(feature => {
           return feature.domain === 'time';
         });
+
         freqFeatures = allFeatures.features.filter(feature => {
           return feature.domain === 'frequential';
         });
       }
 
       container.innerHTML = inertialContainerTemplate({
-        totalTimeFeatures: timeFeatures.total === undefined ? 0 : timeFeatures.total,
-        totalFreqFeatures: freqFeatures.total === undefined ? 0 : freqFeatures.total
+        totalTimeFeatures: timeFeatures.length,
+        totalFreqFeatures: freqFeatures.length
       });
 
       this.buildFeatureList('#time-features', loading);
