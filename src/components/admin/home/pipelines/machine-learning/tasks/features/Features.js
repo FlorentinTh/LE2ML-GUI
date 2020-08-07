@@ -12,6 +12,7 @@ import configDownloadTemplate from '../config-download.hbs';
 
 let allFeatures = [];
 let featureItems;
+let selectedFeaturesCount = 0;
 
 class Features extends Task {
   constructor(context) {
@@ -60,9 +61,11 @@ class Features extends Task {
     if (toggle) {
       target.children[0].classList.remove('fa-check-square');
       target.children[0].classList.add('fa-square');
+      selectedFeaturesCount = 0;
     } else {
       target.children[0].classList.remove('fa-square');
       target.children[0].classList.add('fa-check-square');
+      selectedFeaturesCount = allFeatures.total;
     }
 
     target.dataset.toggle = !toggle;
@@ -99,6 +102,7 @@ class Features extends Task {
 
     if (item.classList.contains('item-selected')) {
       item.classList.remove('item-selected');
+      selectedFeaturesCount--;
 
       if (!(storedFeatures === null)) {
         const array = storedFeatures
@@ -113,6 +117,7 @@ class Features extends Task {
       }
     } else {
       item.classList.add('item-selected');
+      selectedFeaturesCount++;
 
       if (!(storedFeatures === null)) {
         sessionStorage.setItem(
@@ -124,6 +129,21 @@ class Features extends Task {
           'features',
           item.dataset.container + '.' + item.dataset.slug
         );
+      }
+    }
+
+    const toggleAllBtn = this.context.querySelector('#select-all-toggle');
+    if (allFeatures.total === selectedFeaturesCount) {
+      if (toggleAllBtn.dataset.toggle === 'false') {
+        toggleAllBtn.dataset.toggle = 'true';
+        toggleAllBtn.children[0].classList.remove('fa-square');
+        toggleAllBtn.children[0].classList.add('fa-check-square');
+      }
+    } else {
+      if (toggleAllBtn.dataset.toggle === 'true') {
+        toggleAllBtn.dataset.toggle = 'false';
+        toggleAllBtn.children[0].classList.remove('fa-check-square');
+        toggleAllBtn.children[0].classList.add('fa-square');
       }
     }
   }
@@ -359,6 +379,22 @@ class Features extends Task {
 
     if (!(storedFeatures === null)) {
       this.toggleSelected(storedFeatures.split(','));
+      selectedFeaturesCount = storedFeatures.split(',').length;
+
+      const toggleAllBtn = this.context.querySelector('#select-all-toggle');
+      if (allFeatures.total === selectedFeaturesCount) {
+        if (toggleAllBtn.dataset.toggle === 'false') {
+          toggleAllBtn.dataset.toggle = 'true';
+          toggleAllBtn.children[0].classList.remove('fa-square');
+          toggleAllBtn.children[0].classList.add('fa-check-square');
+        }
+      } else {
+        if (toggleAllBtn.dataset.toggle === 'true') {
+          toggleAllBtn.dataset.toggle = 'false';
+          toggleAllBtn.children[0].classList.remove('fa-check-square');
+          toggleAllBtn.children[0].classList.add('fa-square');
+        }
+      }
     }
   }
 }
