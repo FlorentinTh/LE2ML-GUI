@@ -171,7 +171,7 @@ class WindowingManagement extends Component {
 
         switch (input.id) {
           case 'label':
-            input.value = input.value.replace(/[^0-9a-zA-Z-]/gi, '-').toLowerCase();
+            input.value = input.value.replace(/[^\s0-9a-zA-Z-]/gi, '').toLowerCase();
             break;
           case 'container':
             input.value = input.value.replace(/[^0-9a-zA-Z-]/gi, '-').toLowerCase();
