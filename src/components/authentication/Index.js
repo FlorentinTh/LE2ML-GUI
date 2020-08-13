@@ -86,7 +86,7 @@ async function signIn(url, data, context) {
     return response.data;
   } catch (error) {
     if (error) {
-      APIHelper.errorsHandler(error, true);
+      APIHelper.errorsHandler(error, true, 'not-admin');
     }
   }
 }

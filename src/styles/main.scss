@@ -329,7 +329,9 @@ input[type='file']::-webkit-file-upload-button {
 
 div.swal2-top {
   div.swal2-popup {
-    left: 170px !important;
+    &:not(.not-admin) {
+      left: 170px !important;
+    }
     top: 125px !important;
   }
 }

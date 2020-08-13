@@ -46,7 +46,7 @@ class APIHelper {
     return this.parseJWT(uuid);
   }
 
-  static errorsHandler(error, replaceContent = false) {
+  static errorsHandler(error, replaceContent = false, customPopupClass = null) {
     let code = '';
     let msg = '';
 
@@ -98,7 +98,7 @@ class APIHelper {
     const text = code !== '' ? code + ': ' + msg : msg;
 
     if (replaceContent) {
-      ModalHelper.error(text);
+      ModalHelper.error(text, customPopupClass);
     } else {
       ModalHelper.notification('error', text);
     }

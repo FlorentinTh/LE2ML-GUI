@@ -79,7 +79,7 @@ class ModalHelper {
     });
   }
 
-  static error(message) {
+  static error(message, customPopupClass = null) {
     return Swal.fire({
       icon: 'error',
       target: document.getElementById('root'),
@@ -88,6 +88,9 @@ class ModalHelper {
       allowOutsideClick: false,
       text: message,
       showConfirmButton: true,
+      customClass: {
+        popup: customPopupClass
+      },
       showClass: {
         popup: 'animated fadeInDown'
       },
