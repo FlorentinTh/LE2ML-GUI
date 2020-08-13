@@ -189,7 +189,7 @@ class Windowing extends Task {
     event.stopImmediatePropagation();
 
     const value = event.target.value;
-    if (!(value === '') && value > 1 && value <= 200) {
+    if (!(value === '') && value >= 1) {
       super.toggleNavBtnEnable('next', true);
 
       const isFeaturesFileSave = sessionStorage.getItem('features-save');
@@ -359,7 +359,7 @@ class Windowing extends Task {
         event.stopImmediatePropagation();
         ModalHelper.confirm(
           'Length of the Window',
-          'This value cannot be set to 0 and it cannot exceed 200.',
+          'This value cannot be set to 0.',
           'I understand',
           '',
           false,
