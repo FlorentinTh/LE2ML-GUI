@@ -130,14 +130,11 @@ class DataVisualisation extends Component {
         }
       );
     } else {
-      console.log('HERE 1');
       if (!refresh) {
-        console.log('HERE 2');
         rawFiles = rawStore.data;
         featuresFiles = featuredStore.data;
         this.makeContent();
       } else {
-        console.log('HERE 3');
         Store.remove('raw-files');
         Store.remove('features-files');
         this.initFileData();
