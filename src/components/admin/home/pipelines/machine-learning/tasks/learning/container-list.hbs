@@ -1,0 +1,7 @@
+{{#each containers as |container|}}
+<option value="{{~container~}}">{{~container~}}</option>
+{{else}}
+{{#[utils/compare] loading '===' true}}
+<option disabled>Fetching data...</option>
+{{/[utils/compare]}}
+{{/each}}

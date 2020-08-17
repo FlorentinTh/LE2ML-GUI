@@ -2,12 +2,21 @@
   <h2>{{title}}</h2>
   <section id="process">
     <div class="form-elems">
-      <div class="form-elem inline caps">
+      <div class="form-elem inline">
+        <span class="label-container">
+          <label for="container">Cont.</label>
+        </span>
+        <select id="container">
+          <option value="none" selected disabled>Select a Container</option>
+          {{#containers}}{{> container-list}}{{/containers}}
+        </select>
+      </div>
+      <div class="form-elem inline caps disabled">
         <span class="label-container">
           <label for="algo">Algo</label>
         </span>
-        <select id="algo">
-          <option value="none" data-algo="none" selected>Select an Algorithm</option>
+        <select id="algo" disabled>
+          <option value="none" data-algo="none" selected disabled>Select an Algorithm</option>
           <optgroup id="supervised-group" label="Supervised">
             {{#supervised-algo}}{{> algo-list}}{{/supervised-algo}}
           </optgroup>
@@ -15,13 +24,6 @@
             {{#unsupervised-algo}}{{> algo-list}}{{/unsupervised-algo}}
           </optgroup>
         </select>
-      </div>
-      <div class="form-elem inline disabled">
-        <span class="label-container">
-          <label for="algo-container">Cont.</label>
-        </span>
-        <input type="text" id="algo-container" name="algo-container" value="{{~container~}}" autocomplete="false"
-          disabled>
       </div>
     </div>
     <div class="algo-params">

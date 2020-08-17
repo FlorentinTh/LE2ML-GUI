@@ -1,4 +1,5 @@
 import learningTemplate from './learning.hbs';
+import containerListTemplate from './container-list.hbs';
 import algoListTemplate from './algo-list.hbs';
 import paramsTemplate from './params.hbs';
 import Task from '../Task';
@@ -11,11 +12,15 @@ import AlgoParameters from '@AlgoParameters';
 import ModalHelper from '@ModalHelper';
 import DataSource from '../data-source/DataSource';
 
-let process;
-let algoSelect;
+let allAlgos;
+let allContainers;
 let supervisedAlgos;
 let unsupervisedAlgos;
+let selectedContainer;
+let containerSelect;
 let selectedAlgo;
+let algoSelect;
+let process;
 
 class Learning extends Task {
   constructor(context) {
@@ -25,37 +30,19 @@ class Learning extends Task {
   }
 
   initData() {
-    const supervisedStore = Store.get('supervised-algos');
-    const unsupervisedStore = Store.get('unsupervised-algos');
-
-    if (supervisedStore === undefined && unsupervisedStore === undefined) {
+    const storedAllAlgos = Store.get('all-containers');
+    if (storedAllAlgos === undefined) {
       this.renderView(true);
 
       getAlgorithms('/algos', this.context).then(response => {
         if (response) {
-          const algos = response.data.algorithms;
-
-          const supervised = algos.filter(algo => algo.type === 'supervised');
-          Store.add({
-            id: 'supervised-algos',
-            data: supervised
-          });
-
-          supervisedAlgos = supervised;
-
-          const unsupervised = algos.filter(algo => algo.type === 'unsupervised');
-          Store.add({
-            id: 'unsupervised-algos',
-            data: unsupervised
-          });
-          unsupervisedAlgos = unsupervised;
-
+          allAlgos = response.data.algorithms;
+          allContainers = Array.from(new Set(allAlgos.map(algo => algo.container)));
           this.make();
         }
       });
     } else {
-      supervisedAlgos = supervisedStore.data;
-      unsupervisedAlgos = unsupervisedStore.data;
+      allContainers = allContainers.data;
       this.make();
     }
   }
@@ -67,18 +54,117 @@ class Learning extends Task {
       title: StringHelper.capitalizeFirst(process) + 'ing Process'
     });
 
-    this.buildAlgoList('#supervised-group', loading);
-    this.buildAlgoList('#unsupervised-group', loading);
+    this.buildContainerList('#container', loading);
   }
 
-  buildAlgoList(id, loading = true) {
+  buildContainerList(id, loading = true) {
+    const select = this.context.querySelector(id);
+    select.innerHTML += containerListTemplate({
+      containers: allContainers,
+      loading: loading
+    });
+  }
+
+  initContainerSelect() {
+    const storedContainer = sessionStorage.getItem('algorithm-container');
+    const options = containerSelect.options;
+    if (storedContainer) {
+      for (let i = 1; i < options.length; ++i) {
+        const option = options[i];
+        if (option.value === storedContainer) {
+          option.selected = true;
+          selectedContainer = option.value;
+          this.makeAlgoList();
+          this.toggleEnableAlgoSelect(true);
+        }
+      }
+    } else {
+      options[0].selected = true;
+      this.toggleEnableAlgoSelect(false);
+      super.toggleNavBtnEnable('finish', false);
+    }
+  }
+
+  containerChangeListener(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    selectedContainer = event.target.options[event.target.selectedIndex].value;
+    sessionStorage.setItem('algorithm-container', selectedContainer);
+    this.removeAlgoData();
+    this.toggleEnableAlgoSelect(true);
+    this.makeAlgoList();
+  }
+
+  makeAlgoList() {
+    const selectContainer = this.context.querySelector('select#container');
+
+    if (selectedContainer === null) {
+      selectedContainer = selectContainer.options[selectContainer.selectedIndex].value;
+    }
+
+    if (!(selectedContainer === 'none')) {
+      const supervised = allAlgos.filter(
+        algo => algo.type === 'supervised' && algo.container === selectedContainer
+      );
+      const unsupervised = allAlgos.filter(
+        algo => algo.type === 'unsupervised' && algo.container === selectedContainer
+      );
+
+      supervisedAlgos = supervised;
+      unsupervisedAlgos = unsupervised;
+
+      this.buildAlgoList('#supervised-group');
+      this.buildAlgoList('#unsupervised-group');
+    }
+  }
+
+  buildAlgoList(id) {
     const algos = id.includes('unsupervised') ? unsupervisedAlgos : supervisedAlgos;
 
     const optGroup = this.context.querySelector(id);
     optGroup.innerHTML = algoListTemplate({
-      algos: algos,
-      loading: loading
+      algos: algos
     });
+  }
+
+  toggleEnableAlgoSelect(enable) {
+    if (enable) {
+      if (algoSelect.parentNode.classList.contains('disabled')) {
+        algoSelect.parentNode.classList.remove('disabled');
+      }
+
+      algoSelect.removeAttribute('disabled');
+    } else {
+      if (!algoSelect.parentNode.classList.contains('disabled')) {
+        algoSelect.parentNode.classList.add('disabled');
+      }
+
+      algoSelect.setAttribute('disabled', 'disabled');
+    }
+  }
+
+  initAlgoSelect() {
+    const storedValue = sessionStorage.getItem('algorithm-name');
+    const options = algoSelect.options;
+    let selected;
+    if (storedValue) {
+      for (let i = 1; i < options.length; ++i) {
+        const option = options[i];
+        const algo = this.getAlgorithmById(option.dataset.algo);
+        if (storedValue === algo.slug) {
+          selected = algo;
+          option.selected = true;
+        }
+      }
+      super.toggleNavBtnEnable('finish', true);
+    } else {
+      options[0].selected = true;
+      super.toggleNavBtnEnable('finish', false);
+    }
+    if (!(selected === undefined)) {
+      selectedAlgo = selected;
+      this.applyParametersConfig(selected.config);
+    }
   }
 
   algoChangeListener(event) {
@@ -94,58 +180,12 @@ class Learning extends Task {
     const select = event.target;
     const id = select.options[select.selectedIndex].dataset.algo;
     const value = select.options[select.selectedIndex].value;
-    const containerInput = this.context.querySelector('#algo-container');
 
     selectedAlgo = this.getAlgorithmById(id);
-    containerInput.value = selectedAlgo.container;
-
     sessionStorage.setItem('algorithm-name', value);
-    sessionStorage.setItem('algorithm-container', selectedAlgo.container);
 
     super.toggleNavBtnEnable('finish', true);
-
-    const JSONValues = JSON.parse(JSON.stringify(sessionStorage));
-
-    Object.keys(JSONValues).filter(key => {
-      if (/^algo-param-/.test(key)) {
-        sessionStorage.removeItem(key);
-      }
-    });
-
     this.applyParametersConfig(selectedAlgo.config);
-  }
-
-  initAlgoSelect() {
-    const storedValue = sessionStorage.getItem('algorithm-name');
-    const storedContainer = sessionStorage.getItem('algorithm-container');
-    const options = algoSelect.options;
-
-    let selected;
-    if (storedValue && storedContainer) {
-      for (let i = 1; i < options.length; ++i) {
-        const option = options[i];
-        const algo = this.getAlgorithmById(option.dataset.algo);
-        if (storedValue === algo.slug && storedContainer === algo.container) {
-          selected = algo;
-          option.selected = true;
-        }
-      }
-      super.toggleNavBtnEnable('finish', true);
-    } else {
-      options[0].selected = true;
-      super.toggleNavBtnEnable('finish', false);
-    }
-
-    const containerInput = this.context.querySelector('#algo-container');
-
-    if (!(selected === undefined)) {
-      selectedAlgo = selected;
-      containerInput.value = selected.container;
-
-      this.applyParametersConfig(selected.config);
-    } else {
-      containerInput.value = 'None';
-    }
   }
 
   getAlgorithmById(id) {
@@ -191,6 +231,7 @@ class Learning extends Task {
         algo: selectedAlgo,
         loading: false
       });
+      super.toggleNavBtnEnable('finish', false);
     } else {
       if (container.classList.contains('no-conf')) {
         container.classList.remove('no-conf');
@@ -216,7 +257,31 @@ class Learning extends Task {
           }
         });
       }
+
+      super.toggleNavBtnEnable('finish', true);
     }
+  }
+
+  removeAlgoData() {
+    const storedValue = sessionStorage.getItem('algorithm-name');
+    if (!(storedValue === undefined)) {
+      sessionStorage.removeItem('algorithm-name');
+      algoSelect.options[0].selected = true;
+    }
+
+    const JSONValues = JSON.parse(JSON.stringify(sessionStorage));
+    Object.keys(JSONValues).filter(key => {
+      if (/^algo-param-/.test(key)) {
+        sessionStorage.removeItem(key);
+      }
+    });
+
+    const paramsContainer = this.context.querySelector('.params-container');
+
+    paramsContainer.setAttribute('class', 'params-container');
+    paramsContainer.innerHTML = '';
+
+    super.toggleNavBtnEnable('finish', false);
   }
 
   make() {
@@ -245,7 +310,18 @@ class Learning extends Task {
       }
     });
 
+    this.makeAlgoList();
+
+    containerSelect = this.context.querySelector('select#container');
     algoSelect = this.context.querySelector('select#algo');
+
+    this.initContainerSelect();
+    containerSelect.addEventListener(
+      'change',
+      this.containerChangeListener.bind(this),
+      false
+    );
+
     this.initAlgoSelect();
     algoSelect.addEventListener('change', this.algoChangeListener.bind(this), false);
 
