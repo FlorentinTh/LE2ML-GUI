@@ -104,11 +104,11 @@ class FileContent extends Component {
 
     const isEditable = event.target.options[event.target.selectedIndex].dataset.editable;
 
+    this.dataSource = event.target.value;
     if (isEditable === 'false') {
       this.disableFileSelect();
       ModalHelper.error(`Files of data source ${this.dataSource} are not editable.`);
     } else {
-      this.dataSource = event.target.value;
       this.initFileListData();
     }
   }
