@@ -15,6 +15,7 @@ let allSources;
 let processContainer;
 let fileList;
 let modelNameInput;
+let crossValidationSwitch;
 
 let importFileInputChange;
 let importFileFormSubmit;
@@ -124,9 +125,16 @@ class SelectProcess extends Task {
   makeProcessTest() {
     const process = sessionStorage.getItem('process-type');
     const model = sessionStorage.getItem('process-model');
+    const crossValidation = sessionStorage.getItem('cross-validation');
 
-    if (process === 'train' && !(model === undefined)) {
-      sessionStorage.removeItem('process-model');
+    if (process === 'train') {
+      if (!(model === undefined)) {
+        sessionStorage.removeItem('process-model');
+      }
+
+      if (!(crossValidation === undefined)) {
+        sessionStorage.removeItem('cross-validation');
+      }
     }
 
     sessionStorage.setItem('process-type', 'test');
@@ -350,8 +358,9 @@ class SelectProcess extends Task {
     const content = this.context.querySelector('.process-options');
 
     content.innerHTML = trainingProcessTemplate({
-      title: 'New Trained Model',
-      filename: model
+      'title-model': 'New Trained Model',
+      filename: model,
+      'title-validation': 'Perform Cross-Validation ?'
     });
 
     modelNameInput = this.context.querySelector('input#model-filename');
@@ -423,6 +432,60 @@ class SelectProcess extends Task {
       },
       false
     );
+
+    crossValidationSwitch = this.context.querySelectorAll(
+      '.cross-validation input[type=radio]'
+    );
+
+    const infoBtn = this.context.querySelector('h3.infos-title i');
+    infoBtn.addEventListener(
+      'click',
+      event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        ModalHelper.confirm(
+          'Cross-Validation',
+          'A 10-fold cross-validation will be performed on the trained model in order to provide an estimation of the performance for the learning process.',
+          'I understand',
+          '',
+          false,
+          true,
+          'info'
+        );
+      },
+      false
+    );
+
+    const storedCrossValidation = sessionStorage.getItem('cross-validation');
+
+    for (let i = 0; i < crossValidationSwitch.length; ++i) {
+      const radio = crossValidationSwitch[i];
+
+      if (!(storedCrossValidation === null)) {
+        if (radio.value === storedCrossValidation) {
+          radio.setAttribute('checked', true);
+        }
+      } else {
+        if (radio.checked) {
+          sessionStorage.setItem('cross-validation', true);
+        } else {
+          sessionStorage.setItem('cross-validation', true);
+        }
+      }
+
+      radio.addEventListener(
+        'change',
+        event => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          if (event.target.checked) {
+            sessionStorage.setItem('cross-validation', event.target.value);
+          }
+        },
+        false
+      );
+    }
   }
 
   switchProcessContent(process) {
@@ -435,6 +498,10 @@ class SelectProcess extends Task {
 
       if (sessionStorage.getItem('process-model')) {
         sessionStorage.removeItem('process-model');
+      }
+
+      if (sessionStorage.getItem('cross-validation')) {
+        sessionStorage.removeItem('cross-validation');
       }
       super.toggleNavItemsEnabled(['data-source'], true);
 
@@ -546,6 +613,12 @@ class SelectProcess extends Task {
       }
     } else if (conf.process === 'train') {
       modelNameInput.value = conf.model;
+      for (let i = 0; i < crossValidationSwitch.length; ++i) {
+        const radio = crossValidationSwitch[i];
+        if (radio.value === conf['cross-validation'].toString()) {
+          radio.setAttribute('checked', true);
+        }
+      }
     }
 
     const configuration = new Configuration(conf);

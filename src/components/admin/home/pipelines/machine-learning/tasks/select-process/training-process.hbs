@@ -1,4 +1,26 @@
-<h3>{{~title~}}</h3>
-<label for="model-filename"></label>
-<input type="text" id="model-filename" name="model-filename" placeholder="Filename" autocomplete="false"
-  value="{{~filename~}}" required />
+<div class="content">
+  <div class="content-item">
+    <h3>{{~title-model~}}</h3>
+    <label for="model-filename"></label>
+    <input type="text" id="model-filename" name="model-filename" placeholder="Filename" autocomplete="false"
+      value="{{~filename~}}" required />
+  </div>
+  <div class="content-item">
+    <h3 class="infos-title">
+      {{~title-validation}}
+      <i class="fas fa-info-circle"></i>
+    </h3>
+    <div class="switch-group cross-validation">
+      <input type="radio" id="switch-yes" name="cross-validation" value="true" checked />
+      <label for="switch-yes">
+        <i class="fas fa-thumbs-up"></i>
+        Yes
+      </label>
+      <input type="radio" id="switch-no" name="cross-validation" value="false" />
+      <label for="switch-no">
+        No
+        <i class="fas fa-thumbs-down"></i>
+      </label>
+    </div>
+  </div>
+</div>

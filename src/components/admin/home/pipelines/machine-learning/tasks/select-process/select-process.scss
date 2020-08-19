@@ -1,0 +1,20 @@
+.process-options {
+  margin-top: -20px;
+
+  .content-item {
+    &:not(:first-child) {
+      margin-top: 45px;
+    }
+
+    h3 {
+      i {
+        &:hover {
+          cursor: pointer;
+          @include themify($themes) {
+            color: themed('color-accent');
+          }
+        }
+      }
+    }
+  }
+}

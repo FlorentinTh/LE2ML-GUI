@@ -15,6 +15,10 @@ class V1 {
       result.model = values['process-model'];
     }
 
+    if (values['process-type'] === 'train') {
+      result['cross-validation'] = values['cross-validation'] === 'true';
+    }
+
     const inputType = values['input-type'];
 
     if (inputType.includes('file')) {
@@ -109,6 +113,10 @@ class V1 {
 
     if (!(this.config.process === 'none')) {
       sessionStorage.setItem('process-model', this.config.model);
+    }
+
+    if (this.config.process === 'train') {
+      sessionStorage.setItem('cross-validation', this.config['cross-validation']);
     }
 
     const inputType = Object.keys(this.config.input)[0];
