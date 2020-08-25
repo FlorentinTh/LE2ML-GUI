@@ -1,5 +1,5 @@
 {{#each jobs as |job|}}
-<div class="grid-item" id="job-infos" data-job="{{~job._id~}}">
+<div class="grid-item" data-job="{{~job._id~}}">
   <div class="left">
     <div class="label">
       <h3>
@@ -70,17 +70,26 @@
     {{~else~}}
     <div class="actions">
       {{~#[utils/compare] job.state '===' 'completed'~}}
+      {{~#[utils/compare] job.process '===' 'training'~}}
       <div class="action">
-        <button id="action">Action</button>
+        <button id="results">Show results</button>
       </div>
+      <div class="action">
+        <button id="download-matrix">Download Matrix</button>
+      </div>
+      {{~else~}}
+      <div class="action">
+        <button id="download-predictions">Download Predictions</button>
+      </div>
+      {{~/[utils/compare]~}}
       {{~else~}}
       <div class="action">
         <button id="restart">Restart</button>
       </div>
+      {{~/[utils/compare]~}}
       <div class="action">
         <button id="delete">Delete</button>
       </div>
-      {{~/[utils/compare]~}}
     </div>
     {{~/[utils/compare]~}}
   </div>

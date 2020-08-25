@@ -276,9 +276,9 @@
         }
 
         button {
-          height: 26px;
+          height: 36px;
           margin-top: 5px;
-          width: 150px;
+          width: 225px;
           background-color: transparent;
           text-transform: uppercase;
 
@@ -287,9 +287,17 @@
             color: themed('color-accent');
           }
 
+          &:disabled {
+            cursor: initial;
+            @include themify($themes) {
+              border: 1px solid themed('color-text-secondary');
+              color: themed('color-text-secondary');
+            }
+          }
+
           transition: all 0.5s ease-in-out;
 
-          &:hover {
+          &:hover:not(:disabled) {
             @include themify($themes) {
               background-color: themed('color-accent');
               border: 1px solid themed('color-accent');
@@ -298,6 +306,17 @@
           }
         }
       }
+    }
+  }
+}
+
+.results {
+  .result {
+    display: block;
+    margin-top: 15px;
+    font-size: 1.1em;
+    .metric {
+      text-transform: capitalize;
     }
   }
 }

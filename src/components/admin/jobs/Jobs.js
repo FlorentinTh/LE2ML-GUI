@@ -4,6 +4,7 @@ import axios from 'axios';
 import APIHelper from '@APIHelper';
 import jobListTemplate from './job-list.hbs';
 import ModalHelper from '@ModalHelper';
+import StringHelper from '@StringHelper';
 import Store from '@Store';
 import EventSource from 'eventsource';
 
@@ -67,6 +68,10 @@ class Jobs extends Component {
               loading: opts.loading
             });
 
+            if (value === 'completed') {
+              this.toggleActionEnable(jobs);
+            }
+
             this.setActions(jobs);
 
             if (value === 'started') {
@@ -94,17 +99,41 @@ class Jobs extends Component {
     }
   }
 
+  toggleActionEnable(jobs) {
+    for (let i = 0; i < jobs.length; ++i) {
+      const results = jobs[i].results;
+      const process = jobs[i].process;
+
+      if (process === 'training') {
+        if (results === null) {
+          const buttons = this.context.querySelectorAll('.actions button');
+
+          for (let j = 0; j < buttons.length; ++j) {
+            if (!(buttons[j].id === 'delete')) {
+              if (buttons[j].closest('.grid-item').dataset.job === jobs[i]._id) {
+                buttons[j].setAttribute('disabled', 'disabled');
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   setActions(jobs) {
     this.cancelAction(jobs);
     this.restartAction(jobs);
     this.deleteAction(jobs);
+    this.showResultsAction(jobs);
+    this.downloadMatrixAction(jobs);
+    this.downloadPredictionsAction(jobs);
   }
 
   cancelAction(jobs) {
     const icons = this.context.querySelectorAll('.state i');
 
     icons.forEach(icon => {
-      const jobId = icon.closest('#job-infos').dataset.job;
+      const jobId = icon.closest('.grid-item').dataset.job;
       const job = jobs.find(elem => elem._id === jobId);
 
       icon.addEventListener('click', event => {
@@ -134,7 +163,7 @@ class Jobs extends Component {
     const buttons = this.context.querySelectorAll('button#restart');
 
     buttons.forEach(button => {
-      const jobId = button.closest('#job-infos').dataset.job;
+      const jobId = button.closest('.grid-item').dataset.job;
       const job = jobs.find(elem => elem._id === jobId);
 
       button.addEventListener('click', event => {
@@ -155,7 +184,7 @@ class Jobs extends Component {
     const buttons = this.context.querySelectorAll('button#delete');
 
     buttons.forEach(button => {
-      const jobId = button.closest('#job-infos').dataset.job;
+      const jobId = button.closest('.grid-item').dataset.job;
       const job = jobs.find(elem => elem._id === jobId);
 
       button.addEventListener('click', event => {
@@ -177,6 +206,92 @@ class Jobs extends Component {
         });
       });
     });
+  }
+
+  showResultsAction(jobs) {
+    const buttons = this.context.querySelectorAll('button#results:not(:disabled)');
+
+    for (let i = 0; i < buttons.length; ++i) {
+      const jobId = buttons[i].closest('.grid-item').dataset.job;
+      const job = jobs.find(elem => elem._id === jobId);
+
+      buttons[i].addEventListener('click', event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const results = Object.keys(job.results);
+
+        const title =
+          job.label
+            .split(' ')
+            .map(item => StringHelper.capitalizeFirst(item))
+            .join(' ') + ' results';
+
+        let message = '<div class="results">';
+
+        for (let i = 0; i < results.length; ++i) {
+          message += `<div class="result"><span class="metric">${results[i]}</span> : ${
+            job.results[results[i]]
+          }%</div>`;
+        }
+
+        message += '</div>';
+
+        ModalHelper.confirm(title, message, 'Close', '', false, true, 'info');
+      });
+    }
+  }
+
+  downloadMatrixAction(jobs) {
+    const buttons = this.context.querySelectorAll(
+      'button#download-matrix:not(:disabled)'
+    );
+
+    for (let i = 0; i < buttons.length; ++i) {
+      const jobId = buttons[i].closest('.grid-item').dataset.job;
+
+      buttons[i].addEventListener('click', event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        downloadFile(`/jobs/${jobId}/download?output=matrix`, this.context).then(
+          response => {
+            if (response) {
+              window.open(
+                new URL(window.env.FILE_SERVER_URL + '/' + response.data),
+                '_blank'
+              );
+            }
+          }
+        );
+      });
+    }
+  }
+
+  downloadPredictionsAction(jobs) {
+    const buttons = this.context.querySelectorAll(
+      'button#download-predictions:not(:disabled)'
+    );
+
+    for (let i = 0; i < buttons.length; ++i) {
+      const jobId = buttons[i].closest('.grid-item').dataset.job;
+
+      buttons[i].addEventListener('click', event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        downloadFile(`/jobs/${jobId}/download?output=predictions`, this.context).then(
+          response => {
+            if (response) {
+              window.open(
+                new URL(window.env.FILE_SERVER_URL + '/' + response.data),
+                '_blank'
+              );
+            }
+          }
+        );
+      });
+    }
   }
 
   jobStateSwitchHandler(event) {
@@ -292,6 +407,17 @@ class Jobs extends Component {
 }
 
 async function getJobs(url, context) {
+  try {
+    const response = await axios.get(url, {
+      headers: APIHelper.setAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    APIHelper.errorsHandler(error, true);
+  }
+}
+
+async function downloadFile(url, context) {
   try {
     const response = await axios.get(url, {
       headers: APIHelper.setAuthHeader()

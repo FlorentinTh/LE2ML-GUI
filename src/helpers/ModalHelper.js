@@ -111,7 +111,7 @@ class ModalHelper {
   ) {
     return Swal.fire({
       title: title,
-      text: message,
+      html: message,
       icon: icon,
       position: 'top',
       confirmButtonText: confirmText,
