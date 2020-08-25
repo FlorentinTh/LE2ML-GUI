@@ -257,7 +257,7 @@ class Features extends Task {
   initNav() {
     const processType = sessionStorage.getItem('process-type');
 
-    if (processType === 'none') {
+    if (processType === 'none' || processType === 'test') {
       const firstNav = this.context.querySelector('.btn-group-nav').children[0];
 
       if (firstNav.classList.contains('next')) {
@@ -296,9 +296,14 @@ class Features extends Task {
     event.stopImmediatePropagation();
 
     const value = event.target.value;
+    const processType = sessionStorage.getItem('process-type');
 
     if (!(value === '')) {
-      super.toggleNavBtnEnable('next', true);
+      if (processType === 'none' || processType === 'test') {
+        super.toggleNavBtnEnable('finish', true);
+      } else {
+        super.toggleNavBtnEnable('next', true);
+      }
 
       if (this.selectedFeaturesCount > 0) {
         super.toggleNavItemsEnabled(['process'], true);
@@ -306,7 +311,12 @@ class Features extends Task {
 
       sessionStorage.setItem('features-file', value + '.csv');
     } else {
-      super.toggleNavBtnEnable('next', false);
+      if (processType === 'none' || processType === 'test') {
+        super.toggleNavBtnEnable('finish', false);
+      } else {
+        super.toggleNavBtnEnable('next', false);
+      }
+
       super.toggleNavItemsEnabled(['process'], false);
       sessionStorage.removeItem('features-file');
     }
@@ -323,6 +333,8 @@ class Features extends Task {
 
     const filenameInput = this.context.querySelector('input#save-filename');
 
+    const processType = sessionStorage.getItem('process-type');
+
     if (storedSaveFeatures === null) {
       if (!(storedFeaturesFile === null)) {
         sessionStorage.removeItem('features-file');
@@ -335,17 +347,34 @@ class Features extends Task {
       filenameInput.style.display = 'block';
 
       if (storedFeaturesFile === null) {
-        super.toggleNavBtnEnable('next', false);
+        if (processType === 'none' || processType === 'test') {
+          super.toggleNavBtnEnable('finish', false);
+        } else {
+          super.toggleNavBtnEnable('next', false);
+        }
+
         super.toggleNavItemsEnabled(['process'], false);
       } else {
         filenameInput.value = storedFeaturesFile.split('.')[0];
-        super.toggleNavBtnEnable('next', true);
+
+        if (processType === 'none' || processType === 'test') {
+          super.toggleNavBtnEnable('finish', true);
+        } else {
+          super.toggleNavBtnEnable('next', true);
+        }
+
         super.toggleNavItemsEnabled(['process'], true);
       }
     } else {
       this.context.querySelector('#switch-off').checked = true;
       filenameInput.style.display = 'none';
-      super.toggleNavBtnEnable('next', true);
+
+      if (processType === 'none' || processType === 'test') {
+        super.toggleNavBtnEnable('finish', true);
+      } else {
+        super.toggleNavBtnEnable('next', true);
+      }
+
       super.toggleNavItemsEnabled(['process'], true);
 
       if (!(storedFeaturesFile === null)) {
@@ -366,13 +395,24 @@ class Features extends Task {
           filenameInput.style.display = 'block';
 
           if (filenameInput.value === '') {
-            super.toggleNavBtnEnable('next', false);
+            if (processType === 'none' || processType === 'test') {
+              super.toggleNavBtnEnable('finish', false);
+            } else {
+              super.toggleNavBtnEnable('next', false);
+            }
+
             super.toggleNavItemsEnabled(['process'], false);
           }
         } else {
           sessionStorage.setItem('features-save', false);
           filenameInput.style.display = 'none';
-          super.toggleNavBtnEnable('next', true);
+
+          if (processType === 'none' || processType === 'test') {
+            super.toggleNavBtnEnable('finish', true);
+          } else {
+            super.toggleNavBtnEnable('next', true);
+          }
+
           super.toggleNavItemsEnabled(['process'], true);
 
           if (!(sessionStorage.getItem('features-file') === null)) {

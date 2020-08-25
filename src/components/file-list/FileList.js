@@ -61,7 +61,13 @@ class FileList extends Events {
           this.emit('selected', true);
           this.selectedFile = filename;
           this.setSelected(row);
+
           sessionStorage.setItem(this.key, filename + '.' + ext);
+
+          const container = row.dataset.container;
+          if (!(container === '')) {
+            sessionStorage.setItem('algorithm-container', container);
+          }
         } else {
           this.emit('selected', false);
           this.removeCurrentSelectedFile();

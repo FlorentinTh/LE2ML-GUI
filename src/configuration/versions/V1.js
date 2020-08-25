@@ -48,18 +48,24 @@ class V1 {
       };
     }
 
-    const isSaveFeatures = values['features-save'] === 'true';
-
-    result.features = {
-      save: isSaveFeatures,
-      filename: values['features-file'],
-      list: []
-    };
-
-    const featuresArr = [];
-
     if (!(values.features === undefined)) {
+      const isSaveFeatures = values['features-save'] === 'true';
+
+      result.features = {
+        save: isSaveFeatures
+      };
+
+      if (isSaveFeatures) {
+        if (!(values['features-file'] === undefined)) {
+          result.features.filename = values['features-file'];
+        } else {
+          result.features.save = false;
+        }
+      }
+
+      const featuresArr = [];
       const features = values.features.split(',');
+
       for (let i = 0; i < features.length; ++i) {
         const feature = features[i].split('.');
         const featureObj = {
@@ -68,10 +74,15 @@ class V1 {
         };
         featuresArr.push(featureObj);
       }
+
       result.features.list = featuresArr;
     }
 
-    if (values['process-type'] === 'train' || values['process-type'] === 'test') {
+    if (values['process-type'] === 'test') {
+      result.algorithm = {
+        container: values['algorithm-container']
+      };
+    } else if (values['process-type'] === 'train') {
       result.algorithm = {
         name: values['algorithm-name'],
         container: values['algorithm-container']
@@ -135,56 +146,56 @@ class V1 {
       sessionStorage.setItem('input-content', this.config.input[inputType]);
     }
 
-    const isWindowingEnable = this.config.windowing.enable;
-    sessionStorage.setItem('windowing-enabled', isWindowingEnable);
+    if (!(this.config.windowing === undefined)) {
+      const isWindowingEnable = this.config.windowing.enable;
+      sessionStorage.setItem('windowing-enabled', isWindowingEnable);
+
+      if (isWindowingEnable) {
+        const windowingParams = this.config.windowing.parameters;
+        sessionStorage.setItem(
+          'windowing-length',
+          windowingParams.length.replace(/\D/g, '')
+        );
+
+        sessionStorage.setItem(
+          'windowing-unit',
+          windowingParams.length.replace(/[0-9]+/g, '')
+        );
+
+        const functionLabel = windowingParams.function.label;
+        sessionStorage.setItem('windowing-function-label', functionLabel);
+        sessionStorage.setItem(
+          'windowing-function-container',
+          windowingParams.function.container
+        );
+        sessionStorage.setItem('windowing-overlap', windowingParams.overlap);
+      }
+    }
 
     const features = this.config.features;
+
+    if (!(features === undefined)) {
+      const isSaveFeatures = this.config.features.save;
+      sessionStorage.setItem('features-save', isSaveFeatures);
+
+      const featuresFilename = this.config.features.filename;
+
+      if (!(featuresFilename === undefined)) {
+        sessionStorage.setItem('features-file', featuresFilename);
+      }
+
+      if (!(features.list === undefined)) {
+        if (features.list.length > 0) {
+          const featuresArr = [];
+          for (let i = 0; i < features.list.length; ++i) {
+            featuresArr.push(features.list[i].container + '.' + features.list[i].label);
+          }
+          sessionStorage.setItem('features', featuresArr);
+        }
+      }
+    }
+
     const algorithm = this.config.algorithm;
-
-    if (isWindowingEnable) {
-      const windowingParams = this.config.windowing.parameters;
-      sessionStorage.setItem(
-        'windowing-length',
-        windowingParams.length.replace(/\D/g, '')
-      );
-
-      sessionStorage.setItem(
-        'windowing-unit',
-        windowingParams.length.replace(/[0-9]+/g, '')
-      );
-      const functionLabel = windowingParams.function.label;
-      sessionStorage.setItem('windowing-function-label', functionLabel);
-      sessionStorage.setItem(
-        'windowing-function-container',
-        windowingParams.function.container
-      );
-      sessionStorage.setItem('windowing-overlap', windowingParams.overlap);
-    } else {
-      if (features === undefined) {
-        if (algorithm === undefined || this.config.process === 'none') {
-          return false;
-        }
-      }
-    }
-
-    const isSaveFeatures = this.config.features.save;
-    sessionStorage.setItem('features-save', isSaveFeatures);
-
-    const featuresFilename = this.config.features.filename;
-
-    if (!(featuresFilename === undefined)) {
-      sessionStorage.setItem('features-file', featuresFilename);
-    }
-
-    if (!(features.list === undefined)) {
-      if (features.list.length > 0) {
-        const featuresArr = [];
-        for (let i = 0; i < features.list.length; ++i) {
-          featuresArr.push(features.list[i].container + '.' + features.list[i].label);
-        }
-        sessionStorage.setItem('features', featuresArr);
-      }
-    }
 
     if (!(algorithm === undefined)) {
       sessionStorage.setItem('algorithm-name', algorithm.name);

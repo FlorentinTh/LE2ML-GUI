@@ -1,5 +1,9 @@
 {{#each files as |file|}}
+{{#[utils/compare] loading '===' null}}
 <tr>
+  {{else}}
+<tr data-container="{{file.container}}">
+  {{/[utils/compare]}}
   <td></td>
   <td>{{~file.filename~}}</td>
   <td class="center">{{~file.type~}}</td>

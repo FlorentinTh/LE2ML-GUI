@@ -10,6 +10,7 @@ import SelectProcess from './select-process/SelectProcess';
 import URLHelper from '@URLHelper';
 
 let navButtonClickHandler;
+let finishBtnClickHandler;
 class Task {
   constructor(context) {
     this.context = context;
@@ -77,7 +78,7 @@ class Task {
           if (enabled) {
             if (itemList[j] === 'process') {
               const selectedProcess = sessionStorage.getItem('process-type');
-              if (!(selectedProcess === null) && !(selectedProcess === 'none')) {
+              if (!(selectedProcess === null) && selectedProcess === 'train') {
                 this.setNavItemEnable(navItemsElems[i]);
               }
             } else if (itemList[j] === 'data-source') {
@@ -96,18 +97,46 @@ class Task {
               const storedInput = sessionStorage.getItem('input-content');
               if (!(storedInput === null)) {
                 this.setNavItemDisabled(navItemsElems[i]);
-                this.toggleNavItemsEnabled(
+                return this.toggleNavItemsEnabled(
                   ['windowing', 'feature-extraction', 'process'],
                   false
                 );
               } else {
                 this.setNavItemDisabled(navItemsElems[i]);
               }
-            } else if (itemList[j] === 'process') {
-              this.setNavItemDisabled(navItemsElems[i]);
             } else {
               this.setNavItemDisabled(navItemsElems[i]);
             }
+          }
+        }
+      }
+    }
+  }
+
+  removeFromSession(itemList) {
+    for (let i = 0; i < itemList.length; i++) {
+      if (itemList[i] === 'windowing') {
+        const keys = Object.keys(JSON.parse(JSON.stringify(sessionStorage)));
+
+        for (let j = 0; j < keys.length; ++j) {
+          if (keys[j].startsWith('windowing')) {
+            sessionStorage.removeItem(keys[j]);
+          }
+        }
+      } else if (itemList[i] === 'feature-extraction') {
+        const keys = Object.keys(JSON.parse(JSON.stringify(sessionStorage)));
+
+        for (let j = 0; j < keys.length; ++j) {
+          if (keys[j].startsWith('features')) {
+            sessionStorage.removeItem(keys[j]);
+          }
+        }
+      } else if (itemList[i] === 'process') {
+        const keys = Object.keys(JSON.parse(JSON.stringify(sessionStorage)));
+
+        for (let j = 0; j < keys.length; ++j) {
+          if (keys[j].startsWith('algo')) {
+            sessionStorage.removeItem(keys[j]);
           }
         }
       }
@@ -169,7 +198,7 @@ class Task {
     }
     const finishBtn = this.context.querySelector('.btn-group-nav .finish button');
 
-    finishBtn.addEventListener(
+    finishBtnClickHandler = [
       'click',
       event => {
         event.preventDefault();
@@ -182,7 +211,9 @@ class Task {
         }
       },
       false
-    );
+    ];
+
+    finishBtn.addEventListener(...finishBtnClickHandler);
   }
 
   finishBtnHandler() {
@@ -264,13 +295,16 @@ class Task {
           this.setNavActive(options.label);
         }
       },
-      false
+      true
     ];
 
     const nextBtn = this.context.querySelector('.btn-group-nav .next button');
     const previousBtn = this.context.querySelector('.btn-group-nav .previous button');
 
     if (!(nextBtn === null) && button === 'next') {
+      if (!(finishBtnClickHandler === undefined)) {
+        nextBtn.removeEventListener(...finishBtnClickHandler);
+      }
       nextBtn.addEventListener(...navButtonClickHandler);
     } else if (!(previousBtn === null) && button === 'previous') {
       previousBtn.addEventListener(...navButtonClickHandler);

@@ -122,179 +122,6 @@ class SelectProcess extends Task {
     this.makeSelectProcess();
   }
 
-  makeProcessTest() {
-    const process = sessionStorage.getItem('process-type');
-    const model = sessionStorage.getItem('process-model');
-    const crossValidation = sessionStorage.getItem('cross-validation');
-
-    if (process === 'train') {
-      if (!(model === undefined)) {
-        sessionStorage.removeItem('process-model');
-      }
-
-      if (!(crossValidation === undefined)) {
-        sessionStorage.removeItem('cross-validation');
-      }
-    }
-
-    sessionStorage.setItem('process-type', 'test');
-
-    const file = sessionStorage.getItem('process-model');
-    let filename;
-
-    if (!(file === null)) {
-      filename = file.split('.')[0];
-      super.toggleNavBtnEnable('next', true);
-      super.toggleNavItemsEnabled(['data-source'], true);
-
-      const isOnlyLearning = sessionStorage.getItem('only-learning');
-      const selectedInput = sessionStorage.getItem('input-content');
-
-      if (selectedInput === null) {
-        super.toggleNavItemsEnabled(
-          ['windowing', 'feature-extraction', 'process'],
-          false
-        );
-      } else {
-        const isWindowingEnable = sessionStorage.getItem('windowing-enabled');
-        const isWindowLengthValid = sessionStorage.getItem('windowing-length') > 0;
-
-        if (!isOnlyLearning) {
-          super.toggleNavItemsEnabled(['windowing'], true);
-
-          if (!(isWindowingEnable === null)) {
-            if (
-              (isWindowingEnable === 'true' && isWindowLengthValid) ||
-              isWindowingEnable === 'false'
-            ) {
-              super.toggleNavItemsEnabled(['feature-extraction'], true);
-              const isFeaturesFileSave = sessionStorage.getItem('features-save');
-              const isFileNameValid = sessionStorage.getItem('features-file');
-
-              if (!(isFeaturesFileSave === null)) {
-                if (
-                  (isFeaturesFileSave === 'true' && !(isFileNameValid === null)) ||
-                  isFeaturesFileSave === 'false'
-                ) {
-                  super.toggleNavItemsEnabled(['process'], true);
-                } else {
-                  super.toggleNavItemsEnabled(['process'], false);
-                }
-              } else {
-                super.toggleNavItemsEnabled(['process'], true);
-              }
-            } else {
-              super.toggleNavItemsEnabled(['process'], false);
-            }
-          } else {
-            super.toggleNavItemsEnabled(['feature-extraction', 'process'], false);
-          }
-        } else {
-          super.toggleNavItemsEnabled(['process'], true);
-        }
-      }
-    } else {
-      super.toggleNavBtnEnable('next', false);
-      super.toggleNavItemsEnabled(
-        ['data-source', 'windowing', 'feature-extraction', 'process'],
-        false
-      );
-    }
-
-    const dataStore = Store.get('model-data');
-    if (dataStore === undefined) {
-      fileList = new FileList(
-        processContainer,
-        'Existing Trained Models',
-        [],
-        'process-model',
-        filename || null
-      );
-
-      getFiles(`/files?source=${this.dataSource}&type=models`, this.context).then(
-        response => {
-          if (response) {
-            Store.add({
-              id: 'model-data',
-              data: response.data
-            });
-
-            fileList.setData(response.data);
-            fileList.make();
-          }
-        }
-      );
-    } else {
-      const context = this.context.querySelector('.process-options');
-      fileList = new FileList(
-        context,
-        'Existing Trained Models',
-        dataStore.data,
-        'process-model',
-        filename || null,
-        false
-      );
-    }
-
-    fileList.on('selected', result => {
-      super.toggleNavBtnEnable('next', result);
-      const isOnlyLearning = sessionStorage.getItem('only-learning');
-      const selectedInput = sessionStorage.getItem('input-content');
-
-      if (result) {
-        super.toggleNavItemsEnabled(['data-source'], true);
-        if (selectedInput === null) {
-          super.toggleNavItemsEnabled(
-            ['windowing', 'feature-extraction', 'process'],
-            false
-          );
-        } else {
-          const isWindowingEnable = sessionStorage.getItem('windowing-enabled');
-          const isWindowLengthValid = sessionStorage.getItem('windowing-length') > 0;
-
-          if (!isOnlyLearning) {
-            super.toggleNavItemsEnabled(['windowing'], true);
-
-            if (!(isWindowingEnable === null)) {
-              if (
-                (isWindowingEnable === 'true' && isWindowLengthValid) ||
-                isWindowingEnable === 'false'
-              ) {
-                super.toggleNavItemsEnabled(['feature-extraction'], true);
-                const isFeaturesFileSave = sessionStorage.getItem('features-save');
-                const isFileNameValid = sessionStorage.getItem('features-file');
-
-                if (!(isFeaturesFileSave === null)) {
-                  if (
-                    (isFeaturesFileSave === 'true' && !(isFileNameValid === null)) ||
-                    isFeaturesFileSave === 'false'
-                  ) {
-                    super.toggleNavItemsEnabled(['process'], true);
-                  } else {
-                    super.toggleNavItemsEnabled(['process'], false);
-                  }
-                } else {
-                  super.toggleNavItemsEnabled(['process'], true);
-                }
-              } else {
-                super.toggleNavItemsEnabled(['process'], false);
-              }
-            } else {
-              super.toggleNavItemsEnabled(['feature-extraction', 'process'], false);
-            }
-          } else {
-            super.toggleNavItemsEnabled(['process'], true);
-          }
-        }
-      } else {
-        super.toggleNavItemsEnabled(
-          ['data-source', 'windowing', 'feature-extraction', 'process'],
-          result
-        );
-      }
-    });
-  }
-
   makeProcessTrain() {
     const process = sessionStorage.getItem('process-type');
 
@@ -488,11 +315,153 @@ class SelectProcess extends Task {
     }
   }
 
+  makeProcessTest() {
+    const process = sessionStorage.getItem('process-type');
+    const model = sessionStorage.getItem('process-model');
+    const crossValidation = sessionStorage.getItem('cross-validation');
+
+    if (process === 'train') {
+      if (!(model === undefined)) {
+        sessionStorage.removeItem('process-model');
+      }
+
+      if (!(crossValidation === undefined)) {
+        sessionStorage.removeItem('cross-validation');
+      }
+    }
+
+    sessionStorage.setItem('process-type', 'test');
+
+    const file = sessionStorage.getItem('process-model');
+    let filename;
+
+    if (!(file === null)) {
+      filename = file.split('.')[0];
+      super.toggleNavBtnEnable('next', true);
+      super.toggleNavItemsEnabled(['data-source'], true);
+
+      const isOnlyLearning = sessionStorage.getItem('only-learning');
+      const selectedInput = sessionStorage.getItem('input-content');
+
+      if (selectedInput === null) {
+        super.toggleNavItemsEnabled(
+          ['windowing', 'feature-extraction', 'process'],
+          false
+        );
+        super.removeFromSession(['process']);
+      } else {
+        const isWindowingEnable = sessionStorage.getItem('windowing-enabled');
+        const isWindowLengthValid = sessionStorage.getItem('windowing-length') > 0;
+
+        if (!isOnlyLearning) {
+          super.toggleNavItemsEnabled(['windowing'], true);
+
+          if (!(isWindowingEnable === null)) {
+            if (
+              (isWindowingEnable === 'true' && isWindowLengthValid) ||
+              isWindowingEnable === 'false'
+            ) {
+              super.toggleNavItemsEnabled(['feature-extraction'], true);
+            }
+          } else {
+            super.toggleNavItemsEnabled(['feature-extraction', 'process'], false);
+          }
+        }
+      }
+    } else {
+      super.toggleNavBtnEnable('next', false);
+      super.toggleNavItemsEnabled(
+        ['data-source', 'windowing', 'feature-extraction', 'process'],
+        false
+      );
+      super.removeFromSession(['process']);
+    }
+
+    const dataStore = Store.get('model-data');
+    if (dataStore === undefined) {
+      fileList = new FileList(
+        processContainer,
+        'Existing Trained Models',
+        [],
+        'process-model',
+        filename || null
+      );
+
+      getFiles(`/files?source=${this.dataSource}&type=models`, this.context).then(
+        response => {
+          if (response) {
+            Store.add({
+              id: 'model-data',
+              data: response.data
+            });
+
+            fileList.setData(response.data);
+            fileList.make();
+          }
+        }
+      );
+    } else {
+      const context = this.context.querySelector('.process-options');
+      fileList = new FileList(
+        context,
+        'Existing Trained Models',
+        dataStore.data,
+        'process-model',
+        filename || null,
+        false
+      );
+    }
+
+    fileList.on('selected', result => {
+      super.toggleNavBtnEnable('next', result);
+      const isOnlyLearning = sessionStorage.getItem('only-learning');
+      const selectedInput = sessionStorage.getItem('input-content');
+
+      if (result) {
+        super.toggleNavItemsEnabled(['data-source'], true);
+        if (selectedInput === null) {
+          super.toggleNavItemsEnabled(
+            ['windowing', 'feature-extraction', 'process'],
+            false
+          );
+          super.removeFromSession(['process']);
+        } else {
+          const isWindowingEnable = sessionStorage.getItem('windowing-enabled');
+          const isWindowLengthValid = sessionStorage.getItem('windowing-length') > 0;
+
+          if (!isOnlyLearning) {
+            super.toggleNavItemsEnabled(['windowing'], true);
+
+            if (!(isWindowingEnable === null)) {
+              if (
+                (isWindowingEnable === 'true' && isWindowLengthValid) ||
+                isWindowingEnable === 'false'
+              ) {
+                super.toggleNavItemsEnabled(['feature-extraction'], true);
+              }
+            } else {
+              super.toggleNavItemsEnabled(['feature-extraction', 'process'], false);
+            }
+          }
+        }
+      } else {
+        super.toggleNavItemsEnabled(
+          ['data-source', 'windowing', 'feature-extraction'],
+          result
+        );
+
+        if (!result) {
+          super.removeFromSession(['process']);
+        }
+      }
+    });
+  }
+
   switchProcessContent(process) {
-    if (process === 'test') {
-      this.makeProcessTest();
-    } else if (process === 'train') {
+    if (process === 'train') {
       this.makeProcessTrain();
+    } else if (process === 'test') {
+      this.makeProcessTest();
     } else if (process === 'none') {
       sessionStorage.setItem('process-type', process);
 
@@ -553,6 +522,7 @@ class SelectProcess extends Task {
       }
 
       super.toggleNavItemsEnabled(['process'], false);
+      super.removeFromSession(['process']);
       super.toggleNavBtnEnable('next', true);
     }
   }

@@ -1,5 +1,6 @@
 import Task from '../Task';
 import dataSourceTemplate from './data-source.hbs';
+import configDownloadTemplate from '../config-download.hbs';
 import FileList from '@FileList';
 import websocketTemplate from './websocket.hbs';
 import axios from 'axios';
@@ -87,7 +88,7 @@ class DataSource extends Task {
     if (inputType === 'raw') {
       sessionStorage.setItem('input-type', 'raw-file');
       super.clearNavButton('next');
-      super.initNavBtn('next', { label: 'windowing', Task: Windowing });
+      this.initNavNextBtn(inputType);
 
       if (sessionStorage.getItem('only-learning')) {
         sessionStorage.removeItem('only-learning');
@@ -96,7 +97,7 @@ class DataSource extends Task {
       sessionStorage.setItem('input-type', 'features-file');
       sessionStorage.setItem('only-learning', true);
       super.clearNavButton('next');
-      super.initNavBtn('next', { label: 'process', Task: Learning });
+      this.initNavNextBtn(inputType);
     }
 
     const dataStore = Store.get(inputType + '-file-data');
@@ -147,9 +148,10 @@ class DataSource extends Task {
                 super.toggleNavItemsEnabled(['feature-extraction', 'process'], false);
               }
             }
-            super.toggleNavBtnEnable('next', true);
+            this.toggleNextOrFinishBtnEnable(inputType, true);
           } else {
-            super.toggleNavBtnEnable('next', false);
+            this.toggleNextOrFinishBtnEnable(inputType, false);
+
             super.toggleNavItemsEnabled(
               ['windowing', 'feature-extraction', 'process'],
               false
@@ -207,9 +209,11 @@ class DataSource extends Task {
             super.toggleNavItemsEnabled(['feature-extraction', 'process'], false);
           }
         }
-        super.toggleNavBtnEnable('next', true);
+
+        this.toggleNextOrFinishBtnEnable(inputType, true);
       } else {
-        super.toggleNavBtnEnable('next', false);
+        this.toggleNextOrFinishBtnEnable(inputType, false);
+
         super.toggleNavItemsEnabled(
           ['windowing', 'feature-extraction', 'process'],
           false
@@ -264,7 +268,7 @@ class DataSource extends Task {
           );
         }
       }
-      super.toggleNavBtnEnable('next', result);
+      this.toggleNextOrFinishBtnEnable(inputType, result);
     });
   }
 
@@ -288,6 +292,75 @@ class DataSource extends Task {
       inputContent.innerHTML = '';
       const value = event.target.value;
       this.switchInputContent(value);
+    }
+  }
+
+  initNavNextBtn(inputType) {
+    const processType = sessionStorage.getItem('process-type');
+    const firstNav = this.context.querySelector('.btn-group-nav').children[0];
+    const icon = firstNav.children[0].children[0];
+
+    if (processType === 'test') {
+      if (inputType === 'features') {
+        if (firstNav.classList.contains('next')) {
+          firstNav.classList.remove('next');
+          firstNav.classList.add('finish');
+        }
+        super.initFinishBtn(() => {
+          super.finishBtnHandler();
+        });
+
+        if (icon.classList.contains('fa-arrow-right')) {
+          icon.classList.remove('fa-arrow-right');
+          icon.classList.add('fa-paper-plane');
+        }
+        this.context.insertAdjacentHTML('beforeend', configDownloadTemplate());
+        const downloadBtn = this.context.querySelector('#download-config');
+        downloadBtn.addEventListener(
+          'click',
+          super.downloadBtnClickListener.bind(this),
+          false
+        );
+      } else {
+        if (firstNav.classList.contains('finish')) {
+          firstNav.classList.remove('finish');
+          firstNav.classList.add('next');
+        }
+
+        if (icon.classList.contains('fa-paper-plane')) {
+          icon.classList.remove('fa-paper-plane');
+          icon.classList.add('fa-arrow-right');
+        }
+
+        const downloadBtn = this.context.querySelector('#download-config');
+
+        if (!(downloadBtn === null)) {
+          downloadBtn.parentNode.remove();
+        }
+
+        super.initNavBtn('next', { label: 'windowing', Task: Windowing });
+      }
+    } else if (processType === 'train') {
+      if (inputType === 'features') {
+        super.initNavBtn('next', { label: 'process', Task: Learning });
+      } else {
+        super.initNavBtn('next', { label: 'windowing', Task: Windowing });
+      }
+    }
+  }
+
+  toggleNextOrFinishBtnEnable(inputType, enable) {
+    const processType = sessionStorage.getItem('process-type');
+
+    if (inputType === 'features') {
+      if (processType === 'test') {
+        super.toggleNavBtnEnable('finish', enable);
+        super.removeFromSession(['windowing', 'feature-extraction']);
+      } else {
+        super.toggleNavBtnEnable('next', enable);
+      }
+    } else {
+      super.toggleNavBtnEnable('next', enable);
     }
   }
 
