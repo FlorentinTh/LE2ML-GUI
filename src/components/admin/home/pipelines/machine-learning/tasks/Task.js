@@ -336,9 +336,13 @@ class Task {
       ModalHelper.error(
         'Please select an algorithm or check that all required parameters does not have missing values before starting your download.'
       );
-    } else if (!this.validateTestFeatureFileSelected()) {
+    }
+
+    if (!this.validateTestFeatureFileSelected()) {
       ModalHelper.error('Please select a file to start your download.');
-    } else if (!this.validateFeatureFileSaveFiled()) {
+    }
+
+    if (!this.validateFeatureFileSaveFiled()) {
       ModalHelper.error(
         'Please enter a filename to save file or disable this option to start your download.'
       );
@@ -433,23 +437,29 @@ class Task {
   }
 
   validateTestFeatureFileSelected() {
-    const testFeatureFileStored = sessionStorage.getItem('input-content');
-    if (!(testFeatureFileStored === null)) {
-      return true;
+    const process = sessionStorage.getItem('process-type');
+
+    if (process === 'test') {
+      const testFeatureFileStored = sessionStorage.getItem('input-content');
+      if (testFeatureFileStored === null) {
+        return false;
+      }
     }
 
-    return false;
+    return true;
   }
 
   validateFeatureFileSaveFiled() {
-    const isSwitchOnChecked = this.context.querySelector(
-      '.switch-save-file input#switch-on'
-    ).checked;
+    const input = this.context.querySelector('.switch-save-file input#switch-on');
 
-    const saveFileInput = this.context.querySelector('#save-filename');
+    if (!(input === null)) {
+      const isSwitchOnChecked = input.checked;
 
-    if (isSwitchOnChecked && saveFileInput.value.trim() === '') {
-      return false;
+      const saveFileInput = this.context.querySelector('#save-filename');
+
+      if (isSwitchOnChecked && saveFileInput.value.trim() === '') {
+        return false;
+      }
     }
 
     return true;
