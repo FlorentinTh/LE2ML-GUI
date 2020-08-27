@@ -334,7 +334,13 @@ class Task {
 
     if (!this.validateAlgoParamsFields()) {
       ModalHelper.error(
-        'Please select an algorithm or check that all required parameters does not have missing values.'
+        'Please select an algorithm or check that all required parameters does not have missing values before starting your download.'
+      );
+    } else if (!this.validateTestFeatureFileSelected()) {
+      ModalHelper.error('Please select a file to start your download.');
+    } else if (!this.validateFeatureFileSaveFiled()) {
+      ModalHelper.error(
+        'Please enter a filename to save file or disable this option to start your download.'
       );
     } else {
       const content = formConfVersionTemplate();
@@ -421,6 +427,29 @@ class Task {
           return false;
         }
       }
+    }
+
+    return true;
+  }
+
+  validateTestFeatureFileSelected() {
+    const testFeatureFileStored = sessionStorage.getItem('input-content');
+    if (!(testFeatureFileStored === null)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  validateFeatureFileSaveFiled() {
+    const isSwitchOnChecked = this.context.querySelector(
+      '.switch-save-file input#switch-on'
+    ).checked;
+
+    const saveFileInput = this.context.querySelector('#save-filename');
+
+    if (isSwitchOnChecked && saveFileInput.value.trim() === '') {
+      return false;
     }
 
     return true;
