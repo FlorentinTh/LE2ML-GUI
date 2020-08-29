@@ -78,9 +78,11 @@
         <button id="download-matrix">Download Matrix</button>
       </div>
       {{~else~}}
+      {{~#[utils/compare] job.process '===' 'testing'~}}
       <div class="action">
         <button id="download-predictions">Download Predictions</button>
       </div>
+      {{~/[utils/compare]~}}
       {{~/[utils/compare]~}}
       {{~else~}}
       <div class="action">
