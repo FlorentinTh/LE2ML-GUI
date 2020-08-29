@@ -295,6 +295,7 @@ class Features extends Task {
     event.preventDefault();
     event.stopImmediatePropagation();
 
+    event.target.value = event.target.value.replace(/[^0-9a-zA-Z-]/gi, '-').toLowerCase();
     const value = event.target.value;
     const processType = sessionStorage.getItem('process-type');
 

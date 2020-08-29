@@ -203,6 +203,7 @@ class Task {
       event => {
         event.preventDefault();
         event.stopImmediatePropagation();
+
         const btn =
           event.target.tagName === 'BUTTON' ? event.target : event.target.parentNode;
 
@@ -229,7 +230,11 @@ class Task {
     ModalHelper.edit('Job Configuration', content, 'Start Job', elems).then(result => {
       if (result.value) {
         const selectedVersion = result.value.version;
-        if (selectedVersion === 'none') {
+        const labelInput = result.value.label;
+
+        if (labelInput === '') {
+          ModalHelper.error('You must provide a label to start the job.');
+        } else if (selectedVersion === 'none') {
           ModalHelper.error('You must select a version to start the job.');
         } else {
           let JSONConf;
@@ -267,6 +272,21 @@ class Task {
         }
       }
     });
+
+    const labelInput = document.querySelector('input#label');
+
+    labelInput.addEventListener(
+      'input',
+      event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        labelInput.value = labelInput.value
+          .replace(/[^\s0-9a-zA-Z-]/gi, '')
+          .toLowerCase();
+      },
+      false
+    );
   }
 
   initNavBtn(button, options) {
