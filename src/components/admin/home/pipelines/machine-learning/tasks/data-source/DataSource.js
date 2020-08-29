@@ -340,7 +340,7 @@ class DataSource extends Task {
 
         super.initNavBtn('next', { label: 'windowing', Task: Windowing });
       }
-    } else if (processType === 'train') {
+    } else if (processType === 'train' || processType === 'none') {
       if (inputType === 'features') {
         super.initNavBtn('next', { label: 'process', Task: Learning });
       } else {
@@ -356,6 +356,9 @@ class DataSource extends Task {
       if (processType === 'test') {
         super.toggleNavBtnEnable('finish', enable);
         super.removeFromSession(['windowing', 'feature-extraction']);
+      } else if (processType === 'train') {
+        super.removeFromSession(['windowing', 'feature-extraction']);
+        super.toggleNavBtnEnable('next', enable);
       } else {
         super.toggleNavBtnEnable('next', enable);
       }
