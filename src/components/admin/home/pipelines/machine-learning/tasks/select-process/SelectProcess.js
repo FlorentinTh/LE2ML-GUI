@@ -104,6 +104,16 @@ class SelectProcess extends Task {
     this.dataSource = event.target.value;
     sessionStorage.setItem('data-source', this.dataSource);
 
+    const rawFilesStored = Store.get('raw-file-data');
+    if (!(rawFilesStored === undefined)) {
+      Store.remove('raw-file-data');
+    }
+
+    const featuresFilesStored = Store.get('features-file-data');
+    if (!(featuresFilesStored === undefined)) {
+      Store.remove('features-file-data');
+    }
+
     const dataStore = Store.get('model-data');
     if (!(dataStore === undefined)) {
       Store.remove('model-data');
