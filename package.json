@@ -84,7 +84,7 @@
     "@fortawesome/fontawesome-free": "^5.15.1",
     "@openfonts/roboto-mono_latin": "^1.44.1",
     "axios": "^0.20.0",
-    "dayjs": "^1.9.1",
+    "dayjs": "^1.9.3",
     "email-validator": "^2.0.4",
     "eventsource": "^1.0.7",
     "handlebars": "^4.7.6",
