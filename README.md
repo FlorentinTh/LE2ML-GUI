@@ -1,8 +1,8 @@
-# PiCluster-GUI
+# LE2ML-GUI
 
-[![GitHub Release](https://img.shields.io/github/release/FlorentinTh/PiCluster-GUI?style=flat-square)](https://github.com/FlorentinTh/PiCluster-GUI/releases) [![GitHub](https://img.shields.io/github/license/FlorentinTh/PiCluster-GUI?style=flat-square)](https://github.com/FlorentinTh/PiCluster-GUI/blob/master/LICENSE)
+[![GitHub Release](https://img.shields.io/github/release/FlorentinTh/LE2ML-GUI?style=flat-square)](https://github.com/FlorentinTh/LE2ML-GUI/releases) [![GitHub](https://img.shields.io/github/license/FlorentinTh/LE2ML-GUI?style=flat-square)](https://github.com/FlorentinTh/LE2ML-GUI/blob/master/LICENSE)
 
-Repository of the GUI for the PiCluster project.
+Repository of the GUI for the LE2ML workbench.
 
 ## Authors
 

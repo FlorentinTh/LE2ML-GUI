@@ -1,9 +1,9 @@
 {
-  "name": "cluster-gui",
+  "name": "le2ml-gui",
   "version": "1.0.0",
-  "description": "GUI for the PiCluster project",
+  "description": "GUI for the LE2ML project",
   "scripts": {
-    "file-server": "http-server ../PiCluster-data --silent",
+    "file-server": "http-server ../LE2ML-Data --silent",
     "dev": "webpack-dev-server --env=development",
     "start": "npm-run-all --parallel file-server dev",
     "build": "webpack -p --env=production",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/FlorentinTh/picluster-gui.git"
+    "url": "git+https://github.com/FlorentinTh/LE2ML-GUI.git"
   },
   "author": "FlorentinTh",
   "license": "Apache-2.0",
@@ -19,9 +19,9 @@
     "lint"
   ],
   "bugs": {
-    "url": "https://github.com/FlorentinTh/picluster-gui/issues"
+    "url": "https://github.com/FlorentinTh/LE2ML-GUI/issues"
   },
-  "homepage": "https://github.com/FlorentinTh/picluster-gui#readme",
+  "homepage": "https://github.com/FlorentinTh/LE2ML-GUI#README",
   "devDependencies": {
     "@babel/core": "^7.12.3",
     "@babel/generator": "^7.12.1",
@@ -34,23 +34,23 @@
     "babel-preset-minify": "^0.5.1",
     "clean-webpack-plugin": "^3.0.0",
     "common-tags": "^1.8.0",
-    "compression-webpack-plugin": "^6.0.3",
+    "compression-webpack-plugin": "^6.0.4",
     "core-js": "^3.6.5",
-    "css-loader": "^4.3.0",
+    "css-loader": "^5.0.0",
     "cssnano": "^4.1.10",
     "cssnano-preset-advanced": "^4.0.7",
-    "eslint": "^7.11.0",
-    "eslint-config-prettier": "^6.13.0",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-import-resolver-babel-module": "^5.1.2",
+    "eslint": "^7.12.1",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-config-standard": "^16.0.1",
+    "eslint-import-resolver-babel-module": "^5.2.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-json": "^2.1.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
-    "file-loader": "^6.1.1",
+    "eslint-plugin-standard": "^4.0.2",
+    "file-loader": "^6.2.0",
     "friendly-errors-webpack-plugin": "^1.7.0",
     "handlebars-loader": "^1.7.1",
     "html-loader": "^1.3.2",
@@ -58,19 +58,19 @@
     "http-server": "^0.12.3",
     "image-webpack-loader": "^7.0.1",
     "import-glob": "^1.5.0",
-    "mini-css-extract-plugin": "^1.0.0",
+    "mini-css-extract-plugin": "^1.2.1",
     "node-sass": "^4.14.1",
     "npm-run-all": "^4.1.5",
     "optimize-css-assets-webpack-plugin": "^5.0.4",
-    "postcss": "^8.1.1",
-    "postcss-flexbugs-fixes": "^4.2.1",
+    "postcss": "^8.1.4",
+    "postcss-flexbugs-fixes": "^5.0.0",
     "postcss-loader": "^4.0.4",
     "postcss-normalize": "^9.0.0",
     "postcss-preset-env": "^6.7.0",
     "pre-commit": "^1.2.2",
     "prettier": "^1.19.1",
     "progress-bar-webpack-plugin": "^2.1.0",
-    "sass-loader": "^10.0.3",
+    "sass-loader": "^10.0.4",
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^4.2.3",
     "url-loader": "^4.1.1",
@@ -78,20 +78,20 @@
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
     "webpack-manifest-plugin": "^2.2.0",
-    "webpack-merge": "^5.2.0"
+    "webpack-merge": "^5.3.0"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
     "@openfonts/roboto-mono_latin": "^1.44.1",
-    "axios": "^0.20.0",
-    "dayjs": "^1.9.3",
+    "axios": "^0.21.0",
+    "dayjs": "^1.9.4",
     "email-validator": "^2.0.4",
     "eventsource": "^1.0.7",
     "handlebars": "^4.7.6",
     "handlebars-utils": "^1.0.6",
     "jquery": "^3.5.1",
     "js-cookie": "^2.2.1",
-    "plotly.js-cartesian-dist": "^1.57.0",
-    "sweetalert2": "^10.6.1"
+    "plotly.js-cartesian-dist": "^1.57.1",
+    "sweetalert2": "^10.9.0"
   }
 }
