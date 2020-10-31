@@ -270,6 +270,7 @@ class Learning extends Task {
     }
 
     const JSONValues = JSON.parse(JSON.stringify(sessionStorage));
+    // eslint-disable-next-line array-callback-return
     Object.keys(JSONValues).filter(key => {
       if (/^algo-param-/.test(key)) {
         sessionStorage.removeItem(key);

@@ -43,7 +43,7 @@ class JobsLog extends Component {
         }
       })
       // eslint-disable-next-line handle-callback-err
-      .catch(error => {
+      .catch(() => {
         ModalHelper.error('Job logs could not be fetched. Please try again.');
       });
   }
@@ -142,7 +142,7 @@ class JobsLog extends Component {
             }
           })
           // eslint-disable-next-line handle-callback-err
-          .catch(error => {
+          .catch(() => {
             ModalHelper.error('Job logs could not be fetched. Please try again.');
           });
       } else {

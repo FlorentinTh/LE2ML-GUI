@@ -59,6 +59,7 @@ class Task {
 
   removeStoredAlgoParams() {
     const storedValues = JSON.parse(JSON.stringify(sessionStorage));
+    // eslint-disable-next-line array-callback-return
     Object.keys(storedValues).filter(key => {
       if (/^algo/.test(key)) {
         sessionStorage.removeItem(key);
@@ -261,7 +262,7 @@ class Task {
               }
             })
             // eslint-disable-next-line handle-callback-err
-            .catch(error => {
+            .catch(() => {
               ModalHelper.notification('error', 'Job created but failed to start', 3500);
             });
 

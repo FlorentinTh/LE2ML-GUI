@@ -89,6 +89,7 @@ class V1 {
       };
 
       const parameters = {};
+      // eslint-disable-next-line array-callback-return
       Object.keys(values).filter((key, index) => {
         if (/^algo-param-/.test(key)) {
           const value = values[key];

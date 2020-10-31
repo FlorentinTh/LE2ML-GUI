@@ -246,6 +246,7 @@ class DataVisualisation extends Component {
             if (!(this.selectedAttribute === 'label')) {
               const lines = progressEvent.currentTarget.response
                 .split(/\r\n|\n/)
+                // eslint-disable-next-line array-callback-return
                 .filter(line => {
                   if (!(line === '') && !(line === 'label')) {
                     return line;
@@ -277,8 +278,7 @@ class DataVisualisation extends Component {
           ChartHelper.chartDone(this.selectedAttribute);
         }
       })
-      // eslint-disable-next-line handle-callback-err
-      .catch(error => {
+      .catch(() => {
         ModalHelper.error('Chart could not be drawn. Please try again.');
       });
   }

@@ -6,6 +6,7 @@ import Events from '@Events';
 let headers;
 let fileRows;
 class FileList extends Events {
+  // eslint-disable-next-line default-param-last
   constructor(context, title, data, key = 'file', selectedFile, loading = true) {
     super();
     this.context = context;

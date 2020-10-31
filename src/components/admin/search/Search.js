@@ -25,6 +25,7 @@ class Search {
             query = search.value.trim().toLowerCase();
 
             if (StringHelper.isAlphaNum(query)) {
+              // eslint-disable-next-line array-callback-return
               const result = data.filter(item => {
                 for (let i = 0; i < props.length; ++i) {
                   const prop = props[i];

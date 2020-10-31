@@ -40,6 +40,7 @@ class StoreInstance extends Events {
       throw new Error('Expected type for argument data is Object.');
     }
 
+    // eslint-disable-next-line array-callback-return
     this.data.find(entry => {
       if (entry.id === id) {
         entry.data = data;

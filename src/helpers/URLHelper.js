@@ -78,6 +78,7 @@ class URLHelper {
       throw new Error('Expected type for argument route is String.');
     }
 
+    // eslint-disable-next-line prefer-regex-literals
     const regexp = new RegExp('^\\/[a-zA-Z0-9-_]+.html+#*[a-zA-Z0-9-_]*$', 'g');
     return regexp.test(route);
   }
