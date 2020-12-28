@@ -84,7 +84,7 @@
     "@fortawesome/fontawesome-free": "^5.15.1",
     "@openfonts/roboto-mono_latin": "^1.44.1",
     "axios": "^0.21.1",
-    "dayjs": "^1.9.7",
+    "dayjs": "^1.9.8",
     "email-validator": "^2.0.4",
     "eventsource": "^1.0.7",
     "handlebars": "^4.7.6",
@@ -92,6 +92,6 @@
     "jquery": "^3.5.1",
     "js-cookie": "^2.2.1",
     "plotly.js-cartesian-dist": "^1.58.4",
-    "sweetalert2": "^10.12.5"
+    "sweetalert2": "^10.12.6"
   }
 }
