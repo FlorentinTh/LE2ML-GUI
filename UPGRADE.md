@@ -9,7 +9,7 @@ replace:
 "build": "webpack -p --env=production"
 ```
 
-by
+by:
 
 ```json
 "dev": "webpack serve --env development",
@@ -18,38 +18,37 @@ by
 
 ## webpack.config.js
 
-### line 14:
+### line 14
 
 ```js
-// replace
+// replace:
 const ManifestPlugin = require('webpack-manifest-plugin');
-// by
-const ManifestPlugin = require('webpack-manifest-plugin');
+// by:
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 ```
 
-### line 277:
+### line 277
 
 ```js
-// replace
+// replace:
 vendor: {...}
-// by
+// by:
 defaultVendors: {...}
 ```
 
-### line 300:
-
-remove following options :
+### line 300
 
 ```js
+// remove or comment following options :
 cache: true,
 sourceMap: false
 ```
 
-### line 316:
+### line 316
 
 ```js
-// replace
+// replace:
 new ManifestPlugin()
-// by
+// by:
 new WebpackManifestPlugin({})
 ```
