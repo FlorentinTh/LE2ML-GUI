@@ -114,7 +114,13 @@ class Windowing extends Task {
       if (enable === 'off') {
         if (!elem.classList.contains('disabled')) {
           elem.classList.add('disabled');
-          elem.children[1].setAttribute('disabled', true);
+
+          for (let j = 0; j < elem.childNodes.length; ++j) {
+            const node = elem.childNodes[j];
+            if (node.nodeName === 'INPUT' || node.nodeName === 'SELECT') {
+              node.setAttribute('disabled', true);
+            }
+          }
         }
       } else if (enable === 'on') {
         if (!elem.classList.contains('range')) {

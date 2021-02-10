@@ -39,6 +39,10 @@ select {
   &.no-caps {
     text-transform: none !important;
   }
+
+  &:disabled {
+    opacity: 1;
+  }
 }
 
 select:-moz-focusring {
