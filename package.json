@@ -24,7 +24,7 @@
   "homepage": "https://github.com/FlorentinTh/LE2ML-GUI#README",
   "devDependencies": {
     "@babel/core": "^7.12.16",
-    "@babel/generator": "^7.12.15",
+    "@babel/generator": "^7.12.17",
     "@babel/plugin-proposal-object-rest-spread": "^7.12.13",
     "@babel/plugin-transform-runtime": "^7.12.15",
     "@babel/preset-env": "^7.12.16",
