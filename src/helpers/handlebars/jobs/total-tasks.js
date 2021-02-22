@@ -1,4 +1,4 @@
-export default function(tasks) {
+export default tasks => {
   let total = 0;
 
   // eslint-disable-next-line no-unused-vars
@@ -9,4 +9,4 @@ export default function(tasks) {
   }
 
   return total;
-}
+};

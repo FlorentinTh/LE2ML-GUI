@@ -141,10 +141,7 @@ class AttributeContent extends Component {
     const buttons = this.context.querySelectorAll('button#edit');
     buttons.forEach(button => {
       const item = button.closest('#attribute-infos');
-      const attribute = item
-        .querySelector('.label')
-        .dataset.att.trim()
-        .toLowerCase();
+      const attribute = item.querySelector('.label').dataset.att.trim().toLowerCase();
       button.addEventListener('click', event => {
         event.preventDefault();
         event.stopImmediatePropagation();
@@ -298,10 +295,7 @@ class AttributeContent extends Component {
     const buttons = this.context.querySelectorAll('button#delete');
     buttons.forEach(button => {
       const item = button.closest('#attribute-infos');
-      const attribute = item
-        .querySelector('.label')
-        .dataset.att.trim()
-        .toLowerCase();
+      const attribute = item.querySelector('.label').dataset.att.trim().toLowerCase();
       const stringPos = item.querySelector('.position').dataset.pos.trim();
       const position = parseInt(stringPos, 10);
       button.addEventListener('click', event => {

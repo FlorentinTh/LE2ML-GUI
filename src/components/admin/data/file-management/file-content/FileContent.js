@@ -227,10 +227,7 @@ class FileContent extends Component {
     const buttons = this.context.querySelectorAll('button#download');
     buttons.forEach(button => {
       const item = button.closest('#file-infos');
-      const filename = item
-        .querySelector('h3')
-        .textContent.trim()
-        .toLowerCase();
+      const filename = item.querySelector('h3').textContent.trim().toLowerCase();
       button.addEventListener('click', event => {
         event.preventDefault();
         event.stopImmediatePropagation();
@@ -243,10 +240,7 @@ class FileContent extends Component {
           elems
         ).then(result => {
           if (result.value) {
-            const fileFormat = filename
-              .split('.')
-              .pop()
-              .toLowerCase();
+            const fileFormat = filename.split('.').pop().toLowerCase();
             const selectedFormat = result.value.format.toLowerCase();
             if (selectedFormat === 'none') {
               ModalHelper.error('You must select a format to download the file.');
@@ -278,10 +272,7 @@ class FileContent extends Component {
     const buttons = this.context.querySelectorAll('button#rename');
     buttons.forEach(button => {
       const item = button.closest('#file-infos');
-      const filename = item
-        .querySelector('h3')
-        .textContent.trim()
-        .toLowerCase();
+      const filename = item.querySelector('h3').textContent.trim().toLowerCase();
       button.addEventListener('click', event => {
         event.preventDefault();
         event.stopImmediatePropagation();
@@ -346,10 +337,7 @@ class FileContent extends Component {
     const buttons = this.context.querySelectorAll('button#delete');
     buttons.forEach(button => {
       const item = button.closest('#file-infos');
-      const filename = item
-        .querySelector('h3')
-        .textContent.trim()
-        .toLowerCase();
+      const filename = item.querySelector('h3').textContent.trim().toLowerCase();
       button.addEventListener('click', event => {
         event.preventDefault();
         event.stopImmediatePropagation();

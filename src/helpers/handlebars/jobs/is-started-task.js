@@ -1,4 +1,4 @@
-export default function(tasks, options) {
+export default (tasks, options) => {
   let index = 0;
 
   let isStarted = false;
@@ -19,4 +19,4 @@ export default function(tasks, options) {
   if (!isStarted) {
     return options.inverse();
   }
-}
+};

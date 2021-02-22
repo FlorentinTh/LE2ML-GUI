@@ -1,6 +1,6 @@
 import StringHelper from '@StringHelper';
 
-export default function(str, size, sep) {
+export default (str, size, sep) => {
   if (!(typeof str === 'string')) {
     return '';
   }
@@ -14,4 +14,4 @@ export default function(str, size, sep) {
   }
 
   return StringHelper.truncateLength(str, size, sep);
-}
+};

@@ -1,6 +1,6 @@
 import URLHelper from '@URLHelper';
 
-export default function(context, options) {
+export default (context, options) => {
   // eslint-disable-next-line no-prototype-builtins
   const label = context.hasOwnProperty('label') ? context.label : context.name;
   let link;
@@ -11,4 +11,4 @@ export default function(context, options) {
   }
 
   return '<a href="' + link + '">' + label + '</a>';
-}
+};

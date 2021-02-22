@@ -1,6 +1,6 @@
 import util from 'handlebars-utils';
 
-export default function(a, operator, b, options) {
+export default (a, operator, b, options) => {
   let result;
   switch (operator) {
     case '+':
@@ -24,4 +24,4 @@ export default function(a, operator, b, options) {
   }
 
   return util.value(result, this, options);
-}
+};

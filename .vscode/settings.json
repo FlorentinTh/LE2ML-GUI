@@ -4,11 +4,22 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "eslint.validate": ["javascript"],
+  "eslint.validate": [
+    "javascript"
+  ],
+  "files.encoding": "utf8",
+  "search.exclude": {
+    "**/node_modules": true,
+  },
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true
+  },
+  "[markdown]": {
+    "editor.formatOnSave": true,
+    "editor.renderWhitespace": "all",
+    "editor.acceptSuggestionOnEnter": "off"
+  },
   "scssFormatter.singleQuote": true,
-  "scssFormatter.tabWidth": 2,
-  "scssFormatter.useTabs": false,
-  "editor.formatOnPaste": true,
-  "editor.formatOnSave": true,
-  "telemetry.enableCrashReporter": false
+  "scssFormatter.trailingComma": "none"
 }

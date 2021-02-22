@@ -361,10 +361,7 @@ class DataImport extends Component {
       .replace(/[^0-9a-zA-Z_]/gi, '_')
       .toLowerCase();
 
-    const ext = file.name
-      .split('.')
-      .pop()
-      .toLowerCase();
+    const ext = file.name.split('.').pop().toLowerCase();
 
     texts[0].innerHTML = StringHelper.truncateLength(`${filename}.${ext}`, 26, '_');
     texts[1].innerHTML = `(${StringHelper.convertBytesToHuman(file.size)})`;

@@ -1,4 +1,4 @@
-export default function(tasks) {
+export default tasks => {
   let failedTask;
 
   for (const [key, value] of Object.entries(tasks)) {
@@ -8,4 +8,4 @@ export default function(tasks) {
   }
 
   return failedTask;
-}
+};
