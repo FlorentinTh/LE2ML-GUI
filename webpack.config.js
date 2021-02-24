@@ -1,7 +1,10 @@
 /* eslint-disable no-undef */
 const path = require('path');
 const webpack = require('webpack');
+const fs = require('fs');
+
 const { merge } = require('webpack-merge');
+
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
@@ -12,7 +15,6 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const postcssNormalize = require('postcss-normalize');
 const ManifestPlugin = require('webpack-manifest-plugin');
-const fs = require('fs');
 
 const config = {
   SOURCE_FOLDER: path.resolve(__dirname, 'src'),
