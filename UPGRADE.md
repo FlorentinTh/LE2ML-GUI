@@ -1,6 +1,16 @@
-# Upgrade to Webpack 5.x
+# Upgrade to Webpack 5
 
-## package.json
+_Official migration guide from webpack@4 to webpack@5 [here](https://webpack.js.org/migrate/5/#upgrade-webpack-4-and-its-pluginsloaders)._
+
+## Procedure
+
+### ➡️ Update dependencies to lates version
+
+```bash
+$> npm i <package>@latest
+```
+
+### ➡️ in ```package.json```
 
 replace:
 
@@ -16,9 +26,9 @@ by:
 "build": "webpack --env production"
 ```
 
-## webpack.config.js
+### ➡️ in ```webpack.config.js```
 
-### line 14
+#### line 14
 
 ```js
 // replace:
@@ -27,7 +37,7 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 ```
 
-### line 277
+#### line 277
 
 ```js
 // replace:
@@ -36,7 +46,7 @@ vendor: {...}
 defaultVendors: {...}
 ```
 
-### line 300
+#### line 300
 
 ```js
 // remove or comment following options :
@@ -44,7 +54,7 @@ cache: true,
 sourceMap: false
 ```
 
-### line 316
+#### line 316
 
 ```js
 // replace:
@@ -52,3 +62,11 @@ new ManifestPlugin()
 // by:
 new WebpackManifestPlugin({})
 ```
+
+### ➡️ Remove no longer required packages
+
+- Remove ```url-loader``` and ```file-loader``` packages see [webpack@5 asset modules](https://webpack.js.org/guides/asset-modules).
+
+- Remove ```eslint-loader``` package see [webpack@5 migrate from ```eslint-loader```](https://webpack.js.org/plugins/eslint-webpack-plugin/#migrate-from-eslint-loader).
+
+- Remove ```optimize-css-assets-webpack-plugin``` package and replace it by ```css-minimizer-webpack-plugin``` package see doc [here](https://github.com/webpack-contrib/css-minimizer-webpack-plugin).
