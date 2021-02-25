@@ -4,6 +4,9 @@ _Official migration guide from webpack@4 to webpack@5 [here](https://webpack.js.
 
 ## Procedure
 
+### ➡️ Remove dependencies that are no longer required
+
+_see [issue #274](https://github.com/FlorentinTh/LE2ML-GUI/issues/274)._
 ### ➡️ Update dependencies to their latest version
 
 ```bash
@@ -77,16 +80,16 @@ new WebpackManifestPlugin({})
 
 ### ➡️ ```css-minimizer-webpack-plugin```
 
-#### in ```webpack.config.js``` :
+#### in ```webpack.config.js```
 
 ```js
-// replace :
+// replace:
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 // by:
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
-// replace :
+// replace:
 minimizer: [
   new TerserPlugin({...}),
   new OptimizeCSSAssetsPlugin({
@@ -97,7 +100,7 @@ minimizer: [
   })
 ]
 
-// by :
+// by:
 minimizer: [
   new TerserPlugin({...}),
   new CssMinimizerPlugin({
@@ -113,5 +116,4 @@ minimizer: [
     }
   })
 ]
-//...
 ```
