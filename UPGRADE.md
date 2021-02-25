@@ -77,24 +77,41 @@ new WebpackManifestPlugin({})
 
 ### ➡️ ```css-minimizer-webpack-plugin```
 
+#### in ```webpack.config.js``` :
+
 ```js
+// replace :
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+
+// by:
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
-//...
-  minimizer: [
-    new TerserPlugin({...}),
-    new CssMinimizerPlugin({
-      parallel: true,
-      sourceMap: true,
-      minimizerOptions: {
-        preset: [
-          'default',
-          {
-            discardComments: { removeAll: true }
-          }
-        ]
-      }
-    })
-  ]
+// replace :
+minimizer: [
+  new TerserPlugin({...}),
+  new OptimizeCSSAssetsPlugin({
+    cssProcessor: require('cssnano'),
+    cssProcessorPluginOptions: {
+      preset: ['advanced', { discardComments: { removeAll: true } }]
+    }
+  })
+]
+
+// by :
+minimizer: [
+  new TerserPlugin({...}),
+  new CssMinimizerPlugin({
+    parallel: true,
+    sourceMap: true,
+    minimizerOptions: {
+      preset: [
+        'default',
+        {
+          discardComments: { removeAll: true }
+        }
+      ]
+    }
+  })
+]
 //...
 ```
