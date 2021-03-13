@@ -19,7 +19,6 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const config = {
   SOURCE_FOLDER: path.resolve(__dirname, 'src'),
   DESTINATION_FOLDER: path.resolve(__dirname, 'build'),
-  ENABLE_JQUERY: false,
   ENABLE_COMPRESSION: false
 };
 
@@ -318,15 +317,6 @@ module.exports = (env, options) => {
       new ManifestPlugin()
     ]
   };
-
-  if (config.ENABLE_JQUERY) {
-    COMMON.plugins.push(
-      new webpack.ProvidePlugin({
-        $: 'jquery',
-        jQuery: 'jquery'
-      })
-    );
-  }
 
   if (config.ENABLE_COMPRESSION) {
     PROD.plugins.push(
