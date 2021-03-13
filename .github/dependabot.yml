@@ -4,5 +4,24 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    ignore:
+      - dependency-name: "compression-webpack-plugin"
+        versions: ["7.x"]
+      - dependency-name: "html-loader"
+        versions: ["2.x"]
+      - dependency-name: "html-webpack-plugin"
+        versions: ["5.x"]
+      - dependency-name: "postcss-loader"
+        versions: ["5.x"]
+      - dependency-name: "sass-loader"
+        versions: ["11.x"]
+      - dependency-name: "terser-webpack-plugin"
+        versions: ["5.x"]
+      - dependency-name: "webpack"
+        versions: ["5.x"]
+      - dependency-name: "webpack-cli"
+        versions: ["4.x"]
+      - dependency-name: "webpack-manifest-plugin"
+        versions: ["3.x"]
     assignees:
       - "FlorentinTh"
