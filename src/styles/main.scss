@@ -268,7 +268,7 @@ input[type='file']::-webkit-file-upload-button {
     }
 
     button.swal2-confirm {
-      width: 90%;
+      width: 100%;
       background: themed('color-accent') !important;
       color: themed('color-text-active') !important;
 
@@ -278,7 +278,7 @@ input[type='file']::-webkit-file-upload-button {
     }
 
     button.swal2-cancel {
-      width: 90% !important;
+      width: 100% !important;
       background-color: themed('color-primary') !important;
       border: 1px solid themed('color-accent') !important;
       color: themed('color-accent') !important;
