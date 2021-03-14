@@ -82,7 +82,6 @@ class FileContent extends Component {
 
   initView(loading = false) {
     this.context.innerHTML = fileContentTemplate({
-      title: `${this.fileType} for ${this.dataSource} data source`,
       totalModel: fileModels === undefined ? 0 : fileModels.length,
       totalRaw: fileRaw === undefined ? 0 : fileRaw.length,
       totalFeature: fileFeatures === undefined ? 0 : fileFeatures.length

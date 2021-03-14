@@ -1,15 +1,15 @@
 {{#each sources as |source|}}
-{{#[utils/compare] source.enabled '===' true}}
-{{#[utils/compare] source.default '===' true}}
-<option value="{{~source.slug~}}" selected>{{~source.label~}}</option>
+  {{#[utils/compare] source.enabled '===' true}}
+    {{#[utils/compare] source.default '===' true}}
+        <option value="{{~source.slug~}}" selected>{{~source.label~}}</option>
+    {{else}}
+        <option value="{{~source.slug~}}">{{~source.label~}}</option>
+    {{/[utils/compare]}}
+  {{else}}
+    <option value="{{~source.slug~}}" disabled>{{~source.label~}}</option>
+  {{/[utils/compare]}}
 {{else}}
-<option value="{{~source.slug~}}">{{~source.label~}}</option>
-{{/[utils/compare]}}
-{{else}}
-<option value="{{~source.slug~}}" disabled>{{~source.label~}}</option>
-{{/[utils/compare]}}
-{{else}}
-{{#[utils/compare] loading '===' true}}
-<option disabled>Fetching data...</option>
-{{/[utils/compare]}}
+  {{#[utils/compare] loading '===' true}}
+    <option disabled>Fetching data...</option>
+  {{/[utils/compare]}}
 {{/each}}

@@ -1,9 +1,9 @@
 <div class="elem">
   <label for="{{param.slug}}"></label>
   {{#[utils/compare] param.type '===' 'number'}}
-  <input type="number" id="{{param.slug}}" name="{{param.slug}}" autocomplete="false" placeholder="{{param.label}}"
-    {{#if param.min}}max="{{param.min}}" {{/if}} {{#if param.max}}max="{{param.max}}" {{/if}}
-    {{#if param.default}}value="{{param.default}}" {{/if}} data-type="{{param.type}}" required />
+  <input type="number" id="{{../param.slug}}" name="{{../param.slug}}" autocomplete="false" placeholder="{{../param.label}}"
+    {{#if ../param.min}}min="{{../../param.min}}" {{/if}} {{#if ../param.max}}max="{{../../param.max}}" {{/if}}
+    {{#if ../param.default}}value="{{../../param.default}}" {{/if}} data-type="{{../param.type}}" required />
   {{else}}
   {{/[utils/compare]}}
 </div>

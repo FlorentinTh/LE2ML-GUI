@@ -1,13 +1,13 @@
 {{#[utils/compare] config '===' null}}
-{{#[utils/compare] loading '===' true}}
-<span class="loading">
-  Fetching data...
-  <i class="fas fa-spinner"></i>
-</span>
-{{else}}
-<span>
-  <strong>{{~algo.label~}}</strong>
-  does not have any configuration file describing its parameters.
-</span>
-{{/[utils/compare]}}
+  {{#[utils/compare] loading '===' true}}
+    <span class="loading">
+      Fetching data...
+      <i class="fas fa-spinner"></i>
+    </span>
+  {{else}}
+    <span>
+      <strong>{{~algo.label~}}</strong>
+      does not have any configuration file describing its parameters.
+    </span>
+  {{/[utils/compare]}}
 {{/[utils/compare]}}

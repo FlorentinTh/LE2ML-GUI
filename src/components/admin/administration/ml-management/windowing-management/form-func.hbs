@@ -2,31 +2,26 @@
   <div class="form">
     <form action="#">
       <label for="label"></label>
-      {{#[utils/compare] label '===' undefined}}
-      <input type="text" id="label" name="label" autocomplete="false" placeholder="Label" required />
+      {{#if label}}
+        <input type="text" id="label" name="label" autocomplete="false" value="{{label}}" required />
       {{else}}
-      <input type="text" id="label" name="label" autocomplete="false" value="{{label}}" required />
-      {{/[utils/compare]}}
+        <input type="text" id="label" name="label" autocomplete="false" placeholder="Label" required />
+      {{/if}}
       <label for="container"></label>
-      {{#[utils/compare] container '===' undefined}}
-      <input type="text" id="container" name="container" autocomplete="false" placeholder="Container Name" required />
+      {{#if container}}
+        <input type="text" id="container" name="container" autocomplete="false" value="{{container}}" required />
       {{else}}
-      <input type="text" id="container" name="container" autocomplete="false" value="{{container}}" required />
-      {{/[utils/compare]}}
+        <input type="text" id="container" name="container" autocomplete="false" placeholder="Container Name" required />
+      {{/if}}
       <label for="enabled"></label>
       <select id="enabled">
-        {{#[utils/compare] enabled '===' undefined}}
-        <option value="true" selected>Enabled</option>
-        <option value="false">Disabled</option>
+        {{#if enabled}}
+          <option value="true" selected>Enabled</option>
+          <option value="false">Disabled</option>
         {{else}}
-        {{#[utils/compare] enabled '===' true}}
-        <option value="true" selected>Enabled</option>
-        <option value="false">Disabled</option>
-        {{else}}
-        <option value="true">Enabled</option>
-        <option value="false" selected>Disabled</option>
-        {{/[utils/compare]}}
-        {{/[utils/compare]}}
+          <option value="true">Enabled</option>
+          <option value="false" selected>Disabled</option>
+        {{/if}}
       </select>
     </form>
   </div>

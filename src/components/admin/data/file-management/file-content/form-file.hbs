@@ -1,11 +1,11 @@
 <div class="form-infos form-infos-modal">
   <div class="form">
     <label for="filename"></label>
-    {{#[utils/compare] filename '===' undefined}}
-    <input type="text" id="filename" name="filename" autocomplete="false" placeholder="Filename" required />
-    {{else}}
-    <input type="text" id="filename" name="filename" autocomplete="false" placeholder="Filename" value="{{filename}}"
+    {{#if filename}}
+      <input type="text" id="filename" name="filename" autocomplete="false" placeholder="Filename" value="{{filename}}"
       required />
-    {{/[utils/compare]}}
+    {{else}}
+      <input type="text" id="filename" name="filename" autocomplete="false" placeholder="Filename" required />
+    {{/if}}
   </div>
 </div>
