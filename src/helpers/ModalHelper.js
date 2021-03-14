@@ -48,13 +48,13 @@ class ModalHelper {
       allowEnterKey: false,
       stopKeydownPropagation: false,
       keydownListenerCapture: true,
-      onOpen: () => {
+      didOpen: () => {
         formElements.forEach(elem => {
           const e = document.getElementById(elem);
           e.addEventListener(
-            'keypress',
+            'keydown',
             event => {
-              if (event.which === '13') {
+              if (event.key === 'Enter') {
                 event.preventDefault();
               }
             },
