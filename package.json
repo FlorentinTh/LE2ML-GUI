@@ -81,7 +81,7 @@
     "webpack-merge": "^5.7.3"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.2",
+    "@fortawesome/fontawesome-free": "^5.15.3",
     "@openfonts/roboto-mono_latin": "^1.44.1",
     "axios": "^0.21.1",
     "dayjs": "^1.10.4",
