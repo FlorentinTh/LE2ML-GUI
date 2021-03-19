@@ -81,16 +81,16 @@
     "webpack-merge": "^5.7.3"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.2",
+    "@fortawesome/fontawesome-free": "^5.15.3",
     "@openfonts/roboto-mono_latin": "^1.44.1",
     "axios": "^0.21.1",
     "dayjs": "^1.10.4",
     "email-validator": "^2.0.4",
-    "eventsource": "^1.0.7",
+    "eventsource": "^1.1.0",
     "handlebars": "^4.7.7",
     "handlebars-utils": "^1.0.6",
     "js-cookie": "^2.2.1",
     "plotly.js-cartesian-dist": "^1.58.4",
-    "sweetalert2": "^10.15.5"
+    "sweetalert2": "^10.15.6"
   }
 }
