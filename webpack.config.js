@@ -7,14 +7,14 @@ const { merge } = require('webpack-merge');
 
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HTMLWebPackPlugin = require('html-webpack-plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const postcssNormalize = require('postcss-normalize');
-const ManifestPlugin = require('webpack-manifest-plugin');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 
 const config = {
   SOURCE_FOLDER: path.resolve(__dirname, 'src'),
@@ -52,6 +52,14 @@ module.exports = (env, options) => {
       path: config.DESTINATION_FOLDER,
       filename: 'scripts/bundle' + (isProd ? '.[hash:12].min.js' : '.js')
     },
+    resolve: {
+      fallback: {
+        process: 'process/browser',
+        util: require.resolve('util/'),
+        http: require.resolve('stream-http'),
+        https: require.resolve('https-browserify')
+      }
+    },
     module: {
       rules: [
         {
@@ -66,28 +74,23 @@ module.exports = (env, options) => {
           loader: 'import-glob'
         },
         {
-          test: /\.(ttf|otf|eot|woff2?|png|jpe?g|gif|svg|ico)$/,
-          include: config.SOURCE_FOLDER,
-          loader: 'url-loader',
-          options: {
-            limit: 1024,
-            name: '[name].[hash:12].[ext]',
-            useRelativePath: true,
-            outputPath: 'img/',
-            esModule: false
+          test: /\.(png|jpe?g|gif|ico)$/,
+          type: 'asset/resource',
+          generator: {
+            filename: 'img/[name]_[hash:12][ext]'
           }
         },
         {
-          test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-          use: [
-            {
-              loader: 'file-loader',
-              options: {
-                name: '[name].[ext]',
-                outputPath: 'fonts/'
-              }
+          test: /\.(woff(2)?|otf|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+          type: 'asset',
+          parser: {
+            dataUrlCondition: {
+              maxSize: 4 * 1024
             }
-          ]
+          },
+          generator: {
+            filename: 'font/[name]_[hash:12][ext]'
+          }
         },
         {
           test: /\.hbs$/,
@@ -120,6 +123,9 @@ module.exports = (env, options) => {
         'window.env.API_PROXY': JSON.stringify('https://cors-anywhere.herokuapp.com'),
         'window.env.FILE_SERVER_URL': JSON.stringify('http://localhost:8080'),
         'window.env.JOB_LOGS_FILE': JSON.stringify('/.app-data/jobs.log')
+      }),
+      new webpack.ProvidePlugin({
+        process: 'process/browser'
       })
     ].concat(HTMLPlugin)
   };
@@ -171,12 +177,6 @@ module.exports = (env, options) => {
     },
     module: {
       rules: [
-        // {
-        //   enforce: 'pre',
-        //   test: /\.js$/,
-        //   exclude: /node_modules/,
-        //   loader: 'eslint-loader'
-        // },
         {
           test: /\.(sa|sc|c)ss$/,
           use: [
@@ -275,7 +275,7 @@ module.exports = (env, options) => {
         maxInitialRequests: Infinity,
         maxSize: 95000,
         cacheGroups: {
-          vendor: {
+          defaultVendors: {
             test: /[\\/]node_modules[\\/]/,
             name(module) {
               const packageName = module.context.match(
@@ -298,14 +298,19 @@ module.exports = (env, options) => {
               comments: false
             }
           },
-          cache: true,
-          parallel: true,
-          sourceMap: false
+          // cache: true,
+          parallel: true
+          // sourceMap: false
         }),
-        new OptimizeCSSAssetsPlugin({
-          cssProcessor: require('cssnano'),
-          cssProcessorPluginOptions: {
-            preset: ['advanced', { discardComments: { removeAll: true } }]
+        new CssMinimizerPlugin({
+          parallel: true,
+          minimizerOptions: {
+            preset: [
+              'default',
+              {
+                discardComments: { removeAll: true }
+              }
+            ]
           }
         })
       ]
@@ -314,7 +319,7 @@ module.exports = (env, options) => {
       new MiniCssExtractPlugin({
         chunkFilename: 'styles/[name]' + (isProd ? '.[hash:12].min.css' : '.css')
       }),
-      new ManifestPlugin()
+      new WebpackManifestPlugin()
     ]
   };
 
