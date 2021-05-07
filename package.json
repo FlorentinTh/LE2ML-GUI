@@ -36,7 +36,7 @@
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "common-tags": "^1.8.0",
     "compression-webpack-plugin": "^7.1.2",
-    "core-js": "^3.11.3",
+    "core-js": "^3.12.0",
     "css-loader": "^5.2.4",
     "css-minimizer-webpack-plugin": "^2.0.0",
     "cssnano": "^5.0.2",
