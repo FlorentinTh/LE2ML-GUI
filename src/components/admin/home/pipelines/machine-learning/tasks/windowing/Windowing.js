@@ -283,9 +283,8 @@ class Windowing extends Task {
       }
     } else {
       this.properties.function.label = options[options.selectedIndex].value.split('.')[1];
-      this.properties.function.container = options[options.selectedIndex].value.split(
-        '.'
-      )[0];
+      this.properties.function.container =
+        options[options.selectedIndex].value.split('.')[0];
       this.storeWindowingProperties(this.properties);
     }
   }

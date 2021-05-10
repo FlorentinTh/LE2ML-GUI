@@ -402,9 +402,8 @@ class Task {
                 })
                 .then(response => {
                   if (response) {
-                    const downloadConfBtn = this.context.querySelector(
-                      '#download-config a'
-                    );
+                    const downloadConfBtn =
+                      this.context.querySelector('#download-config a');
                     FileHelper.enableDownload(
                       downloadConfBtn,
                       response.data.data,
