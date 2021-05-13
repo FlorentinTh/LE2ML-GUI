@@ -1,0 +1,138 @@
+.chart-container {
+  height: 100%;
+  width: 100%;
+  margin-top: 45px;
+  padding-top: 45px;
+  @include themify($themes) {
+    border-top: 2px dotted themed('color-secondary');
+  }
+
+  #bar-chart,
+  #histogram {
+    display: block;
+  }
+
+  .plot {
+    path {
+      @include themify($themes) {
+        fill: themed('color-accent') !important;
+        fill-opacity: 1 !important;
+      }
+    }
+  }
+
+  .loading {
+    .plot {
+      path {
+        fill: grey !important;
+        fill-opacity: 1 !important;
+      }
+    }
+  }
+
+  .main-svg {
+    background-color: transparent !important;
+
+    &:first-of-type {
+      margin-top: -45px !important;
+    }
+
+    &:nth-of-type(2),
+    &:nth-of-type(3) {
+      margin-top: -25px !important;
+    }
+
+    path.ygrid,
+    path.crisp {
+      @include themify($themes) {
+        stroke: themed('color-text-secondary') !important;
+      }
+    }
+
+    .zerolinelayer {
+      path {
+        stroke-width: 1px !important;
+      }
+    }
+
+    @include themify($themes) {
+      .xaxislayer-above {
+        .xtick {
+          text {
+            font-style: normal;
+            fill: themed('color-text-primary') !important;
+            text-transform: capitalize;
+          }
+        }
+      }
+
+      .yaxislayer-above {
+        .ytick {
+          text {
+            font-style: normal;
+            fill: themed('color-text-primary') !important;
+            text-transform: capitalize;
+          }
+        }
+      }
+    }
+
+    .legend {
+      rect.bg {
+        fill-opacity: 0 !important;
+      }
+
+      @include themify($themes) {
+        .traces {
+          .legendtext {
+            fill: themed('color-text-primary') !important;
+            text-transform: capitalize;
+            font-style: normal;
+          }
+
+          .legendpoints {
+            path {
+              fill: themed('color-accent') !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .modebar-container {
+    .modebar {
+      .modebar-group {
+        background-color: transparent !important;
+        .modebar-btn {
+          @include themify($themes) {
+            &::before {
+              border-color: transparent transparent themed('color-accent') !important;
+            }
+
+            &::after {
+              font-style: normal;
+              background-color: themed('color-accent') !important;
+              color: themed('color-text-active') !important;
+            }
+
+            .icon {
+              height: 1.35em !important;
+              width: 1.35em !important;
+              &:hover {
+                animation: rubber-band 0.6s linear;
+              }
+              path {
+                fill: themed('color-accent') !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.plotly-notifier {
+  visibility: hidden;
+}

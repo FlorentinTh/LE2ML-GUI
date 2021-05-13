@@ -1,0 +1,490 @@
+.grid-container {
+  margin-top: 25px;
+  margin-bottom: 50px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .outer-grid {
+    display: grid;
+    width: 100%;
+    grid-auto-rows: minmax(95px, auto);
+    grid-gap: 1em;
+    max-width: 900px;
+    margin: 0 auto;
+    padding-bottom: 50px;
+
+    .outer-item {
+      @include themify($themes) {
+        color: themed('color-text-primary');
+        background: themed('color-secondary');
+        border-bottom: 2px solid themed('color-accent');
+
+        &:hover {
+          cursor: pointer;
+          background: themed('color-accent');
+          transition: background 0.5s linear;
+        }
+      }
+
+      display: flex;
+      height: 95px;
+      flex: 1 1 150px;
+      align-items: center;
+      justify-content: center;
+
+      i {
+        font-size: 1.8em;
+        margin-bottom: 10px;
+      }
+
+      h3 {
+        font-size: 1em;
+      }
+    }
+  }
+
+  .list-header {
+    display: flex;
+    max-width: 900px;
+    margin: 0 auto;
+    justify-content: space-between;
+    margin-top: 25px;
+
+    .filters {
+      display: initial;
+      text-align: initial;
+      max-width: initial;
+      margin: initial;
+      line-height: 35px;
+    }
+    .action-whole {
+      button {
+        height: 35px;
+        width: 165px;
+        margin-top: 0;
+
+        i {
+          padding-right: 5px;
+        }
+
+        @include themify($themes) {
+          background-color: themed('color-secondary');
+          color: themed('color-text-primary');
+
+          &:hover {
+            background-color: themed('color-accent');
+            color: themed('color-text-active');
+            transition: background 0.6s ease;
+          }
+
+          &:disabled {
+            background-color: transparent;
+            cursor: initial;
+
+            border: 1px solid themed('color-text-secondary');
+            color: themed('color-text-secondary');
+          }
+        }
+      }
+    }
+  }
+
+  h2 {
+    text-align: left;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  h2.title {
+    text-align: center;
+    margin-bottom: 45px;
+  }
+
+  button {
+    height: 45px;
+    border: none;
+    font-size: 0.95em;
+    width: 300px;
+    text-transform: uppercase;
+    margin-top: 25px;
+
+    @include themify($themes) {
+      color: themed('color-text-active');
+      background-color: themed('color-accent');
+    }
+
+    &:hover {
+      @include themify($themes) {
+        background-color: themed('color-accent-darker');
+      }
+    }
+  }
+}
+
+.grid-functions,
+.grid-algos,
+.grid-app-keys,
+.grid-sources,
+.grid-features,
+.grid-users {
+  display: grid;
+  width: 100%;
+  grid-auto-rows: minmax(175px, auto);
+  grid-gap: 1em;
+  max-width: 900px;
+  margin: 0 auto;
+  padding-top: 25px;
+
+  .grid-item {
+    @include themify($themes) {
+      color: themed('color-text-primary');
+      background: themed('color-secondary');
+      border-bottom: 2px solid themed('color-accent');
+    }
+
+    animation: slide-up 0.4s linear;
+    height: 175px;
+    flex: 1 1 150px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .loading-item,
+    .not-found {
+      width: 100%;
+      text-align: center;
+
+      p {
+        font-size: 1.2em;
+      }
+    }
+
+    .actions {
+      div.action {
+        padding-bottom: 8px;
+
+        &:last-of-type {
+          padding-bottom: 0;
+        }
+
+        &:first-child {
+          button {
+            margin-top: 0;
+          }
+        }
+
+        .form-container {
+          height: 26px;
+          margin-top: 5px;
+          width: 150px;
+
+          @include themify($themes) {
+            border: 1px solid themed('color-accent');
+            color: themed('color-accent');
+          }
+
+          transition: all 0.5s ease-in-out;
+
+          &:not(.loading) {
+            &:hover {
+              @include themify($themes) {
+                background-color: themed('color-accent');
+                color: themed('color-text-active');
+              }
+            }
+          }
+
+          &.loading {
+            @include themify($themes) {
+              background-color: themed('color-accent');
+              color: themed('color-text-active');
+            }
+          }
+
+          border-radius: 0.25rem;
+
+          label {
+            float: left;
+            clear: both;
+            width: 100%;
+            height: 100%;
+            user-select: none;
+            text-align: center;
+            cursor: pointer;
+            line-height: 26px;
+
+            span {
+              font-size: 0.95em;
+              text-transform: uppercase;
+            }
+
+            button {
+              display: none;
+            }
+
+            &.loading {
+              cursor: default;
+            }
+
+            i {
+              display: none;
+            }
+
+            &.loading {
+              span {
+                display: none;
+              }
+
+              i {
+                display: inline-block;
+              }
+            }
+          }
+
+          input[type='file'] {
+            display: none;
+          }
+        }
+
+        button {
+          height: 26px;
+          margin-top: 5px;
+          width: 150px;
+          background-color: transparent;
+          text-transform: uppercase;
+
+          @include themify($themes) {
+            border: 1px solid themed('color-accent');
+            color: themed('color-accent');
+          }
+
+          transition: all 0.5s ease-in-out;
+
+          &:hover {
+            @include themify($themes) {
+              background-color: themed('color-accent');
+              border: 1px solid themed('color-accent');
+              color: themed('color-text-active');
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.grid-functions,
+.grid-algos,
+.grid-app-keys,
+.grid-sources,
+.grid-features {
+  .grid-item {
+    padding: 0 50px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .left {
+      flex-grow: 1;
+      .label {
+        h3 {
+          font-size: 1.5em;
+          margin-bottom: 5px;
+          text-transform: capitalize;
+        }
+      }
+
+      .state-indic {
+        margin-bottom: 15px;
+        font-size: 0.75em;
+        text-transform: uppercase;
+
+        i {
+          font-size: 0.5em;
+          vertical-align: middle;
+          line-height: 0.2em;
+        }
+
+        &.state-enabled {
+          @include themify($themes) {
+            color: themed('color-accent');
+          }
+        }
+
+        &.state-disabled {
+          color: #ef5350;
+        }
+      }
+
+      .desc {
+        margin-top: 10px;
+        margin-bottom: 15px;
+        font-size: 0.75em;
+        text-transform: uppercase;
+
+        @include themify($themes) {
+          color: themed('color-text-secondary');
+        }
+      }
+
+      .infos {
+        font-size: 0.85em;
+        padding: 5px 0 5px 25px;
+        @include themify($themes) {
+          border-left: 1px solid themed('color-text-primary');
+        }
+
+        .info:not(:last-of-type) {
+          margin-bottom: 15px;
+        }
+
+        .info {
+          a {
+            padding-bottom: 2px;
+            @include themify($themes) {
+              border-bottom: 1px solid themed('color-text-primary');
+            }
+          }
+
+          &.info-link {
+            &:hover {
+              @include themify($themes) {
+                a,
+                i {
+                  color: themed('color-accent');
+                }
+
+                a {
+                  border-color: themed('color-accent');
+                }
+              }
+            }
+          }
+        }
+
+        i {
+          padding-right: 10px;
+        }
+      }
+    }
+    .actions {
+      p.action {
+        padding-bottom: 8px;
+      }
+    }
+  }
+}
+
+.grid-users {
+  .grid-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 35px;
+    .head {
+      margin-right: 25px;
+      width: 13%;
+
+      i {
+        font-size: 4.5em;
+        margin-bottom: 15px;
+      }
+
+      span::before {
+        content: '\A';
+        white-space: pre;
+      }
+
+      span {
+        font-size: 1em;
+        font-weight: bold;
+      }
+    }
+
+    .infos {
+      padding-left: 5%;
+      min-width: 250px;
+      @include themify($themes) {
+        border-left: 1px solid themed('color-text-primary');
+      }
+
+      p.info {
+        &:first-of-type {
+          display: none;
+        }
+
+        text-align: left;
+        padding-bottom: 15px;
+
+        &:last-of-type {
+          padding-bottom: 0;
+        }
+
+        i {
+          padding-right: 10px;
+        }
+      }
+    }
+
+    .actions {
+      padding-right: 35px;
+    }
+  }
+}
+
+@media screen and (min-width: 1295px) {
+  .infos {
+    width: 60%;
+  }
+}
+
+@media screen and (min-width: 1195px) and (max-width: 1294px) {
+  .infos {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 1085px) {
+  .head {
+    display: none;
+  }
+
+  .grid-users {
+    .grid-item {
+      .infos {
+        @include themify($themes) {
+          border-left: none;
+        }
+
+        padding-left: 0;
+        min-width: unset;
+
+        p.info {
+          &:first-of-type {
+            display: block;
+            font-size: 1.2em;
+            text-transform: capitalize;
+          }
+        }
+      }
+    }
+  }
+
+  .grid-app-keys {
+    .grid-item {
+      .left {
+        .desc {
+          width: 320px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+}

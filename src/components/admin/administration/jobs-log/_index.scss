@@ -1,0 +1,154 @@
+.custom-scroll-logs::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.custom-scroll-logs::-webkit-scrollbar {
+  width: 5px;
+  background-color: transparent;
+}
+
+.custom-scroll-logs::-webkit-scrollbar-thumb {
+  border-radius: 0.25em;
+  @include themify($themes) {
+    background-color: themed('color-text-secondary');
+  }
+}
+
+.custom-scroll-logs {
+  scrollbar-width: thin;
+  @include themify($themes) {
+    scrollbar-color: themed('color-text-secondary') transparent;
+  }
+}
+
+.logs-container {
+  max-width: 900px;
+  margin: 25px auto 0 auto;
+
+  .download-container {
+    float: right;
+    width: 80px;
+    height: 35px;
+    border-bottom-left-radius: 0.35rem;
+    border-top-right-radius: 0.35rem;
+    line-height: 33px;
+    font-size: 1.2em;
+
+    @include themify($themes) {
+      border-left: 3px solid themed('color-primary');
+      border-bottom: 3px solid themed('color-primary');
+      background-color: themed('color-secondary');
+      color: themed('color-accent');
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &.loading {
+      cursor: default;
+    }
+
+    &:not(.loading):hover {
+      i {
+        animation: rubber-band 0.6s linear;
+      }
+    }
+  }
+
+  .logs-wrapper {
+    border-radius: 0.35rem;
+    padding: 4em 1em 2em 2em;
+    text-align: left;
+    letter-spacing: normal;
+    font-family: 'Roboto Mono', monospace;
+    height: 625px;
+    font-size: 0.8em;
+
+    @include themify($themes) {
+      background-color: themed('color-secondary');
+    }
+
+    .content {
+      height: 100%;
+
+      #log-entries {
+        height: 100%;
+        overflow: auto;
+
+        p {
+          line-height: 2em;
+          i,
+          span.date {
+            @include themify($themes) {
+              color: themed('color-accent');
+            }
+          }
+
+          span.date {
+            font-weight: bold;
+          }
+
+          span.job,
+          a {
+            text-transform: capitalize;
+          }
+
+          a {
+            @include themify($themes) {
+              border-bottom: 1px solid themed('color-text-primary');
+
+              &:hover {
+                color: themed('color-accent');
+                border-color: themed('color-accent');
+              }
+            }
+          }
+        }
+      }
+
+      .load-content,
+      .no-content {
+        text-align: center;
+        width: 50%;
+        margin: 0 auto;
+        position: relative;
+        top: 30%;
+        padding: 50px 0;
+        border-radius: 0.35rem;
+        box-shadow: 3px 3px 15px -6px rgba(0, 0, 0, 0.384);
+        @include themify($themes) {
+          background-color: themed('color-primary');
+          color: themed('color-text-active');
+        }
+
+        i {
+          font-size: 2.5em;
+          margin-bottom: 15px;
+        }
+
+        p {
+          font-size: 1.15em;
+        }
+      }
+
+      .load-content {
+        i {
+          animation: fa-spin 1.5s linear infinite;
+        }
+      }
+
+      p:not(:first-of-type) {
+        padding-top: 1em;
+      }
+    }
+  }
+}
+
+@media screen and (max-height: 750px) and (min-width: 900px) {
+  .logs-container {
+    .logs-wrapper {
+      height: 490px;
+    }
+  }
+}

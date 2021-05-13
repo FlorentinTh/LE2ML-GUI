@@ -1,0 +1,238 @@
+.menu-custom-scroll::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.menu-custom-scroll::-webkit-scrollbar {
+  width: 3px;
+  background-color: transparent;
+}
+
+.menu-custom-scroll::-webkit-scrollbar-thumb {
+  @include themify($themes) {
+    background-color: themed('color-accent');
+  }
+}
+
+.menu-custom-scroll {
+  scrollbar-width: thin;
+  @include themify($themes) {
+    scrollbar-color: themed('color-accent') transparent;
+  }
+}
+
+.menu {
+  @include themify($themes) {
+    background-color: themed('color-secondary');
+    border-right: 3px solid themed('color-accent');
+  }
+
+  height: 100vh;
+  overflow-y: auto;
+  width: $menu-width-desktop;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  outline: none;
+
+  .logo {
+    padding: 2em 0.5em 0.5em 0.5em;
+    text-align: center;
+
+    a {
+      width: 264px;
+      content: url($logo-liara-large-light);
+      content: url($logo-liara-large-dark);
+
+      @include themify($themes) {
+        content: url(themed('logo-liara-large'));
+      }
+      transition: all 0.05s linear;
+    }
+
+    h2 {
+      margin: 0.75em 0 0.75em 0;
+      font-weight: normal;
+      text-transform: capitalize;
+      font-family: 'Roboto Mono', monospace;
+    }
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    height: 340px;
+
+    li {
+      font-size: 1.05em;
+      font-weight: regular;
+      transition: all 0.1s linear;
+      font-size: 1.25em;
+      display: flex;
+
+      &:not(:first-child) {
+        cursor: pointer;
+      }
+
+      & > *:not(i) {
+        padding-left: 1em;
+      }
+
+      &.active {
+        @include themify($themes) {
+          background-color: themed('color-accent');
+          color: themed('color-text-active');
+          a {
+            color: themed('color-text-active');
+          }
+        }
+      }
+
+      &:not(:first-of-type):not(.active):hover {
+        @include themify($themes) {
+          background-color: themed('color-primary');
+        }
+      }
+
+      &:focus {
+        outline: none;
+      }
+
+      a {
+        display: block;
+        width: 100%;
+        height: 65px;
+      }
+
+      i {
+        padding-left: 1em;
+      }
+
+      a,
+      i {
+        line-height: 65px;
+      }
+
+      .switch-theme {
+        height: 23px;
+        position: relative;
+        width: 57px;
+        margin: 0 auto 30px auto;
+
+        input:hover,
+        label:hover {
+          cursor: pointer;
+        }
+
+        i {
+          font-size: 0.95em;
+          padding-left: 0;
+          line-height: 0;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-height: 800px) and (min-width: 900px) {
+  .menu {
+    .logo {
+      a {
+        width: 220px;
+        height: 77px;
+      }
+    }
+    ul {
+      li {
+        font-size: 1em;
+
+        a {
+          height: 55px;
+        }
+
+        a,
+        i {
+          line-height: 55px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .menu {
+    width: $menu-width-tablet;
+
+    .logo {
+      padding: 0.5em 0.5em 3em 0.5em;
+      position: relative;
+
+      a {
+        width: $menu-width-tablet - 30px;
+
+        content: url($logo-liara-small-light);
+        content: url($logo-liara-small-dark);
+
+        @include themify($themes) {
+          content: url(themed('logo-liara-small'));
+        }
+      }
+
+      h2 {
+        opacity: 0;
+        position: absolute;
+        top: 35%;
+        left: $menu-width-tablet + 10px;
+        margin: 0;
+        min-width: 200px;
+        background: rgba(0, 0, 0, 0.4);
+        transform: translate3d(-20px, -50%, 0);
+        transition: all 0.1s ease-in-out;
+      }
+    }
+
+    ul {
+      li {
+        height: $menu-width-tablet/1.5;
+        position: relative;
+
+        &:not(:first-of-type) {
+          i {
+            padding: 0.45em 0 0 1.2em;
+          }
+        }
+
+        a {
+          opacity: 0;
+          position: absolute;
+          background: rgba(0, 0, 0, 0.5);
+          padding: 0.2em 0.5em;
+          top: 50%;
+          left: $menu-width-tablet - 10px;
+          transform: translate3d(-15px, -50%, 0);
+          transition: all 0.15s ease-in-out;
+
+          &:before {
+            content: '';
+            width: 0;
+            height: 0;
+            position: absolute;
+            top: 50%;
+            left: -5px;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-right: 5px solid rgba(0, 0, 0, 0.5);
+            transform: translateY(-50%);
+          }
+        }
+
+        &:hover {
+          a {
+            opacity: 1;
+            transform: translate3d(0px, -50%, 0);
+          }
+        }
+      }
+    }
+  }
+}

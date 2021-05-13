@@ -1,7 +1,12 @@
-@import './utils/*.scss';
-@import '../core/theme/*.scss';
-@import './grid-menu.scss';
-@import '../components/**/**/*.scss';
+// @import './utils/*.scss';
+// @import '../core/theme/*.scss';
+// @import './grid-menu.scss';
+// @import '../components/**/**/*.scss';
+
+@import 'utils';
+@import '../core/theme';
+@import 'utils/grid-menu';
+@import '../components';
 
 * {
   margin: 0;

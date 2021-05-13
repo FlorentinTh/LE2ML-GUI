@@ -1,0 +1,32 @@
+.wrap {
+  justify-content: center;
+}
+
+main.content {
+  .error-container {
+    margin: 0 auto;
+    max-width: 900px;
+    @include themify($themes) {
+      background-color: themed('color-secondary');
+      border-radius: 0.35em;
+      padding: 5em 0;
+
+      img {
+        content: url(themed('logo-liara-small'));
+      }
+
+      #code {
+        margin-top: 0.5em;
+        margin-bottom: 0.25em;
+        font-size: 3em;
+        @include themify($themes) {
+          color: themed('color-accent');
+        }
+      }
+
+      #message {
+        font-size: 1.2em;
+      }
+    }
+  }
+}

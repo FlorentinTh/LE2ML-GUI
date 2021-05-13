@@ -1,0 +1,167 @@
+.custom-scroll::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 5px;
+  background-color: transparent;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  border-radius: 0.25em;
+  @include themify($themes) {
+    background-color: themed('color-secondary');
+  }
+}
+
+.custom-scroll {
+  padding-right: 10px;
+  scrollbar-width: thin;
+  @include themify($themes) {
+    scrollbar-color: themed('color-secondary') transparent;
+  }
+}
+
+.file-list {
+  animation: fade-in 0.6s linear;
+
+  h3 {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  .table-container {
+    overflow-y: auto;
+    max-height: 35vh;
+
+    table {
+      @include themify($themes) {
+        background: themed('color-secondary');
+        color: themed('color-text-primary');
+      }
+      text-align: left;
+      position: relative;
+      border-collapse: collapse;
+      width: 100%;
+      margin: 0 auto;
+
+      thead {
+        th {
+          position: sticky;
+          top: 0;
+          z-index: 2;
+          height: 45px;
+          user-select: none;
+
+          i {
+            font-size: 0.75em;
+          }
+
+          &:hover {
+            cursor: pointer;
+
+            i {
+              @include themify($themes) {
+                color: themed('color-accent');
+                transition: color 0.2s linear;
+              }
+            }
+          }
+
+          @include themify($themes) {
+            background: themed('color-primary');
+            color: themed('color-text-primary');
+          }
+
+          &:not(:first-of-type) {
+            @include themify($themes) {
+              box-shadow: 0 3px 0px -1px themed('color-secondary');
+            }
+          }
+        }
+      }
+
+      td:not(:first-of-type),
+      th {
+        padding-left: 8px;
+      }
+
+      tbody tr {
+        height: 45px;
+
+        &.selected-file {
+          @include themify($themes) {
+            color: themed('color-accent');
+          }
+        }
+
+        &:nth-child(odd) {
+          @include themify($themes) {
+            background-color: themed('color-primary');
+          }
+        }
+
+        &:hover {
+          cursor: pointer;
+          @include themify($themes) {
+            color: themed('color-accent');
+            transition: color 0.2s linear;
+          }
+        }
+
+        td {
+          @include themify($themes) {
+            border-right: 4px solid themed('color-primary');
+          }
+
+          &:first-of-type {
+            width: 30px;
+            @include themify($themes) {
+              background-color: themed('color-primary');
+            }
+            border-right: none;
+            border-bottom: none;
+          }
+
+          &:last-of-type {
+            border-right: none;
+          }
+
+          &.no-data {
+            text-align: center;
+            @include themify($themes) {
+              background-color: themed('color-secondary');
+              &:hover {
+                cursor: default;
+                color: themed('color-text-primary');
+              }
+            }
+          }
+        }
+
+        &:last-of-type {
+          td:first-child {
+            @include themify($themes) {
+              border-bottom: 2px solid themed('color-primary');
+            }
+          }
+          @include themify($themes) {
+            border-bottom: 2px solid themed('color-secondary');
+          }
+        }
+      }
+
+      td,
+      th {
+        &.center {
+          text-align: center;
+          padding: 0;
+        }
+        &.right {
+          text-align: right;
+          padding-right: 8px;
+        }
+      }
+    }
+  }
+}

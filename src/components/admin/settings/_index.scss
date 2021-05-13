@@ -1,0 +1,16 @@
+.form-infos,
+.change-password,
+.user-infos {
+  max-width: 500px;
+  margin: 0 auto;
+}
+.form-infos-modal,
+.user-infos-modal {
+  margin-top: 50px;
+}
+
+@supports (display: grid) {
+  .grid-item {
+    margin: 0;
+  }
+}

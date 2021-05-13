@@ -1,4 +1,4 @@
-import './styles/font-awesome.scss';
+import './styles/utils/_font.scss';
 import '@Styles';
 
 import Router from '@Router';

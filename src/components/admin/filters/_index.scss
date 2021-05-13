@@ -1,0 +1,54 @@
+.filters {
+  text-align: left;
+  max-width: 900px;
+  margin: 0 auto;
+  user-select: none;
+  margin-top: 25px;
+
+  .filter {
+    font-size: 1.4em;
+    margin-right: 20px;
+
+    &:last-of-type {
+      margin-right: 0;
+    }
+
+    i:hover {
+      cursor: pointer;
+    }
+
+    i:last-of-type {
+      visibility: hidden;
+      padding: 0;
+      margin: -3px;
+
+      &:hover {
+        cursor: default;
+      }
+    }
+  }
+
+  .filter-active {
+    i {
+      @include themify($themes) {
+        color: themed('color-accent');
+      }
+    }
+
+    i:last-of-type {
+      visibility: visible;
+    }
+  }
+
+  .filter-disabled {
+    i {
+      @include themify($themes) {
+        color: themed('color-text-secondary');
+      }
+
+      &:hover {
+        cursor: default;
+      }
+    }
+  }
+}

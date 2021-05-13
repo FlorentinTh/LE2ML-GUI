@@ -1,0 +1,375 @@
+.tasks,
+.process-selector {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.process-selector {
+  user-select: none;
+
+  .process-options {
+    input {
+      width: 402px;
+      height: 45px;
+      border: none;
+      font-weight: lighter;
+      font-size: 1.25em;
+      margin-top: 15px;
+    }
+  }
+}
+
+.tasks {
+  .tasks-nav {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    justify-content: space-between;
+
+    .task-nav-item {
+      button {
+        padding: 20px 15px;
+        font-size: 1em;
+        border: 0;
+        font-weight: lighter;
+
+        @include themify($themes) {
+          background-color: themed('color-secondary');
+          color: themed('color-text-primary');
+
+          &:hover {
+            background-color: themed('color-accent');
+            color: themed('color-text-active');
+          }
+
+          i {
+            padding-right: 10px;
+          }
+        }
+      }
+
+      .indicator {
+        display: block;
+        visibility: hidden;
+        font-size: 1.5em;
+
+        @include themify($themes) {
+          color: themed('color-accent');
+        }
+      }
+    }
+
+    .item-active {
+      button {
+        @include themify($themes) {
+          background-color: themed('color-accent');
+          color: themed('color-text-active');
+        }
+
+        &:hover {
+          cursor: default;
+        }
+      }
+
+      .indicator {
+        visibility: visible;
+      }
+    }
+
+    .item-disabled {
+      .indicator {
+        visibility: hidden;
+      }
+
+      @include themify($themes) {
+        button {
+          border: none;
+          color: themed('color-text-secondary');
+
+          &:hover {
+            cursor: default;
+            color: themed('color-text-secondary');
+            background-color: themed('color-secondary');
+          }
+        }
+
+        i {
+          color: themed('color-text-secondary');
+        }
+      }
+    }
+
+    .task-nav-item-link {
+      padding-top: 20px;
+    }
+  }
+
+  .task-container {
+    margin-top: -11px;
+    border-radius: 0.25em;
+
+    @include themify($themes) {
+      border: 2px solid themed('color-accent');
+    }
+
+    .import-container {
+      height: 35px;
+
+      .form-container {
+        width: 80px;
+        height: 35px;
+        float: right;
+        border-bottom-left-radius: 0.25em;
+        @include themify($themes) {
+          border-left: 2px solid themed('color-accent');
+          border-bottom: 2px solid themed('color-accent');
+          background-color: themed('color-accent');
+          color: themed('color-text-active');
+        }
+
+        label {
+          float: left;
+          clear: both;
+          width: 100%;
+          height: 100%;
+          user-select: none;
+          text-align: center;
+          cursor: pointer;
+          line-height: 33px;
+          font-size: 1.2em;
+
+          button {
+            display: none;
+          }
+
+          &.loading {
+            cursor: default;
+          }
+
+          &:not(.loading):hover {
+            i {
+              animation: rubber-band 0.6s linear;
+            }
+          }
+        }
+
+        input[type='file'] {
+          display: none;
+        }
+      }
+    }
+
+    .action {
+      button {
+        height: 35px;
+        width: 80px;
+        border: none;
+        border-radius: 0;
+        font-size: 1.2em;
+        font-weight: bold;
+
+        @include themify($themes) {
+          border-left: 2px solid themed('color-accent');
+          border-bottom: 2px solid themed('color-accent');
+          background-color: themed('color-accent');
+          color: themed('color-text-active');
+        }
+
+        &:disabled {
+          cursor: default;
+        }
+
+        &:not(:disabled):hover {
+          i {
+            animation: rubber-band 0.6s linear;
+          }
+        }
+
+        &.loading {
+          i:before {
+            content: '\f110';
+          }
+        }
+      }
+    }
+
+    .action-top-left {
+      text-align: left;
+
+      button {
+        border-bottom-right-radius: 0.25em;
+      }
+    }
+
+    .action-bottom-right {
+      text-align: right;
+
+      button {
+        border-top-left-radius: 0.25em;
+      }
+    }
+
+    .task-content {
+      margin: 25px auto 60px auto;
+      text-align: center;
+      width: 80%;
+
+      h2 {
+        text-align: center;
+        margin-bottom: 45px;
+      }
+
+      .switch-group {
+        margin-bottom: 65px;
+      }
+
+      .source-select {
+        select {
+          width: 402px !important;
+        }
+      }
+
+      .input-content {
+        section {
+          animation: fade-in 0.4s linear;
+        }
+      }
+
+      section:not(:last-child) {
+        margin-bottom: 50px;
+      }
+
+      section {
+        h3 {
+          margin-bottom: 25px;
+          text-align: center;
+          i {
+            padding-right: 10px;
+          }
+        }
+
+        .algo-params {
+          margin-top: 35px;
+        }
+
+        &.section-disabled {
+          @include themify($themes) {
+            color: themed('color-text-secondary');
+            .form-elems {
+              input[type='text'] {
+                pointer-events: none;
+                color: themed('color-text-secondary');
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .btn-group-nav {
+      margin: 35px auto;
+      width: 85%;
+      padding-top: 45px;
+      text-align: center;
+      @include themify($themes) {
+        border-top: 2px dotted themed('color-secondary');
+        .previous,
+        .next,
+        .finish {
+          button {
+            height: 45px;
+            border: none;
+            font-size: 1.2em;
+            width: 100%;
+            width: 60%;
+          }
+        }
+
+        .next,
+        .finish {
+          margin-bottom: 15px;
+          button {
+            &.primary {
+              color: themed('color-text-active');
+              background-color: themed('color-accent');
+              &:not(.disabled):hover {
+                background-color: themed('color-accent-darker');
+              }
+            }
+
+            &.disabled {
+              color: themed('color-text-secondary');
+              background-color: themed('color-primary');
+              border: 1px solid themed('color-text-secondary');
+              &:hover {
+                cursor: default;
+              }
+            }
+          }
+        }
+
+        .next {
+          button:before {
+            content: 'Next';
+          }
+        }
+
+        .finish {
+          button:before {
+            content: 'Start';
+          }
+        }
+
+        .previous {
+          button {
+            color: themed('color-accent');
+            background-color: themed('color-primary');
+            border: 1px solid themed('color-accent');
+            transition: all 0.2s ease;
+            &:hover {
+              color: themed('color-accent-darker');
+              border: 1px solid themed('color-accent-darker');
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1025px) {
+  .tasks {
+    .tasks-nav {
+      .task-nav-item {
+        button {
+          padding: 10px 0;
+          width: 50px;
+          height: 45px;
+          font-size: 1.3em;
+          color: transparent !important;
+
+          i {
+            padding: 0 !important;
+            @include themify($themes) {
+              color: themed('color-text-active');
+            }
+          }
+        }
+      }
+
+      .item-disabled {
+        button {
+          i {
+            @include themify($themes) {
+              color: themed('color-text-secondary');
+            }
+          }
+        }
+      }
+
+      .task-nav-item-link {
+        padding-top: 15px;
+      }
+    }
+  }
+}
