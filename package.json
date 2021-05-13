@@ -5,7 +5,10 @@
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "start": "webpack serve --config webpack.dev.js",
-    "lint": "eslint . --ext .js,.json"
+    "lint": "eslint . --ext .js,.json",
+    "commit": "git-cz",
+    "release": "standard-version",
+    "publish": "git push --follow-tags"
   },
   "repository": {
     "type": "git",
@@ -35,6 +38,7 @@
     "core-js": "^3.12.1",
     "css-loader": "^5.2.4",
     "css-minimizer-webpack-plugin": "^3.0.0",
+    "cz-conventional-changelog": "^3.3.0",
     "dotenv": "^9.0.2",
     "eslint": "^7.26.0",
     "eslint-config-prettier": "^8.3.0",
@@ -61,6 +65,7 @@
     "prettier": "^2.3.0",
     "process": "^0.11.10",
     "sass-loader": "^11.1.0",
+    "standard-version": "^9.3.0",
     "stream-http": "^3.2.0",
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^5.1.2",
@@ -83,5 +88,10 @@
     "plotly.js-cartesian-dist": "^1.58.4",
     "sweetalert2": "^10.16.7",
     "util": "^0.12.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
