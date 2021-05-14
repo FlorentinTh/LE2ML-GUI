@@ -7,6 +7,7 @@ import ModalHelper from '@ModalHelper';
 import StringHelper from '@StringHelper';
 import Store from '@Store';
 import EventSource from 'eventsource';
+import fileDownload from 'js-file-download';
 
 let startedJobs;
 let completedJobs;
@@ -257,10 +258,7 @@ class Jobs extends Component {
         downloadFile(`/jobs/${jobId}/download?output=matrix`, this.context).then(
           response => {
             if (response) {
-              window.open(
-                new URL(window.env.FILE_SERVER_URL + '/' + response.data),
-                '_blank'
-              );
+              fileDownload(response, 'matrix.csv');
             }
           }
         );
@@ -283,10 +281,7 @@ class Jobs extends Component {
         downloadFile(`/jobs/${jobId}/download?output=predictions`, this.context).then(
           response => {
             if (response) {
-              window.open(
-                new URL(window.env.FILE_SERVER_URL + '/' + response.data),
-                '_blank'
-              );
+              fileDownload(response, 'predictions.csv');
             }
           }
         );

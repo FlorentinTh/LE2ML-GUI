@@ -6,6 +6,7 @@ import axios from 'axios';
 import APIHelper from '@APIHelper';
 import ModalHelper from '@ModalHelper';
 import EventSource from 'eventsource';
+import fileDownload from 'js-file-download';
 
 let logEntries;
 class JobsLog extends Component {
@@ -164,10 +165,15 @@ class JobsLog extends Component {
     event.preventDefault();
     event.stopImmediatePropagation();
 
-    window.open(
-      new URL(window.env.FILE_SERVER_URL + '/' + window.env.JOB_LOGS_FILE),
-      '_blank'
-    );
+    axios
+      .get('/jobs/log/file', {
+        headers: APIHelper.setAuthHeader()
+      })
+      .then(response => {
+        if (response) {
+          fileDownload(response.data, 'jobs.log');
+        }
+      });
   }
 
   openEventSource(close = false) {

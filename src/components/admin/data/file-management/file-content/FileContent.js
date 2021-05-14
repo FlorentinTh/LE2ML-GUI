@@ -9,6 +9,7 @@ import APIHelper from '@APIHelper';
 import ModalHelper from '@ModalHelper';
 import { Filters, FilterType } from '@Filters';
 import Search from '@Search';
+import fileDownload from 'js-file-download';
 
 let fileModels;
 let fileRaw;
@@ -248,16 +249,22 @@ class FileContent extends Component {
                 'Preparing Download...',
                 'Your download will begin automatically'
               );
+
               downloadFile(
                 `/files/${filename}/download?source=${this.dataSource}&type=${this.fileType}&from=${fileFormat}&to=${selectedFormat}`,
                 this.context
               ).then(response => {
                 if (response) {
                   loader.close();
-                  window.open(
-                    new URL(window.env.FILE_SERVER_URL + '/' + response.data),
-                    '_blank'
-                  );
+
+                  let mimetype = 'text/csv';
+
+                  if (typeof response === 'object') {
+                    response = JSON.stringify(response, null, 2);
+                    mimetype = 'application/json';
+                  }
+
+                  fileDownload(response, `${filename}.${selectedFormat}`, mimetype);
                 }
               });
             }
