@@ -126,13 +126,13 @@ class ModalHelper {
   static loading(title, message) {
     return Swal.fire({
       title: title,
-      text: message,
+      html: message,
       position: 'top',
       width: 600,
       allowEscapeKey: false,
       allowOutsideClick: false,
       target: document.getElementById('root'),
-      onBeforeOpen: () => {
+      didOpen: () => {
         Swal.showLoading();
       }
     });
