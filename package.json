@@ -1,6 +1,6 @@
 {
   "name": "le2ml-gui",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "GUI for the LE2ML project",
   "scripts": {
     "build": "webpack --config webpack.prod.js",

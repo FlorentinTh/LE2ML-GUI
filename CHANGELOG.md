@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.2](https://github.com/FlorentinTh/LE2ML-GUI/compare/v1.0.1...v1.0.2) (2021-05-14)
+
+
+### Bug Fixes
+
+* **file download:** fix required file server to download files ([286cacc](https://github.com/FlorentinTh/LE2ML-GUI/commit/286cacc6220a7295db00ff099f0515e067623337))
+* **swal:** move swal loading popup to newest configuration ([967885c](https://github.com/FlorentinTh/LE2ML-GUI/commit/967885cee567beff61c4e3b12c1cefd5247e02ba))
+
+
+### Build System
+
+* **webpack:** improve speed for dev configuration ([7cc69ca](https://github.com/FlorentinTh/LE2ML-GUI/commit/7cc69cac0f849d2eea96bd2c97dd91c54ca002da))
+
+
+### Chore
+
+* **deps:** update dependencies ([0585831](https://github.com/FlorentinTh/LE2ML-GUI/commit/0585831a69693d0f6d4fde6e4436b8f2ecb73173))
+
 ### 1.0.1 (2021-05-13)
 
 
