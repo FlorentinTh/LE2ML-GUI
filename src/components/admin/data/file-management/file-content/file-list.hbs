@@ -20,10 +20,10 @@
   <div class="right">
     <div class="actions">
       <p class="action">
-        {{#[utils/compare] ../fileType '===' 'models'}}
-        <button class="btn-disabled" id="download" disabled>Download</button>
-        {{else}}
+        {{#[utils/compare] ../fileType '!==' 'models'}}
         <button id="download">Download</button>
+        {{else}}
+        <button class="btn-disabled" id="download" disabled>Download</button>
         {{/[utils/compare]}}
       </p>
       <p class="action">

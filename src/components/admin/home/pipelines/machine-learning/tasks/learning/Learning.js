@@ -175,6 +175,7 @@ class Learning extends Task {
 
     if (!(confParamsStore === undefined)) {
       Store.remove('conf-params');
+      this.removeAlgoParams();
     }
 
     const select = event.target;
@@ -262,13 +263,7 @@ class Learning extends Task {
     }
   }
 
-  removeAlgoData() {
-    const storedValue = sessionStorage.getItem('algorithm-name');
-    if (!(storedValue === undefined)) {
-      sessionStorage.removeItem('algorithm-name');
-      algoSelect.options[0].selected = true;
-    }
-
+  removeAlgoParams() {
     const JSONValues = JSON.parse(JSON.stringify(sessionStorage));
     // eslint-disable-next-line array-callback-return
     Object.keys(JSONValues).filter(key => {
@@ -276,6 +271,16 @@ class Learning extends Task {
         sessionStorage.removeItem(key);
       }
     });
+  }
+
+  removeAlgoData() {
+    const storedValue = sessionStorage.getItem('algorithm-name');
+    if (!(storedValue === undefined)) {
+      sessionStorage.removeItem('algorithm-name');
+      algoSelect.options[0].selected = true;
+    }
+
+    this.removeAlgoParams();
 
     const paramsContainer = this.context.querySelector('.params-container');
 
