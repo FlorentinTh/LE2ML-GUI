@@ -36,7 +36,7 @@
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "compression-webpack-plugin": "^7.1.2",
     "core-js": "^3.12.1",
-    "css-loader": "^5.2.4",
+    "css-loader": "^5.2.5",
     "css-minimizer-webpack-plugin": "^3.0.0",
     "cz-conventional-changelog": "^3.3.0",
     "dotenv": "^9.0.2",
@@ -69,7 +69,7 @@
     "stream-http": "^3.2.0",
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^5.1.2",
-    "webpack": "^5.37.0",
+    "webpack": "^5.37.1",
     "webpack-cli": "^4.7.0",
     "webpack-dev-server": "^3.11.2",
     "webpack-manifest-plugin": "^3.1.1",
@@ -87,7 +87,7 @@
     "js-cookie": "^2.2.1",
     "js-file-download": "^0.4.12",
     "plotly.js-cartesian-dist": "^1.58.4",
-    "sweetalert2": "^11.0.7",
+    "sweetalert2": "^11.0.8",
     "util": "^0.12.3"
   },
   "config": {
