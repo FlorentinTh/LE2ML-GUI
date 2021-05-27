@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.3](https://github.com/FlorentinTh/LE2ML-GUI/compare/v1.0.2...v1.0.3) (2021-05-27)
+
+
+### Bug Fixes
+
+* **machine learning:** fix algorithms parameters reset on algo select change ([3e620fb](https://github.com/FlorentinTh/LE2ML-GUI/commit/3e620fb23562976cc5ce319d9349cb4f47df8287))
+* **swal:** update swal style according to new major version upgrade ([e7e7d81](https://github.com/FlorentinTh/LE2ML-GUI/commit/e7e7d812f6a9c9af951d4ed351985b89387d37c0))
+
+
+### Chore
+
+* **deps:** update dependencies ([a149868](https://github.com/FlorentinTh/LE2ML-GUI/commit/a14986894627e09611fb9cc82ebbf3eb9485c037))
+* **deps:** update dependencies ([8739061](https://github.com/FlorentinTh/LE2ML-GUI/commit/8739061f3aa060b659a0bb96d5cd15d2eceb3433))
+* **deps:** update dependencies ([e2e8567](https://github.com/FlorentinTh/LE2ML-GUI/commit/e2e8567b6c139caee1bc4a93206337120251c81b))
+* **deps:** update dependencies ([f8504b6](https://github.com/FlorentinTh/LE2ML-GUI/commit/f8504b6af21eeea76ef9200a018da0189d3c6596))
+* **deps:** update dependencies ([d045093](https://github.com/FlorentinTh/LE2ML-GUI/commit/d045093c066a3a15bf8cd2ffccf47bb0a7f5a20b))
+* **deps:** update dependencies and update npm to v7.x ([e32cf1a](https://github.com/FlorentinTh/LE2ML-GUI/commit/e32cf1ab0a1fee2d8f6bfcfb5a09555118594335))
+
 ### [1.0.2](https://github.com/FlorentinTh/LE2ML-GUI/compare/v1.0.1...v1.0.2) (2021-05-14)
 
 
