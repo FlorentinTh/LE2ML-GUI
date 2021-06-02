@@ -4,5 +4,8 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    ignore:
+      - dependency-name: "postcss-preset-env"
+        versions: ["6.x"]
     assignees:
       - "FlorentinTh"
