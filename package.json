@@ -86,7 +86,7 @@
     "handlebars-utils": "^1.0.6",
     "js-cookie": "^2.2.1",
     "js-file-download": "^0.4.12",
-    "plotly.js-cartesian-dist": "^1.58.4",
+    "plotly.js-cartesian-dist": "^2.0.0",
     "sweetalert2": "^11.0.16",
     "util": "^0.12.4"
   },
