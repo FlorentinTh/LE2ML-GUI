@@ -283,6 +283,12 @@ input[type='file']::-webkit-file-upload-button {
     .swal2-actions {
       margin-top: 35px !important;
       margin-bottom: 15px !important;
+      padding: 0 1.6em;
+
+      button {
+        height: 45px;
+        font-size: 1.25em;
+      }
     }
 
     button.swal2-confirm {
