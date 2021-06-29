@@ -1,4 +1,4 @@
-import Plotly from 'plotly.js-cartesian-dist';
+import Plotly from 'plotly.js-cartesian-dist-min';
 
 const layoutBarChart = {
   barmode: 'relative',
