@@ -1,5 +1,4 @@
 /* eslint-disable no-undef */
-const { HotModuleReplacementPlugin } = require('webpack');
 const { merge } = require('webpack-merge');
 
 const common = require('./webpack.common.js');
@@ -13,7 +12,12 @@ module.exports = merge(common, {
     open: true,
     compress: false,
     hot: true,
-    port: 8080
+    port: 8080,
+    client: {
+      progress: true,
+      logging: 'error',
+      overlay: true
+    }
   },
 
   module: {
@@ -42,6 +46,5 @@ module.exports = merge(common, {
   },
   stats: {
     modules: false
-  },
-  plugins: [new HotModuleReplacementPlugin()]
+  }
 });
