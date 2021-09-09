@@ -2,6 +2,78 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/FlorentinTh/LE2ML-GUI/compare/v1.0.3...v1.1.0) (2021-09-09)
+
+
+### Features
+
+* **favicon:** add a favicon ([ae2ccce](https://github.com/FlorentinTh/LE2ML-GUI/commit/ae2ccceebaf932921246c5e07f99adec8a03786a))
+
+
+### Bug Fixes
+
+* **popup style:** update style for buttons in swal2 popups ([a1c3d02](https://github.com/FlorentinTh/LE2ML-GUI/commit/a1c3d02d367863889e51cc9a244d90f565bfb4d4))
+* **swal style:** update swal css according to the latest update of the dependency changes ([e296421](https://github.com/FlorentinTh/LE2ML-GUI/commit/e296421ee86434c24c54fd283af229d08d081c05))
+* **webpack-config:** change webpack dev config according to webpack-dev-server latest update ([80089d5](https://github.com/FlorentinTh/LE2ML-GUI/commit/80089d549152f9ce0f75624b861cc33a71cc813e))
+
+
+### Documentation
+
+* **readme:** add Snyk badge to README ([ecbd3ff](https://github.com/FlorentinTh/LE2ML-GUI/commit/ecbd3ff0ad5170a89e05f0c102573d804f4ff7cc))
+* **readme:** update readme ([d7cd471](https://github.com/FlorentinTh/LE2ML-GUI/commit/d7cd4715da15fdbbee9c8d6bd2de7cc098351b76))
+* **readme:** update readme ([b123662](https://github.com/FlorentinTh/LE2ML-GUI/commit/b1236621f4c0a96dd5045fd09978c06fe95de0ac))
+
+
+### Refactors
+
+* **env.example:** update example of .env file ([05b3d44](https://github.com/FlorentinTh/LE2ML-GUI/commit/05b3d446bfcde9b8ea612ce36828dc24aa912a47))
+* **project:** some refactoring ([1ddf1de](https://github.com/FlorentinTh/LE2ML-GUI/commit/1ddf1deee913c36359a884b34e105b9a73577fb0))
+
+
+### Build System
+
+* **docker:** add required docker files to build project ([245ed9f](https://github.com/FlorentinTh/LE2ML-GUI/commit/245ed9f03ac17b48835cd1aebb91178c418a803e))
+
+
+### CI
+
+* **dependabot:** update dependabot configuration to only check for production dependencies updates ([921b636](https://github.com/FlorentinTh/LE2ML-GUI/commit/921b6367527df78da758663c3957ad086d57e3d4))
+* **workflows:** add a build file to github actions workflows ([f1d93df](https://github.com/FlorentinTh/LE2ML-GUI/commit/f1d93dfa9af92fb70181986ab49c75a4cfc16de9))
+* **workflows:** add github action workflow file to check dependencies vulnerabilities with Snyk ([78f9136](https://github.com/FlorentinTh/LE2ML-GUI/commit/78f9136d0a78871f8a9ba62888f16bfc5595735d))
+* **workflows:** disable trigger of workflows for dependabot alerts ([c09ab36](https://github.com/FlorentinTh/LE2ML-GUI/commit/c09ab36400232cda004c2973763b7522315ea166))
+* **workflows:** rename dependencies checking workflow file ([32c7bc1](https://github.com/FlorentinTh/LE2ML-GUI/commit/32c7bc16f43e5b55ca648fc300588ec2555d4e22))
+
+
+### Performance
+
+* **plotly:** change import plotly lib by minified version ([9124396](https://github.com/FlorentinTh/LE2ML-GUI/commit/9124396e28bd21719a38b0f5eec963beadc7e202))
+
+
+### Chore
+
+* **deps:** major dependencies update ([f45ce8b](https://github.com/FlorentinTh/LE2ML-GUI/commit/f45ce8b88a2e46a75cb4dac97b0035619347d22b))
+* **deps:** update dependencies ([0f32695](https://github.com/FlorentinTh/LE2ML-GUI/commit/0f32695a7470640edcdb868157365b8d4f1dc1db))
+* **deps:** update dependencies ([9046644](https://github.com/FlorentinTh/LE2ML-GUI/commit/9046644f895de143280be976d15c9d37b6c5de75))
+* **deps:** update dependencies ([2e6158b](https://github.com/FlorentinTh/LE2ML-GUI/commit/2e6158b972db1ca519adfd605e97a5baba8eb68a))
+* **deps:** update dependencies ([b09963f](https://github.com/FlorentinTh/LE2ML-GUI/commit/b09963f2dfc28241226c4a0ef766eafab0d2d9c1))
+* **deps:** update dependencies ([2fadd3f](https://github.com/FlorentinTh/LE2ML-GUI/commit/2fadd3f5cdc20a3781b42c1a00cf73631c87d047))
+* **deps:** update dependencies ([5288c9f](https://github.com/FlorentinTh/LE2ML-GUI/commit/5288c9fcec16fc4fbe68637ec62cb5a0ee4b2f2d))
+* **deps:** update dependencies ([9ec14df](https://github.com/FlorentinTh/LE2ML-GUI/commit/9ec14df285815b57cc49f04a3a48593cc669ab4f))
+* **deps:** update dependencies ([7bcfbd4](https://github.com/FlorentinTh/LE2ML-GUI/commit/7bcfbd420bbc40d46e0c95585473a604d37039c7))
+* **deps:** update dependencies ([75e9a65](https://github.com/FlorentinTh/LE2ML-GUI/commit/75e9a6540302e9f41ff1f8a97e6cadb08d2e8c72))
+* **deps:** update dependencies ([ea7bd9e](https://github.com/FlorentinTh/LE2ML-GUI/commit/ea7bd9ece0f8822fdb5a328c0bd849897f489cf8))
+* **deps:** update dependencies ([2069993](https://github.com/FlorentinTh/LE2ML-GUI/commit/20699931f5e2ad073eaf7c48bbe657d19cbcd583))
+* **deps:** update dependencies ([cd89646](https://github.com/FlorentinTh/LE2ML-GUI/commit/cd89646ff922847351a0d6f7587e2ce30b693e73))
+* **deps:** update dependencies ([f424bf2](https://github.com/FlorentinTh/LE2ML-GUI/commit/f424bf2feb81a8e0cedd20c1befc47b231fd3617))
+* **deps:** update dependencies ([0b3be47](https://github.com/FlorentinTh/LE2ML-GUI/commit/0b3be47a2a815842ccdbcaba70fda1e12f57d50f))
+* **deps:** update dependencies ([fa08b16](https://github.com/FlorentinTh/LE2ML-GUI/commit/fa08b162e2a4aa0a529efff9dc37164b4707e7c2))
+* **deps:** update dependencies ([e1fdf8f](https://github.com/FlorentinTh/LE2ML-GUI/commit/e1fdf8f68808a57ae4d2f3735d65128417c7ccb7))
+* **deps:** update dependencies ([f67c177](https://github.com/FlorentinTh/LE2ML-GUI/commit/f67c177af0564907f0256c3e4f5a968c72835cee))
+* **deps:** update dependencies ([f598cf3](https://github.com/FlorentinTh/LE2ML-GUI/commit/f598cf31f7b8e42fb45a9b27db4be9e8c4a23863))
+* **deps:** update dependencies ([4537e26](https://github.com/FlorentinTh/LE2ML-GUI/commit/4537e26a9e82432e01397fe20203ec2d405a5289))
+* **deps:** update dependencies ([84a3dfb](https://github.com/FlorentinTh/LE2ML-GUI/commit/84a3dfb3c13443588aa700807532e87283779917))
+* **deps:** update dependencies ([f933abb](https://github.com/FlorentinTh/LE2ML-GUI/commit/f933abbb912386abc4f56cce032c8e9daed1b385))
+
 ### [1.0.3](https://github.com/FlorentinTh/LE2ML-GUI/compare/v1.0.2...v1.0.3) (2021-05-27)
 
 
