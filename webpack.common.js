@@ -37,6 +37,9 @@ module.exports = {
     filename: '[name].bundle.js',
     publicPath: '/'
   },
+  infrastructureLogging: {
+    level: 'info'
+  },
   plugins: [
     new CleanWebpackPlugin({
       cleanAfterEveryBuildPatterns: ['*.LICENSE.txt']
