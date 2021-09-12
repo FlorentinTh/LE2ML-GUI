@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/FlorentinTh/LE2ML-GUI/compare/v1.1.0...v1.2.0) (2021-09-12)
+
+
+### Features
+
+* **webpack:** add infrastructureLogging option to info level ([f410ed7](https://github.com/FlorentinTh/LE2ML-GUI/commit/f410ed76a977bb3e3a6504887298db6533bbce91))
+
+
+### Chore
+
+* **deps:** update dependencies ([ae10083](https://github.com/FlorentinTh/LE2ML-GUI/commit/ae1008304969c4fa71b14f83fa559970b74350b8))
+
 ## [1.1.0](https://github.com/FlorentinTh/LE2ML-GUI/compare/v1.0.3...v1.1.0) (2021-09-09)
 
 
