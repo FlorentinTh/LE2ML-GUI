@@ -1,6 +1,7 @@
 import ModalHelper from '@ModalHelper';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import Router from '@Router';
 
 class APIHelper {
   static setBaseURL(url, proxy = false) {
@@ -35,9 +36,12 @@ class APIHelper {
 
   static parseJWT(token) {
     try {
-      return JSON.parse(atob(token.split('.')[1]));
+      return JSON.parse(window.atob(token.split('.')[1]));
     } catch (error) {
-      throw new Error('Token corrupted.');
+      setTimeout(() => {
+        Cookies.remove('uuid', { path: '/' });
+        Router.setRoute('/index.html');
+      }, 500);
     }
   }
 

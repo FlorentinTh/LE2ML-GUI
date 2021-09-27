@@ -19,7 +19,7 @@ class SignOut extends Component {
     setTimeout(() => {
       Cookies.remove('uuid', { path: '/' });
       Router.setRoute('/index.html');
-    }, 1000);
+    }, 500);
   }
 }
 

@@ -72,7 +72,12 @@ class UserPassword extends Component {
           const data = response.data;
 
           Cookies.remove('uuid', { path: '/' });
-          Cookies.set('uuid', data.user.token, { path: '/' });
+          Cookies.set('uuid', data.user.token, {
+            path: '/',
+            secure: true,
+            expires: 365,
+            sameSite: 'strict'
+          });
 
           ModalHelper.notification('success', 'Password successfully modified.').then(
             () => {

@@ -82,8 +82,14 @@ class UserInfos extends Component {
       changeUserInfo('/users/' + user._id, data, this.context).then(response => {
         if (response) {
           const userData = response.data.user;
+
           Cookies.remove('uuid', { path: '/' });
-          Cookies.set('uuid', userData.token, { path: '/' });
+          Cookies.set('uuid', userData.token, {
+            path: '/',
+            secure: true,
+            expires: 365,
+            sameSite: 'strict'
+          });
           Cookies.set('isChanged', true, { path: '/' });
           window.location.reload(false);
         }

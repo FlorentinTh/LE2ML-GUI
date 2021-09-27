@@ -61,7 +61,13 @@ class Index extends Controller {
       signIn('/login', jsonData, this.context).then(response => {
         if (response) {
           const userData = response.data.user;
-          Cookies.set('uuid', userData.token, { path: '/' });
+
+          Cookies.set('uuid', userData.token, {
+            path: '/',
+            secure: true,
+            expires: 30,
+            sameSite: 'strict'
+          });
           Cookies.set('isLogged', true, { path: '/' });
           Router.setRoute('/admin.html');
         }
