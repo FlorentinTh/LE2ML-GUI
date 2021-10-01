@@ -78,7 +78,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@openfonts/roboto-mono_latin": "^1.44.1",
-    "axios": "^0.21.4",
+    "axios": "^0.22.0",
     "dayjs": "^1.10.7",
     "email-validator": "^2.0.4",
     "eventsource": "^1.1.0",
