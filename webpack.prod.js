@@ -143,12 +143,8 @@ const prod = {
       cacheGroups: {
         defaultVendors: {
           test: /[\\/]node_modules[\\/]/,
-          name(module) {
-            const packageName = module.context.match(
-              /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-            )[1];
-            return 'npm.' + packageName.replace('@', '');
-          }
+          name: 'vendors',
+          chunks: 'all'
         }
       }
     }
@@ -173,7 +169,8 @@ const prod = {
     colors: true,
     entrypoints: false,
     errorDetails: false,
-    modules: false
+    modules: false,
+    warnings: false
   }
 };
 
