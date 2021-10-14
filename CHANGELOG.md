@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/FlorentinTh/LE2ML-GUI/compare/v1.2.0...v1.2.1) (2021-10-14)
+
+
+### Bug Fixes
+
+* **authentication:** improve management of frontend authentication cookie ([d70199f](https://github.com/FlorentinTh/LE2ML-GUI/commit/d70199f18f513fcb30001268d231366db5685416))
+
+
+### Build System
+
+* **webpack:** update production build wepback file to remove warnings and fix vendor generation ([121eedb](https://github.com/FlorentinTh/LE2ML-GUI/commit/121eedbb5873222b4d503a0c4316a31f20fc3920))
+
+
+### Chore
+
+* **deps:** update dependencies ([da69e57](https://github.com/FlorentinTh/LE2ML-GUI/commit/da69e579744264173246368f5c2a94b9a02bf546))
+* **deps:** update dependencies ([5e9c01d](https://github.com/FlorentinTh/LE2ML-GUI/commit/5e9c01da7dfd58ab32a59d3358dc32ccbb1e608d))
+* **deps:** update dependencies ([4c5a96c](https://github.com/FlorentinTh/LE2ML-GUI/commit/4c5a96caaca53ac2d4f955329bf0ab15a130f1df))
+* **deps:** update dependencies ([d116cc8](https://github.com/FlorentinTh/LE2ML-GUI/commit/d116cc8623830e2fe7f3e3373cbc171e9718ce97))
+
 ## [1.2.0](https://github.com/FlorentinTh/LE2ML-GUI/compare/v1.1.0...v1.2.0) (2021-09-12)
 
 
