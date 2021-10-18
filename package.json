@@ -87,7 +87,7 @@
     "js-cookie": "^3.0.1",
     "js-file-download": "^0.4.12",
     "plotly.js-cartesian-dist-min": "^2.5.1",
-    "sweetalert2": "^11.1.8",
+    "sweetalert2": "^11.1.9",
     "util": "^0.12.4"
   },
   "config": {
