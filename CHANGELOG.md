@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.3](https://github.com/FlorentinTh/LE2ML-GUI/compare/v1.2.2...v1.2.3) (2022-01-13)
+
+
+### Bug Fixes
+
+* **webpack:** fix webpack configuration according to previous deps update: add url polyfill ([e5f5159](https://github.com/FlorentinTh/LE2ML-GUI/commit/e5f5159bf88f6e408163e7c68f5525b6b53007d0))
+
+
+### Chore
+
+* **deps:** update dependencies ([bb7f3e0](https://github.com/FlorentinTh/LE2ML-GUI/commit/bb7f3e02abdef2f70d67235191eadd4fa52ef1e2))
+
 ### [1.2.2](https://github.com/FlorentinTh/LE2ML-GUI/compare/v1.2.1...v1.2.2) (2021-12-08)
 
 
