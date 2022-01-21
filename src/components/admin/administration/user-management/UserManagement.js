@@ -104,29 +104,37 @@ class UserManagement extends Component {
       (usersAdminStore === undefined && usersNormalStore === undefined)
     ) {
       this.initView(true);
-      getUsers('/admin/users?role=admin', this.context).then(response => {
-        if (response) {
-          Store.add({
-            id: 'users-admin',
-            data: response.data
-          });
+      getUsers('/admin/users?role=admin', this.context)
+        .then(response => {
+          if (response) {
+            Store.add({
+              id: 'users-admin',
+              data: response.data
+            });
 
-          usersAdmin = response.data;
+            usersAdmin = response.data;
 
-          getUsers('/admin/users', this.context).then(response => {
-            if (response) {
-              Store.add({
-                id: 'users-normal',
-                data: response.data
+            getUsers('/admin/users', this.context)
+              .then(response => {
+                if (response) {
+                  Store.add({
+                    id: 'users-normal',
+                    data: response.data
+                  });
+
+                  usersNormal = response.data;
+                  usersNormalFull = response.data.users;
+                  this.render();
+                }
+              })
+              .catch(error => {
+                ModalHelper.notification('error', error);
               });
-
-              usersNormal = response.data;
-              usersNormalFull = response.data.users;
-              this.render();
-            }
-          });
-        }
-      });
+          }
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     } else {
       this.render();
     }
@@ -209,29 +217,36 @@ class UserManagement extends Component {
 
         const elems = ['email', 'lastname', 'firstname', 'role'];
 
-        ModalHelper.edit('Edit information', content, 'update', elems).then(result => {
-          if (result.value) {
-            const data = result.value;
+        ModalHelper.edit('Edit information', content, 'update', elems)
+          .then(result => {
+            if (result.value) {
+              const data = result.value;
 
-            updateUser('/admin/users/' + userId, data, this.context).then(response => {
-              if (response) {
-                const user = response.data.user;
+              updateUser('/admin/users/' + userId, data, this.context)
+                .then(response => {
+                  if (response) {
+                    const user = response.data.user;
 
-                const userFullName = StringHelper.capitalizeFirst(user.firstname).concat(
-                  ' ',
-                  StringHelper.capitalizeFirst(user.lastname)
-                );
+                    const userFullName = StringHelper.capitalizeFirst(
+                      user.firstname
+                    ).concat(' ', StringHelper.capitalizeFirst(user.lastname));
 
-                ModalHelper.notification(
-                  'success',
-                  userFullName + ' successfully updated.'
-                );
-                // eslint-disable-next-line no-new
-                new UserManagement(true);
-              }
-            });
-          }
-        });
+                    ModalHelper.notification(
+                      'success',
+                      userFullName + ' successfully updated.'
+                    );
+                    // eslint-disable-next-line no-new
+                    new UserManagement(true);
+                  }
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
+                });
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
 
         const lastnameInput = document.querySelector('input#lastname');
         const firstnameInput = document.querySelector('input#firstname');
@@ -269,24 +284,30 @@ class UserManagement extends Component {
             ? userFullName + ' will loose all privileges.'
             : userFullName + ' will receive admin privileges.';
 
-        ModalHelper.confirm(askTitle, askMessage).then(result => {
-          if (result.value) {
-            const confirmMessage =
-              role === 'admin'
-                ? 'Admin privileges revoked.'
-                : 'Admin privileges granted.';
+        ModalHelper.confirm(askTitle, askMessage)
+          .then(result => {
+            if (result.value) {
+              const confirmMessage =
+                role === 'admin'
+                  ? 'Admin privileges revoked.'
+                  : 'Admin privileges granted.';
 
-            updateRole(`/admin/users/${userId}/role`, data, this.context).then(
-              response => {
-                if (response) {
-                  ModalHelper.notification('success', confirmMessage);
-                  // eslint-disable-next-line no-new
-                  new UserManagement(true);
-                }
-              }
-            );
-          }
-        });
+              updateRole(`/admin/users/${userId}/role`, data, this.context)
+                .then(response => {
+                  if (response) {
+                    ModalHelper.notification('success', confirmMessage);
+                    // eslint-disable-next-line no-new
+                    new UserManagement(true);
+                  }
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
+                });
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       });
     });
   }
@@ -310,20 +331,28 @@ class UserManagement extends Component {
         const askTitle = 'Delete ' + userFullName + ' ?';
         const askMessage = userFullName + ' will be permanently deleted.';
 
-        ModalHelper.confirm(askTitle, askMessage).then(result => {
-          if (result.value) {
-            deleteUser('/admin/users/' + userId, this.context).then(response => {
-              if (response) {
-                ModalHelper.notification(
-                  'success',
-                  userFullName + ' successfully deleted.'
-                );
-                // eslint-disable-next-line no-new
-                new UserManagement(true);
-              }
-            });
-          }
-        });
+        ModalHelper.confirm(askTitle, askMessage)
+          .then(result => {
+            if (result.value) {
+              deleteUser('/admin/users/' + userId, this.context)
+                .then(response => {
+                  if (response) {
+                    ModalHelper.notification(
+                      'success',
+                      userFullName + ' successfully deleted.'
+                    );
+                    // eslint-disable-next-line no-new
+                    new UserManagement(true);
+                  }
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
+                });
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       });
     });
   }

@@ -34,13 +34,17 @@ class Learning extends Task {
     if (storedAllAlgos === undefined) {
       this.renderView(true);
 
-      getAlgorithms('/algos', this.context).then(response => {
-        if (response) {
-          allAlgos = response.data.algorithms;
-          allContainers = Array.from(new Set(allAlgos.map(algo => algo.container)));
-          this.make();
-        }
-      });
+      getAlgorithms('/algos', this.context)
+        .then(response => {
+          if (response) {
+            allAlgos = response.data.algorithms;
+            allContainers = Array.from(new Set(allAlgos.map(algo => algo.container)));
+            this.make();
+          }
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     } else {
       allContainers = allContainers.data;
       this.make();
@@ -247,16 +251,20 @@ class Learning extends Task {
         getAlgoParamsConf(
           `/algos/params/conf/${config}?container=${selectedAlgo.container}`,
           this.context
-        ).then(response => {
-          if (response) {
-            Store.add({
-              id: 'conf-params',
-              data: response.data
-            });
-            const params = new AlgoParameters(response.data, container);
-            params.build(paramsTemplate);
-          }
-        });
+        )
+          .then(response => {
+            if (response) {
+              Store.add({
+                id: 'conf-params',
+                data: response.data
+              });
+              const params = new AlgoParameters(response.data, container);
+              params.build(paramsTemplate);
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       }
 
       super.toggleNavBtnEnable('finish', true);

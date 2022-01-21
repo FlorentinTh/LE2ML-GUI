@@ -41,7 +41,7 @@ class Component {
           Router.setRoute(URLHelper.getPage() + href);
 
           if (href.includes('machine-learning') || href.includes('deep-learning')) {
-            const pipeline = href.substring(1).replace('-', '_');
+            const pipeline = href.substring(1).replace(/-/g, '_');
             sessionStorage.setItem('pipeline', pipeline);
           }
         });

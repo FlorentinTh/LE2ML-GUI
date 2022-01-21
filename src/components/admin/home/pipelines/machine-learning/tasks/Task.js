@@ -225,54 +225,62 @@ class Task {
     const pipelineStored = sessionStorage.getItem('pipeline');
 
     if (pipelineStored === null) {
-      sessionStorage.setItem('pipeline', URLHelper.getHash().replace('-', '_'));
+      sessionStorage.setItem('pipeline', URLHelper.getHash().replace(/-/g, '_'));
     }
 
-    ModalHelper.edit('Job Configuration', content, 'Start Job', elems).then(result => {
-      if (result.value) {
-        const selectedVersion = result.value.version;
-        const labelInput = result.value.label;
+    ModalHelper.edit('Job Configuration', content, 'Start Job', elems)
+      .then(result => {
+        if (result.value) {
+          const selectedVersion = result.value.version;
+          const labelInput = result.value.label;
 
-        if (labelInput === '') {
-          ModalHelper.error('You must provide a label to start the job.');
-        } else if (selectedVersion === 'none') {
-          ModalHelper.error('You must select a version to start the job.');
-        } else {
-          let JSONConf;
-          let urlParams;
-          switch (selectedVersion) {
-            case '1':
-              urlParams = '?v=1';
-              JSONConf = new Configuration().marshall(Versions.v1);
-              break;
+          if (labelInput === '') {
+            ModalHelper.error('You must provide a label to start the job.');
+          } else if (selectedVersion === 'none') {
+            ModalHelper.error('You must select a version to start the job.');
+          } else {
+            let JSONConf;
+            let urlParams;
+            switch (selectedVersion) {
+              case '1':
+                urlParams = '?v=1';
+                JSONConf = new Configuration().marshall(Versions.v1);
+                break;
+            }
+
+            const data = {
+              label: result.value.label.toLowerCase(),
+              conf: JSONConf
+            };
+
+            axios
+              .put('/jobs' + urlParams, data, {
+                headers: APIHelper.setAuthHeader()
+              })
+              .then(response => {
+                if (response) {
+                  ModalHelper.notification('success', response.data.message);
+                }
+              })
+              // eslint-disable-next-line handle-callback-err
+              .catch(() => {
+                ModalHelper.notification(
+                  'error',
+                  'Job created but failed to start',
+                  3500
+                );
+              });
+
+            sessionStorage.clear();
+            // eslint-disable-next-line no-new
+            new SelectProcess(this.context);
+            this.setNavActive('select-process');
           }
-
-          const data = {
-            label: result.value.label.toLowerCase(),
-            conf: JSONConf
-          };
-
-          axios
-            .put('/jobs' + urlParams, data, {
-              headers: APIHelper.setAuthHeader()
-            })
-            .then(response => {
-              if (response) {
-                ModalHelper.notification('success', response.data.message);
-              }
-            })
-            // eslint-disable-next-line handle-callback-err
-            .catch(() => {
-              ModalHelper.notification('error', 'Job created but failed to start', 3500);
-            });
-
-          sessionStorage.clear();
-          // eslint-disable-next-line no-new
-          new SelectProcess(this.context);
-          this.setNavActive('select-process');
         }
-      }
-    });
+      })
+      .catch(error => {
+        ModalHelper.notification('error', error);
+      });
 
     const labelInput = document.querySelector('input#label');
 
@@ -370,8 +378,8 @@ class Task {
     } else {
       const content = formConfVersionTemplate();
       const elems = ['version'];
-      ModalHelper.edit('Choose a Configuration Version', content, 'download', elems).then(
-        result => {
+      ModalHelper.edit('Choose a Configuration Version', content, 'download', elems)
+        .then(result => {
           if (result.value) {
             const selectedVersion = result.value.version;
             if (selectedVersion === 'none') {
@@ -428,8 +436,10 @@ class Task {
                 });
             }
           }
-        }
-      );
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     }
   }
 

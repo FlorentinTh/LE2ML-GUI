@@ -47,7 +47,7 @@ class APIHelper {
 
   static getConnectedUser() {
     const uuid = Cookies.get('uuid');
-    return this.parseJWT(uuid);
+    return APIHelper.parseJWT(uuid);
   }
 
   static errorsHandler(error, replaceContent = false, customPopupClass = null) {

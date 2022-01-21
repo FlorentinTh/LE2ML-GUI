@@ -92,7 +92,7 @@ class Router {
     }
 
     if (URLHelper.getHash() === null) {
-      this.setRoute(URLHelper.getPage());
+      Router.setRoute(URLHelper.getPage());
     } else {
       if (!(menu === null)) {
         Router.route({ hash: URLHelper.getHash(), menu: menu });
@@ -125,16 +125,16 @@ class Router {
 
     if (options.hash === null) {
       if (options.page === null) {
-        this.loadPage('index');
+        Router.loadPage('index');
       } else {
-        this.loadPage(options.page);
+        Router.loadPage(options.page);
       }
     } else {
-      this.loadPage(options.page);
-      this.loadComponent(options.page, options.hash, options.menu);
+      Router.loadPage(options.page);
+      Router.loadComponent(options.page, options.hash, options.menu);
     }
 
-    window.addEventListener('hashchange', this.onHashChangeHandler, true);
+    window.addEventListener('hashchange', Router.onHashChangeHandler, true);
   }
 
   static follow(link) {

@@ -10,6 +10,7 @@ import URLHelper from '@URLHelper';
 import SelectProcess from '../select-process/SelectProcess';
 import Windowing from '../windowing/Windowing';
 import Learning from '../learning/Learning';
+import ModalHelper from '@ModalHelper';
 
 let inputContent;
 
@@ -48,8 +49,8 @@ class DataSource extends Task {
 
     const storedDataSource = sessionStorage.getItem('data-source');
 
-    getFiles(`/files?source=${storedDataSource}&type=${inputType}`, this.context).then(
-      response => {
+    getFiles(`/files?source=${storedDataSource}&type=${inputType}`, this.context)
+      .then(response => {
         if (response) {
           const dataStore = Store.get(inputType + '-file-data');
 
@@ -65,8 +66,10 @@ class DataSource extends Task {
           fileList.setData(response.data);
           fileList.make();
         }
-      }
-    );
+      })
+      .catch(error => {
+        ModalHelper.notification('error', error);
+      });
 
     return fileList;
   }

@@ -129,16 +129,15 @@ class FileList extends Events {
   }
 
   sort(action, order, data) {
-    switch (action) {
-      case 'filename':
-        return SortHelper.sortArrayAlpha(data, action, order);
-      case 'type':
-        return SortHelper.sortArrayAlpha(data, action, order);
-      case 'size':
-        return SortHelper.sortArrayNumber(data, action, order);
-      case 'date':
-        return SortHelper.sortArrayByDate(data, 'dateCreated', order);
+    if (action === 'filename' || action === 'type') {
+      return SortHelper.sortArrayAlpha(data, action, order);
+    } else if (action === 'size') {
+      return SortHelper.sortArrayNumber(data, action, order);
+    } else if (action === 'date') {
+      return SortHelper.sortArrayByDate(data, 'dateCreated', order);
     }
+
+    return data;
   }
 
   buildFileList() {

@@ -173,6 +173,9 @@ class JobsLog extends Component {
         if (response) {
           fileDownload(response.data, 'jobs.log');
         }
+      })
+      .catch(error => {
+        ModalHelper.notification('error', error);
       });
   }
 

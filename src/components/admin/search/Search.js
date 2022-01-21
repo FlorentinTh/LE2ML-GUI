@@ -43,7 +43,7 @@ class Search {
               countNb.textContent = result.length;
               if (result.length > 1) {
                 countMsg.textContent = 'results found';
-              } else if (result.length >= 0 && result.length <= 1) {
+              } else {
                 countMsg.textContent = 'result found';
               }
 

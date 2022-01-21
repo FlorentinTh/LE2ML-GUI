@@ -33,16 +33,20 @@ class AlgoManagement extends Component {
 
     if (this.reload || algoStore === undefined) {
       this.initView(true);
-      getAlgorithms('/algos', this.context).then(response => {
-        if (response) {
-          Store.add({
-            id: 'algorithms',
-            data: response.data
-          });
-          allAlgorithms = response.data;
-          this.render();
-        }
-      });
+      getAlgorithms('/algos', this.context)
+        .then(response => {
+          if (response) {
+            Store.add({
+              id: 'algorithms',
+              data: response.data
+            });
+            allAlgorithms = response.data;
+            this.render();
+          }
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     } else {
       this.render();
     }
@@ -140,28 +144,36 @@ class AlgoManagement extends Component {
     const content = formAlgoTemplate();
     const elems = ['label', 'type', 'enabled', 'container'];
 
-    ModalHelper.edit('Add a new algorithm', content, 'add', elems).then(result => {
-      if (result.value) {
-        const data = {
-          label: result.value.label.toLowerCase(),
-          type: result.value.type,
-          container: result.value.container,
-          enabled: result.value.enabled === 'true'
-        };
+    ModalHelper.edit('Add a new algorithm', content, 'add', elems)
+      .then(result => {
+        if (result.value) {
+          const data = {
+            label: result.value.label.toLowerCase(),
+            type: result.value.type,
+            container: result.value.container,
+            enabled: result.value.enabled === 'true'
+          };
 
-        addAlgo('/algos', data, this.context).then(response => {
-          if (response) {
-            ModalHelper.notification(
-              'success',
-              response.data.label + ' successfully created.'
-            );
-            this.removeTaskAlgoListStore();
-            // eslint-disable-next-line no-new
-            new AlgoManagement(true);
-          }
-        });
-      }
-    });
+          addAlgo('/algos', data, this.context)
+            .then(response => {
+              if (response) {
+                ModalHelper.notification(
+                  'success',
+                  response.data.label + ' successfully created.'
+                );
+                this.removeTaskAlgoListStore();
+                // eslint-disable-next-line no-new
+                new AlgoManagement(true);
+              }
+            })
+            .catch(error => {
+              ModalHelper.notification('error', error);
+            });
+        }
+      })
+      .catch(error => {
+        ModalHelper.notification('error', error);
+      });
 
     const labelInput = document.querySelector('input#label');
     const containerInput = document.querySelector('input#container');
@@ -297,22 +309,30 @@ class AlgoManagement extends Component {
         });
 
         const elems = ['label', 'type', 'container', 'enabled'];
-        ModalHelper.edit('Edit algorithm', content, 'update', elems).then(result => {
-          if (result.value) {
-            const data = result.value;
-            updateAlgo('/algos/' + algoId, data, this.context).then(response => {
-              if (response) {
-                ModalHelper.notification(
-                  'success',
-                  response.data.algo.label + ' successfully updated'
-                );
-                this.removeTaskAlgoListStore();
-                // eslint-disable-next-line no-new
-                new AlgoManagement(true);
-              }
-            });
-          }
-        });
+        ModalHelper.edit('Edit algorithm', content, 'update', elems)
+          .then(result => {
+            if (result.value) {
+              const data = result.value;
+              updateAlgo('/algos/' + algoId, data, this.context)
+                .then(response => {
+                  if (response) {
+                    ModalHelper.notification(
+                      'success',
+                      response.data.algo.label + ' successfully updated'
+                    );
+                    this.removeTaskAlgoListStore();
+                    // eslint-disable-next-line no-new
+                    new AlgoManagement(true);
+                  }
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
+                });
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
 
         const labelInput = document.querySelector('input#label');
         const containerInput = document.querySelector('input#container');
@@ -335,21 +355,29 @@ class AlgoManagement extends Component {
         const askTitle = 'Delete ' + algo.label + ' ?';
         const askMessage = algo.label + ' will be permanently deleted.';
 
-        ModalHelper.confirm(askTitle, askMessage).then(result => {
-          if (result.value) {
-            deleteAlgo('/algos/' + algoId, this.context).then(response => {
-              if (response) {
-                ModalHelper.notification(
-                  'success',
-                  algo.label + ' successfully deleted.'
-                );
-                this.removeTaskAlgoListStore();
-                // eslint-disable-next-line no-new
-                new AlgoManagement(true);
-              }
-            });
-          }
-        });
+        ModalHelper.confirm(askTitle, askMessage)
+          .then(result => {
+            if (result.value) {
+              deleteAlgo('/algos/' + algoId, this.context)
+                .then(response => {
+                  if (response) {
+                    ModalHelper.notification(
+                      'success',
+                      algo.label + ' successfully deleted.'
+                    );
+                    this.removeTaskAlgoListStore();
+                    // eslint-disable-next-line no-new
+                    new AlgoManagement(true);
+                  }
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
+                });
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       });
     });
   }

@@ -43,18 +43,22 @@ class FileContent extends Component {
     if (storedSources === undefined) {
       this.render(true);
 
-      getSources('/sources', this.context).then(response => {
-        if (response) {
-          allSources = response.data.sources;
+      getSources('/sources', this.context)
+        .then(response => {
+          if (response) {
+            allSources = response.data.sources;
 
-          Store.add({
-            id: 'file-atts-data-sources',
-            data: allSources
-          });
+            Store.add({
+              id: 'file-atts-data-sources',
+              data: allSources
+            });
 
-          this.make();
-        }
-      });
+            this.make();
+          }
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     } else {
       allSources = storedSources.data;
       this.make();
@@ -124,27 +128,37 @@ class FileContent extends Component {
 
   initFileListData() {
     this.renderFileList(true);
-    getFiles(`/files?source=${this.dataSource}&type=raw`, this.context).then(response => {
-      if (response) {
-        rawFiles = SortHelper.sortArrayAlpha(response.data, 'filename', 'asc');
-        Store.add({
-          id: 'raw-files',
-          data: rawFiles
-        });
-        getFiles(`/files?source=${this.dataSource}&type=features`, this.context).then(
-          response => {
-            if (response) {
-              featuresFiles = SortHelper.sortArrayAlpha(response.data, 'filename', 'asc');
-              Store.add({
-                id: 'features-files',
-                data: featuresFiles
-              });
-              this.makeFileList();
-            }
-          }
-        );
-      }
-    });
+    getFiles(`/files?source=${this.dataSource}&type=raw`, this.context)
+      .then(response => {
+        if (response) {
+          rawFiles = SortHelper.sortArrayAlpha(response.data, 'filename', 'asc');
+          Store.add({
+            id: 'raw-files',
+            data: rawFiles
+          });
+          getFiles(`/files?source=${this.dataSource}&type=features`, this.context)
+            .then(response => {
+              if (response) {
+                featuresFiles = SortHelper.sortArrayAlpha(
+                  response.data,
+                  'filename',
+                  'asc'
+                );
+                Store.add({
+                  id: 'features-files',
+                  data: featuresFiles
+                });
+                this.makeFileList();
+              }
+            })
+            .catch(error => {
+              ModalHelper.notification('error', error);
+            });
+        }
+      })
+      .catch(error => {
+        ModalHelper.notification('error', error);
+      });
   }
 
   renderFileList(loading = true) {

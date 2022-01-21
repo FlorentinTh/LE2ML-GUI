@@ -28,16 +28,20 @@ class SourceManagement extends Component {
 
     if (this.reload || storedSources === undefined) {
       this.initView(true);
-      getSources('/sources', this.context).then(response => {
-        if (response) {
-          Store.add({
-            id: 'data-sources',
-            data: response.data
-          });
-          allSources = response.data;
-          this.render();
-        }
-      });
+      getSources('/sources', this.context)
+        .then(response => {
+          if (response) {
+            Store.add({
+              id: 'data-sources',
+              data: response.data
+            });
+            allSources = response.data;
+            this.render();
+          }
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     } else {
       this.render();
     }
@@ -124,27 +128,35 @@ class SourceManagement extends Component {
     const content = formSourceTemplate();
     const elems = ['label', 'enabled', 'editable-files'];
 
-    ModalHelper.edit('Add a new data source', content, 'add', elems).then(result => {
-      if (result.value) {
-        const data = {
-          label: result.value.label.toLowerCase(),
-          enabled: result.value.enabled === 'true',
-          editableFiles: result.value['editable-files']
-        };
+    ModalHelper.edit('Add a new data source', content, 'add', elems)
+      .then(result => {
+        if (result.value) {
+          const data = {
+            label: result.value.label.toLowerCase(),
+            enabled: result.value.enabled === 'true',
+            editableFiles: result.value['editable-files']
+          };
 
-        addSource('/sources', data, this.context).then(response => {
-          if (response) {
-            ModalHelper.notification(
-              'success',
-              response.data.label + ' successfully created.'
-            );
-            this.removeStoredDataSources();
-            // eslint-disable-next-line no-new
-            new SourceManagement(true);
-          }
-        });
-      }
-    });
+          addSource('/sources', data, this.context)
+            .then(response => {
+              if (response) {
+                ModalHelper.notification(
+                  'success',
+                  response.data.label + ' successfully created.'
+                );
+                this.removeStoredDataSources();
+                // eslint-disable-next-line no-new
+                new SourceManagement(true);
+              }
+            })
+            .catch(error => {
+              ModalHelper.notification('error', error);
+            });
+        }
+      })
+      .catch(error => {
+        ModalHelper.notification('error', error);
+      });
 
     const labelInput = document.querySelector('input#label');
     this.inputListener(labelInput);
@@ -191,24 +203,30 @@ class SourceManagement extends Component {
           ? source.label + ' will be disabled.'
           : source.label + ' will be enabled.';
 
-        ModalHelper.confirm(askTitle, askMessage).then(result => {
-          if (result.value) {
-            const confirmMessage = source.enabled
-              ? source.label + ' is now disabled.'
-              : source.label + ' is now enabled.';
+        ModalHelper.confirm(askTitle, askMessage)
+          .then(result => {
+            if (result.value) {
+              const confirmMessage = source.enabled
+                ? source.label + ' is now disabled.'
+                : source.label + ' is now enabled.';
 
-            updateState(`/sources/${sourceId}/state`, data, this.context).then(
-              response => {
-                if (response) {
-                  ModalHelper.notification('success', confirmMessage);
-                  this.removeStoredDataSources();
-                  // eslint-disable-next-line no-new
-                  new SourceManagement(true);
-                }
-              }
-            );
-          }
-        });
+              updateState(`/sources/${sourceId}/state`, data, this.context)
+                .then(response => {
+                  if (response) {
+                    ModalHelper.notification('success', confirmMessage);
+                    this.removeStoredDataSources();
+                    // eslint-disable-next-line no-new
+                    new SourceManagement(true);
+                  }
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
+                });
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       });
     });
   }

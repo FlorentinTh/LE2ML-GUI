@@ -36,18 +36,22 @@ class SelectProcess extends Task {
     if (storedSources === undefined) {
       this.render(true);
 
-      getSources('/sources', this.context).then(response => {
-        if (response) {
-          allSources = response.data.sources;
+      getSources('/sources', this.context)
+        .then(response => {
+          if (response) {
+            allSources = response.data.sources;
 
-          Store.add({
-            id: 'home-data-sources',
-            data: allSources
-          });
+            Store.add({
+              id: 'home-data-sources',
+              data: allSources
+            });
 
-          this.make();
-        }
-      });
+            this.make();
+          }
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     } else {
       allSources = storedSources.data;
       this.make();
@@ -305,9 +309,7 @@ class SelectProcess extends Task {
         }
       } else {
         if (radio.checked) {
-          sessionStorage.setItem('cross-validation', true);
-        } else {
-          sessionStorage.setItem('cross-validation', true);
+          sessionStorage.setItem('cross-validation', radio.value);
         }
       }
 
@@ -397,8 +399,8 @@ class SelectProcess extends Task {
         filename || null
       );
 
-      getFiles(`/files?source=${this.dataSource}&type=models`, this.context).then(
-        response => {
+      getFiles(`/files?source=${this.dataSource}&type=models`, this.context)
+        .then(response => {
           if (response) {
             Store.add({
               id: 'model-data',
@@ -408,8 +410,10 @@ class SelectProcess extends Task {
             fileList.setData(response.data);
             fileList.make();
           }
-        }
-      );
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     } else {
       const context = this.context.querySelector('.process-options');
       fileList = new FileList(

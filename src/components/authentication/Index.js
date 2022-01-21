@@ -58,20 +58,24 @@ class Index extends Controller {
       const formData = new FormData(signInForm);
       const jsonData = Object.fromEntries(formData);
 
-      signIn('/login', jsonData, this.context).then(response => {
-        if (response) {
-          const userData = response.data.user;
+      signIn('/login', jsonData, this.context)
+        .then(response => {
+          if (response) {
+            const userData = response.data.user;
 
-          Cookies.set('uuid', userData.token, {
-            path: '/',
-            secure: true,
-            expires: 30,
-            sameSite: 'strict'
-          });
-          Cookies.set('isLogged', true, { path: '/' });
-          Router.setRoute('/admin.html');
-        }
-      });
+            Cookies.set('uuid', userData.token, {
+              path: '/',
+              secure: true,
+              expires: 30,
+              sameSite: 'strict'
+            });
+            Cookies.set('isLogged', true, { path: '/' });
+            Router.setRoute('/admin.html');
+          }
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     });
   }
 

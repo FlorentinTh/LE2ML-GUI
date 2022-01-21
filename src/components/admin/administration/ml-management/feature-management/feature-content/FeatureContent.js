@@ -30,16 +30,20 @@ class FeatureContent extends Component {
 
     if (this.reload || featureStore === undefined) {
       this.initView(true);
-      getFeatures(`/features?source=${this.dataSource}`, this.context).then(response => {
-        if (response) {
-          Store.add({
-            id: 'feature-content',
-            data: response.data
-          });
-          allFeatures = response.data;
-          this.render();
-        }
-      });
+      getFeatures(`/features?source=${this.dataSource}`, this.context)
+        .then(response => {
+          if (response) {
+            Store.add({
+              id: 'feature-content',
+              data: response.data
+            });
+            allFeatures = response.data;
+            this.render();
+          }
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     } else {
       this.render();
     }
@@ -136,29 +140,37 @@ class FeatureContent extends Component {
     const content = formFeatureTemplate();
     const elems = ['label', 'domain', 'container', 'enabled'];
 
-    ModalHelper.edit('Add a new feature', content, 'add', elems).then(result => {
-      if (result.value) {
-        const data = {
-          label: result.value.label.toLowerCase(),
-          domain: result.value.domain,
-          container: result.value.container,
-          enabled: result.value.enabled === 'true',
-          source: this.dataSource.toLowerCase()
-        };
+    ModalHelper.edit('Add a new feature', content, 'add', elems)
+      .then(result => {
+        if (result.value) {
+          const data = {
+            label: result.value.label.toLowerCase(),
+            domain: result.value.domain,
+            container: result.value.container,
+            enabled: result.value.enabled === 'true',
+            source: this.dataSource.toLowerCase()
+          };
 
-        addFeature('/features', data, this.context).then(response => {
-          if (response) {
-            ModalHelper.notification(
-              'success',
-              response.data.label + ' successfully created.'
-            );
-            this.removeTaskFeatureListStore();
-            // eslint-disable-next-line no-new
-            new FeatureContent(this.dataSource, true, '#features');
-          }
-        });
-      }
-    });
+          addFeature('/features', data, this.context)
+            .then(response => {
+              if (response) {
+                ModalHelper.notification(
+                  'success',
+                  response.data.label + ' successfully created.'
+                );
+                this.removeTaskFeatureListStore();
+                // eslint-disable-next-line no-new
+                new FeatureContent(this.dataSource, true, '#features');
+              }
+            })
+            .catch(error => {
+              ModalHelper.notification('error', error);
+            });
+        }
+      })
+      .catch(error => {
+        ModalHelper.notification('error', error);
+      });
 
     const labelInput = document.querySelector('input#label');
     const containerInput = document.querySelector('input#container');
@@ -212,22 +224,30 @@ class FeatureContent extends Component {
         });
 
         const elems = ['label', 'domain', 'container', 'enabled'];
-        ModalHelper.edit('Edit feature', content, 'update', elems).then(result => {
-          if (result.value) {
-            const data = result.value;
-            updateFeature('/features/' + featureId, data, this.context).then(response => {
-              if (response) {
-                ModalHelper.notification(
-                  'success',
-                  response.data.feature.label + ' successfully updated.'
-                );
-                this.removeTaskFeatureListStore();
-                // eslint-disable-next-line no-new
-                new FeatureContent(this.dataSource, true, '#features');
-              }
-            });
-          }
-        });
+        ModalHelper.edit('Edit feature', content, 'update', elems)
+          .then(result => {
+            if (result.value) {
+              const data = result.value;
+              updateFeature('/features/' + featureId, data, this.context)
+                .then(response => {
+                  if (response) {
+                    ModalHelper.notification(
+                      'success',
+                      response.data.feature.label + ' successfully updated.'
+                    );
+                    this.removeTaskFeatureListStore();
+                    // eslint-disable-next-line no-new
+                    new FeatureContent(this.dataSource, true, '#features');
+                  }
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
+                });
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
 
         const labelInput = document.querySelector('input#label');
         const containerInput = document.querySelector('input#container');
@@ -262,23 +282,29 @@ class FeatureContent extends Component {
           ? feature.label + ' will be disabled.'
           : feature.label + ' will be enabled.';
 
-        ModalHelper.confirm(askTitle, askMessage).then(result => {
-          if (result.value) {
-            const confirmMessage = feature.enabled
-              ? feature.label + ' is now disabled.'
-              : feature.label + ' is now enabled.';
-            updateState(`/features/${featureId}/state`, data, this.context).then(
-              response => {
-                if (response) {
-                  ModalHelper.notification('success', confirmMessage);
-                  this.removeTaskFeatureListStore();
-                  // eslint-disable-next-line no-new
-                  new FeatureContent(this.dataSource, true, '#features');
-                }
-              }
-            );
-          }
-        });
+        ModalHelper.confirm(askTitle, askMessage)
+          .then(result => {
+            if (result.value) {
+              const confirmMessage = feature.enabled
+                ? feature.label + ' is now disabled.'
+                : feature.label + ' is now enabled.';
+              updateState(`/features/${featureId}/state`, data, this.context)
+                .then(response => {
+                  if (response) {
+                    ModalHelper.notification('success', confirmMessage);
+                    this.removeTaskFeatureListStore();
+                    // eslint-disable-next-line no-new
+                    new FeatureContent(this.dataSource, true, '#features');
+                  }
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
+                });
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       });
     });
   }
@@ -295,21 +321,29 @@ class FeatureContent extends Component {
         const askTitle = 'Delete ' + feature.label + ' ?';
         const askMessage = feature.label + ' will be permanently deleted.';
 
-        ModalHelper.confirm(askTitle, askMessage).then(result => {
-          if (result.value) {
-            deleteFeature('/features/' + featureId, this.context).then(response => {
-              if (response) {
-                ModalHelper.notification(
-                  'success',
-                  feature.label + ' successfully deleted.'
-                );
-                this.removeTaskFeatureListStore();
-                // eslint-disable-next-line no-new
-                new FeatureContent(this.dataSource, true, '#features');
-              }
-            });
-          }
-        });
+        ModalHelper.confirm(askTitle, askMessage)
+          .then(result => {
+            if (result.value) {
+              deleteFeature('/features/' + featureId, this.context)
+                .then(response => {
+                  if (response) {
+                    ModalHelper.notification(
+                      'success',
+                      feature.label + ' successfully deleted.'
+                    );
+                    this.removeTaskFeatureListStore();
+                    // eslint-disable-next-line no-new
+                    new FeatureContent(this.dataSource, true, '#features');
+                  }
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
+                });
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       });
     });
   }

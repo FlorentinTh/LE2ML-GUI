@@ -39,18 +39,22 @@ class DataVisualisation extends Component {
     if (storedSources === undefined) {
       this.render(true);
 
-      getSources('/sources', this.context).then(response => {
-        if (response) {
-          allSources = response.data.sources;
+      getSources('/sources', this.context)
+        .then(response => {
+          if (response) {
+            allSources = response.data.sources;
 
-          Store.add({
-            id: 'data-viz-sources',
-            data: allSources
-          });
+            Store.add({
+              id: 'data-viz-sources',
+              data: allSources
+            });
 
-          this.make();
-        }
-      });
+            this.make();
+          }
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     } else {
       allSources = storedSources.data;
       this.make();
@@ -98,8 +102,8 @@ class DataVisualisation extends Component {
     if (rawStore === undefined || featuredStore === undefined) {
       this.renderFileList(true);
 
-      getFiles(`/files?source=${this.dataSource}&type=raw`, this.context).then(
-        response => {
+      getFiles(`/files?source=${this.dataSource}&type=raw`, this.context)
+        .then(response => {
           if (response) {
             rawFiles = SortHelper.sortArrayAlpha(response.data, 'filename', 'asc');
 
@@ -108,8 +112,8 @@ class DataVisualisation extends Component {
               data: rawFiles
             });
 
-            getFiles(`/files?source=${this.dataSource}&type=features`, this.context).then(
-              response => {
+            getFiles(`/files?source=${this.dataSource}&type=features`, this.context)
+              .then(response => {
                 if (response) {
                   featuresFiles = SortHelper.sortArrayAlpha(
                     response.data,
@@ -124,11 +128,15 @@ class DataVisualisation extends Component {
 
                   this.makeContent();
                 }
-              }
-            );
+              })
+              .catch(error => {
+                ModalHelper.notification('error', error);
+              });
           }
-        }
-      );
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     } else {
       if (!refresh) {
         rawFiles = rawStore.data;
@@ -196,12 +204,16 @@ class DataVisualisation extends Component {
     getFileHeaders(
       `/files/${this.selectedFile}/headers?source=${this.dataSource}&type=${this.selectedFileType}`,
       this.context
-    ).then(response => {
-      if (response) {
-        attributes = response.data;
-        this.renderAttributeList(false);
-      }
-    });
+    )
+      .then(response => {
+        if (response) {
+          attributes = response.data;
+          this.renderAttributeList(false);
+        }
+      })
+      .catch(error => {
+        ModalHelper.notification('error', error);
+      });
   }
 
   renderAttributeList(loading = true) {

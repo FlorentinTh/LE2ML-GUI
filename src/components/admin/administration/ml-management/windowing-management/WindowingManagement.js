@@ -32,16 +32,20 @@ class WindowingManagement extends Component {
 
     if (this.reload || funcStore === undefined) {
       this.initView(true);
-      getFunctions('/windows', this.context).then(response => {
-        if (response) {
-          Store.add({
-            id: 'window-functions',
-            data: response.data
-          });
-          allWindowFunctions = response.data;
-          this.render();
-        }
-      });
+      getFunctions('/windows', this.context)
+        .then(response => {
+          if (response) {
+            Store.add({
+              id: 'window-functions',
+              data: response.data
+            });
+            allWindowFunctions = response.data;
+            this.render();
+          }
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     } else {
       this.render();
     }
@@ -133,27 +137,35 @@ class WindowingManagement extends Component {
     const content = formFuncTemplate();
     const elems = ['label', 'enabled', 'container'];
 
-    ModalHelper.edit('Add a new window function', content, 'add', elems).then(result => {
-      if (result.value) {
-        const data = {
-          label: result.value.label.toLowerCase(),
-          container: result.value.container,
-          enabled: result.value.enabled === 'true'
-        };
+    ModalHelper.edit('Add a new window function', content, 'add', elems)
+      .then(result => {
+        if (result.value) {
+          const data = {
+            label: result.value.label.toLowerCase(),
+            container: result.value.container,
+            enabled: result.value.enabled === 'true'
+          };
 
-        addFunction('/windows', data, this.context).then(response => {
-          if (response) {
-            ModalHelper.notification(
-              'success',
-              response.data.label + ' successfully created.'
-            );
-            this.removeTaskWindowTypeStore();
-            // eslint-disable-next-line no-new
-            new WindowingManagement(true);
-          }
-        });
-      }
-    });
+          addFunction('/windows', data, this.context)
+            .then(response => {
+              if (response) {
+                ModalHelper.notification(
+                  'success',
+                  response.data.label + ' successfully created.'
+                );
+                this.removeTaskWindowTypeStore();
+                // eslint-disable-next-line no-new
+                new WindowingManagement(true);
+              }
+            })
+            .catch(error => {
+              ModalHelper.notification('error', error);
+            });
+        }
+      })
+      .catch(error => {
+        ModalHelper.notification('error', error);
+      });
 
     const labelInput = document.querySelector('input#label');
     const containerInput = document.querySelector('input#container');
@@ -206,24 +218,30 @@ class WindowingManagement extends Component {
         });
 
         const elems = ['label', 'container', 'enabled'];
-        ModalHelper.edit('Edit window function', content, 'update', elems).then(
-          result => {
+        ModalHelper.edit('Edit window function', content, 'update', elems)
+          .then(result => {
             if (result.value) {
               const data = result.value;
-              update('/windows/' + funcId, data, this.context).then(response => {
-                if (response) {
-                  ModalHelper.notification(
-                    'success',
-                    response.data.function.label + ' successfully updated.'
-                  );
-                  this.removeTaskWindowTypeStore();
-                  // eslint-disable-next-line no-new
-                  new WindowingManagement(true);
-                }
-              });
+              update('/windows/' + funcId, data, this.context)
+                .then(response => {
+                  if (response) {
+                    ModalHelper.notification(
+                      'success',
+                      response.data.function.label + ' successfully updated.'
+                    );
+                    this.removeTaskWindowTypeStore();
+                    // eslint-disable-next-line no-new
+                    new WindowingManagement(true);
+                  }
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
+                });
             }
-          }
-        );
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
 
         const labelInput = document.querySelector('input#label');
         const containerInput = document.querySelector('input#container');
@@ -259,21 +277,29 @@ class WindowingManagement extends Component {
           ? func.label + ' will be disabled.'
           : func.label + ' will be enabled.';
 
-        ModalHelper.confirm(askTitle, askMessage).then(result => {
-          if (result.value) {
-            const confirmMessage = func.enabled
-              ? func.label + ' is now disabled.'
-              : func.label + ' is now enabled.';
-            update(`/windows/${funcId}/state`, data, this.context).then(response => {
-              if (response) {
-                ModalHelper.notification('success', confirmMessage);
-                this.removeTaskWindowTypeStore();
-                // eslint-disable-next-line no-new
-                new WindowingManagement(true);
-              }
-            });
-          }
-        });
+        ModalHelper.confirm(askTitle, askMessage)
+          .then(result => {
+            if (result.value) {
+              const confirmMessage = func.enabled
+                ? func.label + ' is now disabled.'
+                : func.label + ' is now enabled.';
+              update(`/windows/${funcId}/state`, data, this.context)
+                .then(response => {
+                  if (response) {
+                    ModalHelper.notification('success', confirmMessage);
+                    this.removeTaskWindowTypeStore();
+                    // eslint-disable-next-line no-new
+                    new WindowingManagement(true);
+                  }
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
+                });
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       });
     });
   }
@@ -290,21 +316,29 @@ class WindowingManagement extends Component {
         const askTitle = 'Delete ' + func.label + ' ?';
         const askMessage = func.label + ' will be permanently deleted.';
 
-        ModalHelper.confirm(askTitle, askMessage).then(result => {
-          if (result.value) {
-            deleteFunction('/windows/' + funcId, this.context).then(response => {
-              if (response) {
-                ModalHelper.notification(
-                  'success',
-                  func.label + ' successfully deleted.'
-                );
-                this.removeTaskWindowTypeStore();
-                // eslint-disable-next-line no-new
-                new WindowingManagement(true);
-              }
-            });
-          }
-        });
+        ModalHelper.confirm(askTitle, askMessage)
+          .then(result => {
+            if (result.value) {
+              deleteFunction('/windows/' + funcId, this.context)
+                .then(response => {
+                  if (response) {
+                    ModalHelper.notification(
+                      'success',
+                      func.label + ' successfully deleted.'
+                    );
+                    this.removeTaskWindowTypeStore();
+                    // eslint-disable-next-line no-new
+                    new WindowingManagement(true);
+                  }
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
+                });
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       });
     });
   }

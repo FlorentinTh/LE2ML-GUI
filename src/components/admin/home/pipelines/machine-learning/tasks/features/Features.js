@@ -9,6 +9,7 @@ import Store from '@Store';
 import Learning from '../learning/Learning';
 import Windowing from '../windowing/Windowing';
 import configDownloadTemplate from '../config-download.hbs';
+import ModalHelper from '@ModalHelper';
 
 let allFeatures = [];
 let featureItems;
@@ -199,17 +200,21 @@ class Features extends Task {
     const dataSource = sessionStorage.getItem('data-source');
     if (featuresStore === undefined) {
       this.renderView(true);
-      getFeatures(`/features/source/${dataSource}`, this.context).then(response => {
-        if (response) {
-          Store.add({
-            id: 'features-source',
-            data: response.data
-          });
+      getFeatures(`/features/source/${dataSource}`, this.context)
+        .then(response => {
+          if (response) {
+            Store.add({
+              id: 'features-source',
+              data: response.data
+            });
 
-          allFeatures = response.data;
-          this.make();
-        }
-      });
+            allFeatures = response.data;
+            this.make();
+          }
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     } else {
       allFeatures = featuresStore.data;
       this.make();

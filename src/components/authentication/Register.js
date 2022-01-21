@@ -3,7 +3,7 @@ import Theme from '@Theme';
 import Controller from '@Controller';
 import APIHelper from '@APIHelper';
 import StringHelper from '@StringHelper';
-
+import ModalHelper from '@ModalHelper';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -51,12 +51,16 @@ class Register extends Controller {
         passwordConfirm: jsonData.passwordConfirm.trim()
       };
 
-      register('/register', data, this.context).then(response => {
-        if (response) {
-          Cookies.set('isRegistered', true, { path: '/' });
-          Router.setRoute('/index.html');
-        }
-      });
+      register('/register', data, this.context)
+        .then(response => {
+          if (response) {
+            Cookies.set('isRegistered', true, { path: '/' });
+            Router.setRoute('/index.html');
+          }
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     });
   }
 

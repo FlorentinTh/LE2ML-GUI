@@ -33,16 +33,20 @@ class AppKeys extends Component {
 
     if (this.reload || sotredAppKeys === undefined) {
       this.initView(true);
-      getKeys('/apps/keys', this.context).then(response => {
-        if (response) {
-          Store.add({
-            id: 'app-keys',
-            data: response.data
-          });
-          allAppKeys = response.data;
-          this.render();
-        }
-      });
+      getKeys('/apps/keys', this.context)
+        .then(response => {
+          if (response) {
+            Store.add({
+              id: 'app-keys',
+              data: response.data
+            });
+            allAppKeys = response.data;
+            this.render();
+          }
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     } else {
       this.render();
     }
@@ -136,20 +140,28 @@ class AppKeys extends Component {
     const askMessage =
       'Every single key will be permanently revoked and applications using them may no longer work properly. Make sure all of their creators agreed with such a change.';
 
-    ModalHelper.confirm(askTitle, askMessage).then(result => {
-      if (result.value) {
-        revokeKeys('/apps/keys/revoke', this.context).then(response => {
-          if (response) {
-            ModalHelper.notification(
-              'success',
-              response.data.total + ' keys successfully revoked.'
-            );
-            // eslint-disable-next-line no-new
-            new AppKeys(true);
-          }
-        });
-      }
-    });
+    ModalHelper.confirm(askTitle, askMessage)
+      .then(result => {
+        if (result.value) {
+          revokeKeys('/apps/keys/revoke', this.context)
+            .then(response => {
+              if (response) {
+                ModalHelper.notification(
+                  'success',
+                  response.data.total + ' keys successfully revoked.'
+                );
+                // eslint-disable-next-line no-new
+                new AppKeys(true);
+              }
+            })
+            .catch(error => {
+              ModalHelper.notification('error', error);
+            });
+        }
+      })
+      .catch(error => {
+        ModalHelper.notification('error', error);
+      });
   }
 
   addBtnListener(event) {
@@ -159,57 +171,65 @@ class AppKeys extends Component {
     const content = formAppKeysTemplate({ update: false });
     const elems = ['name', 'description'];
 
-    ModalHelper.edit('Generate a new app key', content, 'generate', elems).then(
-      result => {
+    ModalHelper.edit('Generate a new app key', content, 'generate', elems)
+      .then(result => {
         if (result.value) {
           const data = {
             name: result.value.name.toLowerCase(),
             description: result.value.description.toLowerCase()
           };
 
-          generateKey('/apps/keys/generate', data, this.context).then(response => {
-            if (response) {
-              const content = formCopyKeyTemplate({ key: response.data.app.key });
-              const elems = ['key'];
+          generateKey('/apps/keys/generate', data, this.context)
+            .then(response => {
+              if (response) {
+                const content = formCopyKeyTemplate({ key: response.data.app.key });
+                const elems = ['key'];
 
-              ModalHelper.edit('Your new app key', content, 'OK', elems, false).then(
-                response => {
-                  if (response) {
-                    // eslint-disable-next-line no-new
-                    new AppKeys(true);
-                  }
-                }
-              );
+                ModalHelper.edit('Your new app key', content, 'OK', elems, false)
+                  .then(response => {
+                    if (response) {
+                      // eslint-disable-next-line no-new
+                      new AppKeys(true);
+                    }
+                  })
+                  .catch(error => {
+                    ModalHelper.notification('error', error);
+                  });
 
-              const copyBtn = document.querySelector('button#copy-key');
-              copyBtn.addEventListener(
-                'click',
-                event => {
-                  event.preventDefault();
-                  event.stopImmediatePropagation();
-                  const keyInput = document.querySelector('input#key');
+                const copyBtn = document.querySelector('button#copy-key');
+                copyBtn.addEventListener(
+                  'click',
+                  event => {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                    const keyInput = document.querySelector('input#key');
 
-                  keyInput.select();
-                  keyInput.setSelectionRange(0, 99999);
-                  document.execCommand('copy');
+                    keyInput.select();
+                    keyInput.setSelectionRange(0, 99999);
+                    document.execCommand('copy');
 
-                  if (window.getSelection) {
-                    window.getSelection().removeAllRanges();
-                  } else {
-                    document.selection.empty();
-                  }
+                    if (window.getSelection) {
+                      window.getSelection().removeAllRanges();
+                    } else {
+                      document.selection.empty();
+                    }
 
-                  copyBtn.children[0].classList.remove('far', 'fa-clipboard');
-                  copyBtn.children[0].classList.add('fas', 'fa-check');
-                  copyBtn.disabled = true;
-                },
-                false
-              );
-            }
-          });
+                    copyBtn.children[0].classList.remove('far', 'fa-clipboard');
+                    copyBtn.children[0].classList.add('fas', 'fa-check');
+                    copyBtn.disabled = true;
+                  },
+                  false
+                );
+              }
+            })
+            .catch(error => {
+              ModalHelper.notification('error', error);
+            });
         }
-      }
-    );
+      })
+      .catch(error => {
+        ModalHelper.notification('error', error);
+      });
   }
 
   setActions(appKeys) {
@@ -222,7 +242,7 @@ class AppKeys extends Component {
 
     buttons.forEach(button => {
       const appKeyId = button.closest('#app-key-infos').dataset.key;
-      const key = appKeys.find(elem => elem._id === appKeyId);
+      const key = Array.prototype.find.call(appKeys, elem => elem._id === appKeyId);
 
       button.addEventListener('click', event => {
         event.preventDefault();
@@ -231,17 +251,28 @@ class AppKeys extends Component {
         const askTitle = 'Revoke key ?';
         const askMessage = `${key.name} will be permanently revoked and applications using it may no longer work properly. Make sure its creator agreed with such a change.`;
 
-        ModalHelper.confirm(askTitle, askMessage).then(result => {
-          if (result.value) {
-            revokeKeys('/apps/keys/revoke/' + appKeyId, this.context).then(response => {
-              if (response) {
-                ModalHelper.notification('success', key.name + ' successfully revoked.');
-                // eslint-disable-next-line no-new
-                new AppKeys(true);
-              }
-            });
-          }
-        });
+        ModalHelper.confirm(askTitle, askMessage)
+          .then(result => {
+            if (result.value) {
+              revokeKeys('/apps/keys/revoke/' + appKeyId, this.context)
+                .then(response => {
+                  if (response) {
+                    ModalHelper.notification(
+                      'success',
+                      key.name + ' successfully revoked.'
+                    );
+                    // eslint-disable-next-line no-new
+                    new AppKeys(true);
+                  }
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
+                });
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       });
     });
   }
@@ -251,7 +282,7 @@ class AppKeys extends Component {
 
     buttons.forEach(button => {
       const appKeyId = button.closest('#app-key-infos').dataset.key;
-      const key = appKeys.find(elem => elem._id === appKeyId);
+      const key = Array.prototype.find.call(appKeys, elem => elem._id === appKeyId);
 
       button.addEventListener('click', event => {
         event.preventDefault();
@@ -264,21 +295,29 @@ class AppKeys extends Component {
 
         const elems = ['name', 'description'];
 
-        ModalHelper.edit('Edit app key', content, 'update', elems).then(result => {
-          if (result.value) {
-            const data = result.value;
-            updateKey('/apps/keys/' + appKeyId, data, this.context).then(response => {
-              if (response) {
-                ModalHelper.notification(
-                  'success',
-                  response.data.appKey.name + ' successfully updated'
-                );
-                // eslint-disable-next-line no-new
-                new AppKeys(true);
-              }
-            });
-          }
-        });
+        ModalHelper.edit('Edit app key', content, 'update', elems)
+          .then(result => {
+            if (result.value) {
+              const data = result.value;
+              updateKey('/apps/keys/' + appKeyId, data, this.context)
+                .then(response => {
+                  if (response) {
+                    ModalHelper.notification(
+                      'success',
+                      response.data.appKey.name + ' successfully updated'
+                    );
+                    // eslint-disable-next-line no-new
+                    new AppKeys(true);
+                  }
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
+                });
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       });
     });
   }

@@ -5,6 +5,7 @@ import Store from '@Store';
 import axios from 'axios';
 import APIHelper from '@APIHelper';
 import FeatureContent from './feature-content/FeatureContent';
+import ModalHelper from '@ModalHelper';
 
 let allSources;
 
@@ -28,18 +29,22 @@ class FeatureManagement extends Component {
     if (storedSources === undefined) {
       this.render(true);
 
-      getSources('/sources', this.context).then(response => {
-        if (response) {
-          allSources = response.data.sources;
+      getSources('/sources', this.context)
+        .then(response => {
+          if (response) {
+            allSources = response.data.sources;
 
-          Store.add({
-            id: 'admin-data-sources',
-            data: allSources
-          });
+            Store.add({
+              id: 'admin-data-sources',
+              data: allSources
+            });
 
-          this.make();
-        }
-      });
+            this.make();
+          }
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     } else {
       allSources = storedSources.data;
       this.make();

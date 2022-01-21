@@ -37,18 +37,22 @@ class Windowing extends Task {
     if (windowFuncStore === undefined) {
       this.renderView(true);
 
-      getFunctions('/windows', this.context).then(response => {
-        if (response) {
-          windowFunctions = response.data.functions;
+      getFunctions('/windows', this.context)
+        .then(response => {
+          if (response) {
+            windowFunctions = response.data.functions;
 
-          Store.add({
-            id: 'window-type',
-            data: windowFunctions
-          });
+            Store.add({
+              id: 'window-type',
+              data: windowFunctions
+            });
 
-          this.make();
-        }
-      });
+            this.make();
+          }
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     } else {
       windowFunctions = windowFuncStore.data;
       this.make();

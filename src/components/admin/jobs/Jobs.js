@@ -23,18 +23,26 @@ class Jobs extends Component {
   initData() {
     this.initView(true);
 
-    getJobs('/jobs/user?state=started', this.context).then(response => {
-      if (response) {
-        startedJobs = response.data.jobs;
+    getJobs('/jobs/user?state=started', this.context)
+      .then(response => {
+        if (response) {
+          startedJobs = response.data.jobs;
 
-        getJobs('/jobs/user?state=completed', this.context).then(response => {
-          if (response) {
-            completedJobs = response.data.jobs;
-            this.run();
-          }
-        });
-      }
-    });
+          getJobs('/jobs/user?state=completed', this.context)
+            .then(response => {
+              if (response) {
+                completedJobs = response.data.jobs;
+                this.run();
+              }
+            })
+            .catch(error => {
+              ModalHelper.notification('error', error);
+            });
+        }
+      })
+      .catch(error => {
+        ModalHelper.notification('error', error);
+      });
   }
 
   initView(loading = false) {
@@ -59,29 +67,33 @@ class Jobs extends Component {
       });
     } else {
       if (opts.refresh) {
-        getJobs(`/jobs/user?state=${value}`, this.context).then(response => {
-          if (response) {
-            jobs = response.data.jobs;
+        getJobs(`/jobs/user?state=${value}`, this.context)
+          .then(response => {
+            if (response) {
+              jobs = response.data.jobs;
 
-            container.innerHTML = jobListTemplate({
-              jobs: jobs,
-              jobType: value,
-              loading: opts.loading
-            });
+              container.innerHTML = jobListTemplate({
+                jobs: jobs,
+                jobType: value,
+                loading: opts.loading
+              });
 
-            if (value === 'completed') {
-              this.toggleActionEnable(jobs);
+              if (value === 'completed') {
+                this.toggleActionEnable(jobs);
+              }
+
+              this.setActions(jobs);
+
+              if (value === 'started') {
+                startedJobs = jobs;
+              } else {
+                completedJobs = jobs;
+              }
             }
-
-            this.setActions(jobs);
-
-            if (value === 'started') {
-              startedJobs = jobs;
-            } else {
-              completedJobs = jobs;
-            }
-          }
-        });
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       } else {
         if (value === 'started') {
           jobs = startedJobs;
@@ -143,19 +155,27 @@ class Jobs extends Component {
 
         const askTitle = 'Cancel job ?';
         const askMessage = job.label + ' will be canceled.';
-        ModalHelper.confirm(askTitle, askMessage).then(result => {
-          if (result.value) {
-            cancelJob(`/jobs/${jobId}/cancel/`, null, this.context).then(response => {
-              if (response) {
-                ModalHelper.notification(
-                  'success',
-                  job.label + ' successfully canceled.'
-                );
-                this.buildJobList(this.jobState, { refresh: true });
-              }
-            });
-          }
-        });
+        ModalHelper.confirm(askTitle, askMessage)
+          .then(result => {
+            if (result.value) {
+              cancelJob(`/jobs/${jobId}/cancel/`, null, this.context)
+                .then(response => {
+                  if (response) {
+                    ModalHelper.notification(
+                      'success',
+                      job.label + ' successfully canceled.'
+                    );
+                    this.buildJobList(this.jobState, { refresh: true });
+                  }
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
+                });
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       });
     });
   }
@@ -171,12 +191,16 @@ class Jobs extends Component {
         event.preventDefault();
         event.stopImmediatePropagation();
 
-        restartJob(`/jobs/${jobId}/restart/`, null, this.context).then(response => {
-          if (response) {
-            ModalHelper.notification('success', job.label + ' successfully started.');
-            this.buildJobList(this.jobState, { refresh: true });
-          }
-        });
+        restartJob(`/jobs/${jobId}/restart/`, null, this.context)
+          .then(response => {
+            if (response) {
+              ModalHelper.notification('success', job.label + ' successfully started.');
+              this.buildJobList(this.jobState, { refresh: true });
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       });
     });
   }
@@ -195,16 +219,27 @@ class Jobs extends Component {
         const askTitle = 'Delete job ?';
         const askMessage = job.label + ' will be permanently deleted.';
 
-        ModalHelper.confirm(askTitle, askMessage).then(result => {
-          if (result.value) {
-            deleteJob('/jobs/' + jobId, this.context).then(response => {
-              if (response) {
-                ModalHelper.notification('success', job.label + ' successfully deleted.');
-                this.buildJobList(this.jobState, { refresh: true });
-              }
-            });
-          }
-        });
+        ModalHelper.confirm(askTitle, askMessage)
+          .then(result => {
+            if (result.value) {
+              deleteJob('/jobs/' + jobId, this.context)
+                .then(response => {
+                  if (response) {
+                    ModalHelper.notification(
+                      'success',
+                      job.label + ' successfully deleted.'
+                    );
+                    this.buildJobList(this.jobState, { refresh: true });
+                  }
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
+                });
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       });
     });
   }
@@ -255,13 +290,15 @@ class Jobs extends Component {
         event.preventDefault();
         event.stopImmediatePropagation();
 
-        downloadFile(`/jobs/${jobId}/download?output=matrix`, this.context).then(
-          response => {
+        downloadFile(`/jobs/${jobId}/download?output=matrix`, this.context)
+          .then(response => {
             if (response) {
               fileDownload(response, 'matrix.csv');
             }
-          }
-        );
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       });
     }
   }
@@ -278,13 +315,15 @@ class Jobs extends Component {
         event.preventDefault();
         event.stopImmediatePropagation();
 
-        downloadFile(`/jobs/${jobId}/download?output=predictions`, this.context).then(
-          response => {
+        downloadFile(`/jobs/${jobId}/download?output=predictions`, this.context)
+          .then(response => {
             if (response) {
               fileDownload(response, 'predictions.csv');
             }
-          }
-        );
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       });
     }
   }

@@ -48,12 +48,16 @@ class AttributeContent extends Component {
       getFileHeaders(
         `/files/${this.selectedFile}/headers?source=${this.dataSource}&type=${this.selectedFileType}`,
         this.context
-      ).then(response => {
-        if (response) {
-          this.attributes = response.data;
-          this.make();
-        }
-      });
+      )
+        .then(response => {
+          if (response) {
+            this.attributes = response.data;
+            this.make();
+          }
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     }
   }
 
@@ -105,25 +109,29 @@ class AttributeContent extends Component {
       getFileHeaders(
         `/files/${this.selectedFile}/headers?source=${this.dataSource}&type=${this.selectedFileType}`,
         this.context
-      ).then(response => {
-        if (response) {
-          this.attributes = response.data;
-          container.innerHTML = attributeListTemplate({
-            attributes: this.attributes,
-            loading: false
-          });
-          this.setActions();
-          const saveBtn = this.context.querySelector('button#save');
-          if (!saveBtn.classList.contains('disabled')) {
-            if (this.edited) {
-              saveBtn.classList.remove('primary');
-              saveBtn.classList.add('disabled');
-              saveBtn.setAttribute('disabled', true);
-              this.edited = false;
+      )
+        .then(response => {
+          if (response) {
+            this.attributes = response.data;
+            container.innerHTML = attributeListTemplate({
+              attributes: this.attributes,
+              loading: false
+            });
+            this.setActions();
+            const saveBtn = this.context.querySelector('button#save');
+            if (!saveBtn.classList.contains('disabled')) {
+              if (this.edited) {
+                saveBtn.classList.remove('primary');
+                saveBtn.classList.add('disabled');
+                saveBtn.setAttribute('disabled', true);
+                this.edited = false;
+              }
             }
           }
-        }
-      });
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     }
   }
 
@@ -149,39 +157,43 @@ class AttributeContent extends Component {
           attribute: attribute
         });
         const elems = ['attribute-name'];
-        ModalHelper.edit('Edit Attribute', content, 'Update', elems).then(result => {
-          if (result.value) {
-            const data = {
-              label: result.value['attribute-name']
-            };
-            for (let i = 0; i < this.attributes.length; ++i) {
-              const att = this.attributes[i];
-              if (att.label === attribute) {
-                if (!(data.label === att.label)) {
-                  if (!(storedEdit === undefined)) {
-                    const invertedMap = new Map(
-                      [...storedEdit.data.entries()].map(([key, value]) => [value, key])
-                    );
-                    const originalAtt = invertedMap.get(att.label);
-                    if (!(originalAtt === undefined)) {
-                      if (originalAtt === data.label) {
-                        storedEdit.data.delete(originalAtt);
+        ModalHelper.edit('Edit Attribute', content, 'Update', elems)
+          .then(result => {
+            if (result.value) {
+              const data = {
+                label: result.value['attribute-name']
+              };
+              for (let i = 0; i < this.attributes.length; ++i) {
+                const att = this.attributes[i];
+                if (att.label === attribute) {
+                  if (!(data.label === att.label)) {
+                    if (!(storedEdit === undefined)) {
+                      const invertedMap = new Map(
+                        [...storedEdit.data.entries()].map(([key, value]) => [value, key])
+                      );
+                      const originalAtt = invertedMap.get(att.label);
+                      if (!(originalAtt === undefined)) {
+                        if (originalAtt === data.label) {
+                          storedEdit.data.delete(originalAtt);
+                        } else {
+                          storedEdit.data.set(originalAtt, data.label);
+                        }
                       } else {
-                        storedEdit.data.set(originalAtt, data.label);
+                        storedEdit.data.set(att.label, data.label);
                       }
-                    } else {
-                      storedEdit.data.set(att.label, data.label);
                     }
+                    att.label = data.label;
                   }
-                  att.label = data.label;
                 }
               }
-            }
 
-            this.edited = true;
-            this.buildAttributeList(false);
-          }
-        });
+              this.edited = true;
+              this.buildAttributeList(false);
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
         const attributeNameInput = document.querySelector('input#attribute-name');
         this.inputListener(attributeNameInput);
       });
@@ -211,81 +223,97 @@ class AttributeContent extends Component {
           'Save new file...',
           true,
           false
-        ).then(result => {
-          if (result.value) {
-            const loader = ModalHelper.loading(
-              'Saving file...',
-              'Please wait while the file is begin saved'
-            );
-            saveFile(
-              `/files/${this.selectedFile}/edit?source=${this.dataSource}&type=${this.selectedFileType}&override=true`,
-              data,
-              this.context
-            ).then(response => {
-              if (response) {
-                loader.close();
-                ModalHelper.notification('success', response.message);
-                // eslint-disable-next-line no-new
-                new AttributeContent(
-                  '#att-content',
-                  this.dataSource,
-                  this.selectedFile,
-                  this.selectedFileType,
-                  this.attributes
-                );
-              }
-            });
-          } else {
-            const content = saveFileTemplate({
-              filename: this.selectedFile.split('.').slice(0, -1)
-            });
-            const elems = ['filename'];
-            ModalHelper.edit('Create File', content, 'Create', elems).then(result => {
-              if (result.value) {
-                const loader = ModalHelper.loading(
-                  'Saving file...',
-                  'Please wait while the file is begin saved'
-                );
-                data.newFilename =
-                  result.value.filename + '.' + this.selectedFile.split('.').pop();
-                saveFile(
-                  `/files/${this.selectedFile}/edit?source=${this.dataSource}&type=${this.selectedFileType}&override=false`,
-                  data,
-                  this.context
-                ).then(response => {
+        )
+          .then(result => {
+            if (result.value) {
+              const loader = ModalHelper.loading(
+                'Saving file...',
+                'Please wait while the file is begin saved'
+              );
+              saveFile(
+                `/files/${this.selectedFile}/edit?source=${this.dataSource}&type=${this.selectedFileType}&override=true`,
+                data,
+                this.context
+              )
+                .then(response => {
                   if (response) {
                     loader.close();
                     ModalHelper.notification('success', response.message);
-
-                    if (this.selectedFileType === 'raw') {
-                      Store.remove('raw-files');
-                      const fileRawStore = Store.get('admin-file-raw');
-                      if (!(fileRawStore === undefined)) {
-                        Store.remove('admin-file-raw');
-                      }
-                    } else if (this.selectedFileType === 'features') {
-                      Store.remove('features-files');
-                      const fileFeatureStore = Store.get('admin-file-features');
-                      if (!(fileFeatureStore === undefined)) {
-                        Store.remove('admin-file-features');
-                      }
-                    }
                     // eslint-disable-next-line no-new
-                    new FileContent(
-                      null,
+                    new AttributeContent(
+                      '#att-content',
                       this.dataSource,
                       this.selectedFile,
                       this.selectedFileType,
-                      true
+                      this.attributes
                     );
                   }
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
                 });
-              }
-            });
-            const filenameInput = document.querySelector('input#filename');
-            this.inputListener(filenameInput);
-          }
-        });
+            } else {
+              const content = saveFileTemplate({
+                filename: this.selectedFile.split('.').slice(0, -1)
+              });
+              const elems = ['filename'];
+              ModalHelper.edit('Create File', content, 'Create', elems)
+                .then(result => {
+                  if (result.value) {
+                    const loader = ModalHelper.loading(
+                      'Saving file...',
+                      'Please wait while the file is begin saved'
+                    );
+                    data.newFilename =
+                      result.value.filename + '.' + this.selectedFile.split('.').pop();
+                    saveFile(
+                      `/files/${this.selectedFile}/edit?source=${this.dataSource}&type=${this.selectedFileType}&override=false`,
+                      data,
+                      this.context
+                    )
+                      .then(response => {
+                        if (response) {
+                          loader.close();
+                          ModalHelper.notification('success', response.message);
+
+                          if (this.selectedFileType === 'raw') {
+                            Store.remove('raw-files');
+                            const fileRawStore = Store.get('admin-file-raw');
+                            if (!(fileRawStore === undefined)) {
+                              Store.remove('admin-file-raw');
+                            }
+                          } else if (this.selectedFileType === 'features') {
+                            Store.remove('features-files');
+                            const fileFeatureStore = Store.get('admin-file-features');
+                            if (!(fileFeatureStore === undefined)) {
+                              Store.remove('admin-file-features');
+                            }
+                          }
+                          // eslint-disable-next-line no-new
+                          new FileContent(
+                            null,
+                            this.dataSource,
+                            this.selectedFile,
+                            this.selectedFileType,
+                            true
+                          );
+                        }
+                      })
+                      .catch(error => {
+                        ModalHelper.notification('error', error);
+                      });
+                  }
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
+                });
+              const filenameInput = document.querySelector('input#filename');
+              this.inputListener(filenameInput);
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       },
       false
     );
@@ -303,31 +331,35 @@ class AttributeContent extends Component {
         event.stopImmediatePropagation();
         const askTitle = 'Delete attribute ?';
         const askMessage = attribute + ' will be permanently deleted.';
-        ModalHelper.confirm(askTitle, askMessage).then(result => {
-          if (result.value) {
-            for (let i = 0; i < this.attributes.length; ++i) {
-              const att = this.attributes[i];
-              if (att.pos > position) {
-                att.pos = att.pos - 1;
+        ModalHelper.confirm(askTitle, askMessage)
+          .then(result => {
+            if (result.value) {
+              for (let i = 0; i < this.attributes.length; ++i) {
+                const att = this.attributes[i];
+                if (att.pos > position) {
+                  att.pos = att.pos - 1;
+                }
               }
-            }
-            const storedEdit = Store.get('edit-list');
-            if (!(storedEdit === undefined)) {
-              const invertedMap = new Map(
-                [...storedEdit.data.entries()].map(([key, value]) => [value, key])
-              );
-              const originalAtt = invertedMap.get(attribute);
-              if (!(originalAtt === undefined)) {
-                storedEdit.data.set(originalAtt, 'none');
-              } else {
-                storedEdit.data.set(attribute, 'none');
+              const storedEdit = Store.get('edit-list');
+              if (!(storedEdit === undefined)) {
+                const invertedMap = new Map(
+                  [...storedEdit.data.entries()].map(([key, value]) => [value, key])
+                );
+                const originalAtt = invertedMap.get(attribute);
+                if (!(originalAtt === undefined)) {
+                  storedEdit.data.set(originalAtt, 'none');
+                } else {
+                  storedEdit.data.set(attribute, 'none');
+                }
               }
+              this.attributes = this.attributes.filter(att => att.label !== attribute);
+              this.edited = true;
+              this.buildAttributeList(false);
             }
-            this.attributes = this.attributes.filter(att => att.label !== attribute);
-            this.edited = true;
-            this.buildAttributeList(false);
-          }
-        });
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       });
     });
   }
@@ -338,13 +370,9 @@ class AttributeContent extends Component {
       event => {
         event.preventDefault();
         event.stopImmediatePropagation();
-        switch (input.id) {
-          case 'filename':
-            input.value = input.value.replace(/[^0-9a-zA-Z_]/gi, '_').toLowerCase();
-            break;
-          case 'attribute-name':
-            input.value = input.value.replace(/[^0-9a-zA-Z_]/gi, '_').toLowerCase();
-            break;
+
+        if (input.id === 'filename' || input.id === 'attribute-name') {
+          input.value = input.value.replace(/[^0-9a-zA-Z_]/gi, '_').toLowerCase();
         }
       },
       false

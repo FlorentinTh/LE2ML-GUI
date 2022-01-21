@@ -47,11 +47,13 @@ class TempPassword extends Component {
         tempPasswordConfirm: jsonData.tempPasswordConfirm.trim()
       };
 
-      setTempPassword('/admin/users/password/' + data.email, data, this.context).then(
-        response => {
+      setTempPassword('/admin/users/password/' + data.email, data, this.context)
+        .then(response => {
           ModalHelper.notification('success', response.message);
-        }
-      );
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     });
   }
 
@@ -66,14 +68,18 @@ class TempPassword extends Component {
 
         if (!(value.trim() === '')) {
           if (EmailValidator.validate(value)) {
-            getUserByEmail('/admin/users/email/' + value, this.context).then(response => {
-              const data = response.data.user;
-              const userName = StringHelper.capitalizeFirst(data.firstname).concat(
-                ' ',
-                StringHelper.getFirstLetterCapitalized(data.lastname)
-              );
-              ModalHelper.notification('success', 'Correct email for ' + userName);
-            });
+            getUserByEmail('/admin/users/email/' + value, this.context)
+              .then(response => {
+                const data = response.data.user;
+                const userName = StringHelper.capitalizeFirst(data.firstname).concat(
+                  ' ',
+                  StringHelper.getFirstLetterCapitalized(data.lastname)
+                );
+                ModalHelper.notification('success', 'Correct email for ' + userName);
+              })
+              .catch(error => {
+                ModalHelper.notification('error', error);
+              });
           }
         }
       }

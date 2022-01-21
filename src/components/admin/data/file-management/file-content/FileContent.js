@@ -41,41 +41,46 @@ class FileContent extends Component {
       fileFeatureStore === undefined
     ) {
       this.initView(true);
-      getFiles(`/files?source=${this.dataSource}&type=models`, this.context).then(
-        response => {
+      getFiles(`/files?source=${this.dataSource}&type=models`, this.context)
+        .then(response => {
           if (response) {
             Store.add({
               id: 'admin-file-models',
               data: response.data
             });
             fileModels = response.data;
-            getFiles(`/files?source=${this.dataSource}&type=raw`, this.context).then(
-              response => {
+            getFiles(`/files?source=${this.dataSource}&type=raw`, this.context)
+              .then(response => {
                 if (response) {
                   Store.add({
                     id: 'admin-file-raw',
                     data: response.data
                   });
                   fileRaw = response.data;
-                  getFiles(
-                    `/files?source=${this.dataSource}&type=features`,
-                    this.context
-                  ).then(response => {
-                    if (response) {
-                      Store.add({
-                        id: 'admin-file-features',
-                        data: response.data
-                      });
-                      fileFeatures = response.data;
-                      this.render();
-                    }
-                  });
+                  getFiles(`/files?source=${this.dataSource}&type=features`, this.context)
+                    .then(response => {
+                      if (response) {
+                        Store.add({
+                          id: 'admin-file-features',
+                          data: response.data
+                        });
+                        fileFeatures = response.data;
+                        this.render();
+                      }
+                    })
+                    .catch(error => {
+                      ModalHelper.notification('error', error);
+                    });
                 }
-              }
-            );
+              })
+              .catch(error => {
+                ModalHelper.notification('error', error);
+              });
           }
-        }
-      );
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     } else {
       this.render();
     }
@@ -238,38 +243,46 @@ class FileContent extends Component {
           content,
           'download',
           elems
-        ).then(result => {
-          if (result.value) {
-            const fileFormat = filename.split('.').pop().toLowerCase();
-            const selectedFormat = result.value.format.toLowerCase();
-            if (selectedFormat === 'none') {
-              ModalHelper.error('You must select a format to download the file.');
-            } else {
-              const loader = ModalHelper.loading(
-                'Preparing Download...',
-                'Your download will begin automatically'
-              );
+        )
+          .then(result => {
+            if (result.value) {
+              const fileFormat = filename.split('.').pop().toLowerCase();
+              const selectedFormat = result.value.format.toLowerCase();
+              if (selectedFormat === 'none') {
+                ModalHelper.error('You must select a format to download the file.');
+              } else {
+                const loader = ModalHelper.loading(
+                  'Preparing Download...',
+                  'Your download will begin automatically'
+                );
 
-              downloadFile(
-                `/files/${filename}/download?source=${this.dataSource}&type=${this.fileType}&from=${fileFormat}&to=${selectedFormat}`,
-                this.context
-              ).then(response => {
-                if (response) {
-                  loader.close();
+                downloadFile(
+                  `/files/${filename}/download?source=${this.dataSource}&type=${this.fileType}&from=${fileFormat}&to=${selectedFormat}`,
+                  this.context
+                )
+                  .then(response => {
+                    if (response) {
+                      loader.close();
 
-                  let mimetype = 'text/csv';
+                      let mimetype = 'text/csv';
 
-                  if (typeof response === 'object') {
-                    response = JSON.stringify(response, null, 2);
-                    mimetype = 'application/json';
-                  }
+                      if (typeof response === 'object') {
+                        response = JSON.stringify(response, null, 2);
+                        mimetype = 'application/json';
+                      }
 
-                  fileDownload(response, `${filename}.${selectedFormat}`, mimetype);
-                }
-              });
+                      fileDownload(response, `${filename}.${selectedFormat}`, mimetype);
+                    }
+                  })
+                  .catch(error => {
+                    ModalHelper.notification('error', error);
+                  });
+              }
             }
-          }
-        });
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       });
     });
   }
@@ -286,37 +299,46 @@ class FileContent extends Component {
           filename: filename.split('.').slice(0, -1)
         });
         const elems = ['filename'];
-        ModalHelper.edit('Rename File', content, 'rename', elems).then(result => {
-          if (result.value) {
-            const data = {
-              oldFilename: filename,
-              newFilename: result.value.filename + '.' + filename.split('.').pop(),
-              fileType: this.fileType
-            };
-            renameFile(
-              `/files/rename?source=${this.dataSource}`,
-              data,
-              this.context
-            ).then(response => {
-              if (response) {
-                ModalHelper.notification('success', response.message);
-                if (this.fileType === 'raw') {
-                  const rawStore = Store.get('raw-files');
-                  if (!(rawStore === undefined)) {
-                    Store.remove('raw-files');
+        ModalHelper.edit('Rename File', content, 'rename', elems)
+          .then(result => {
+            if (result.value) {
+              const data = {
+                oldFilename: filename,
+                newFilename: result.value.filename + '.' + filename.split('.').pop(),
+                fileType: this.fileType
+              };
+              renameFile(`/files/rename?source=${this.dataSource}`, data, this.context)
+                .then(response => {
+                  if (response) {
+                    ModalHelper.notification('success', response.message);
+                    if (this.fileType === 'raw') {
+                      const rawStore = Store.get('raw-files');
+                      if (!(rawStore === undefined)) {
+                        Store.remove('raw-files');
+                      }
+                    } else if (this.fileType === 'features') {
+                      const featuredStore = Store.get('features-files');
+                      if (!(featuredStore === undefined)) {
+                        Store.remove('features-files');
+                      }
+                    }
+                    // eslint-disable-next-line no-new
+                    new FileContent(
+                      this.dataSource,
+                      true,
+                      this.fileType,
+                      '#file-content'
+                    );
                   }
-                } else if (this.fileType === 'features') {
-                  const featuredStore = Store.get('features-files');
-                  if (!(featuredStore === undefined)) {
-                    Store.remove('features-files');
-                  }
-                }
-                // eslint-disable-next-line no-new
-                new FileContent(this.dataSource, true, this.fileType, '#file-content');
-              }
-            });
-          }
-        });
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
+                });
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
         const filenameInput = document.querySelector('input#filename');
         this.inputListener(filenameInput);
       });
@@ -349,34 +371,45 @@ class FileContent extends Component {
         event.stopImmediatePropagation();
         const askTitle = 'Delete File ?';
         const askMessage = filename + ' will be permanently deleted.';
-        ModalHelper.confirm(askTitle, askMessage).then(result => {
-          if (result.value) {
-            const data = {
-              filename: filename,
-              fileType: this.fileType
-            };
-            deleteFile(`/files?source=${this.dataSource}`, data, this.context).then(
-              response => {
-                if (response) {
-                  ModalHelper.notification('success', response.message);
-                  if (this.fileType === 'raw') {
-                    const rawStore = Store.get('raw-files');
-                    if (!(rawStore === undefined)) {
-                      Store.remove('raw-files');
+        ModalHelper.confirm(askTitle, askMessage)
+          .then(result => {
+            if (result.value) {
+              const data = {
+                filename: filename,
+                fileType: this.fileType
+              };
+              deleteFile(`/files?source=${this.dataSource}`, data, this.context)
+                .then(response => {
+                  if (response) {
+                    ModalHelper.notification('success', response.message);
+                    if (this.fileType === 'raw') {
+                      const rawStore = Store.get('raw-files');
+                      if (!(rawStore === undefined)) {
+                        Store.remove('raw-files');
+                      }
+                    } else if (this.fileType === 'features') {
+                      const featuredStore = Store.get('features-files');
+                      if (!(featuredStore === undefined)) {
+                        Store.remove('features-files');
+                      }
                     }
-                  } else if (this.fileType === 'features') {
-                    const featuredStore = Store.get('features-files');
-                    if (!(featuredStore === undefined)) {
-                      Store.remove('features-files');
-                    }
+                    // eslint-disable-next-line no-new
+                    new FileContent(
+                      this.dataSource,
+                      true,
+                      this.fileType,
+                      '#file-content'
+                    );
                   }
-                  // eslint-disable-next-line no-new
-                  new FileContent(this.dataSource, true, this.fileType, '#file-content');
-                }
-              }
-            );
-          }
-        });
+                })
+                .catch(error => {
+                  ModalHelper.notification('error', error);
+                });
+            }
+          })
+          .catch(error => {
+            ModalHelper.notification('error', error);
+          });
       });
     });
   }

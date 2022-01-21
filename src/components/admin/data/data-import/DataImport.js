@@ -41,18 +41,22 @@ class DataImport extends Component {
     if (storedSources === undefined) {
       this.render(true);
 
-      getSources('/sources', this.context).then(response => {
-        if (response) {
-          allSources = response.data.sources;
+      getSources('/sources', this.context)
+        .then(response => {
+          if (response) {
+            allSources = response.data.sources;
 
-          Store.add({
-            id: 'import-data-sources',
-            data: allSources
-          });
+            Store.add({
+              id: 'import-data-sources',
+              data: allSources
+            });
 
-          this.make();
-        }
-      });
+            this.make();
+          }
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     } else {
       allSources = storedSources.data;
       this.make();
@@ -332,13 +336,17 @@ class DataImport extends Component {
             const title = response.data.message;
             const message = 'Do you want to override it ?';
 
-            ModalHelper.confirm(title, message).then(result => {
-              if (result.value) {
-                this.uploadFile(formData, true);
-              } else {
-                this.resetFileUpload();
-              }
-            });
+            ModalHelper.confirm(title, message)
+              .then(result => {
+                if (result.value) {
+                  this.uploadFile(formData, true);
+                } else {
+                  this.resetFileUpload();
+                }
+              })
+              .catch(error => {
+                ModalHelper.notification('error', error);
+              });
           } else {
             this.uploadFile(formData);
           }

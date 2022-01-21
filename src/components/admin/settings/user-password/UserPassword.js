@@ -62,33 +62,39 @@ class UserPassword extends Component {
         newPasswordConfirm: jsonData.newPasswordConfirm.trim()
       };
 
-      changePassword(`/users/${user._id}/password`, data, this.context).then(response => {
-        if (response) {
-          const inputs = changePasswordForm.querySelectorAll('input:not([type=email])');
-          inputs.forEach(input => {
-            input.value = '';
-          });
+      changePassword(`/users/${user._id}/password`, data, this.context)
+        .then(response => {
+          if (response) {
+            const inputs = changePasswordForm.querySelectorAll('input:not([type=email])');
+            inputs.forEach(input => {
+              input.value = '';
+            });
 
-          const data = response.data;
+            const data = response.data;
 
-          Cookies.remove('uuid', { path: '/' });
-          Cookies.set('uuid', data.user.token, {
-            path: '/',
-            secure: true,
-            expires: 365,
-            sameSite: 'strict'
-          });
+            Cookies.remove('uuid', { path: '/' });
+            Cookies.set('uuid', data.user.token, {
+              path: '/',
+              secure: true,
+              expires: 365,
+              sameSite: 'strict'
+            });
 
-          ModalHelper.notification('success', 'Password successfully modified.').then(
-            () => {
-              const isLogged = Cookies.get('isLogged');
-              if (isLogged === 'true') {
-                Cookies.remove('isLogged', { path: '/' });
-              }
-            }
-          );
-        }
-      });
+            ModalHelper.notification('success', 'Password successfully modified.')
+              .then(() => {
+                const isLogged = Cookies.get('isLogged');
+                if (isLogged === 'true') {
+                  Cookies.remove('isLogged', { path: '/' });
+                }
+              })
+              .catch(error => {
+                ModalHelper.notification('error', error);
+              });
+          }
+        })
+        .catch(error => {
+          ModalHelper.notification('error', error);
+        });
     });
   }
 

@@ -12,18 +12,18 @@ class URLHelper {
       throw new Error('Expected type for argument location is String.');
     }
 
-    const url = location || this.getURL();
-    const start = this.getProtocol().length + 2;
+    const url = location || URLHelper.getURL();
+    const start = URLHelper.getProtocol().length + 2;
     return url.substr(start, url.lastIndexOf('html') + 4 - start);
   }
 
   static getPage() {
-    const path = this.getPath();
+    const path = URLHelper.getPath();
     return path.substr(path.indexOf('/'));
   }
 
   static getPageName() {
-    const page = this.getPage();
+    const page = URLHelper.getPage();
     return page.substr(1, page.indexOf('.') - 1);
   }
 
@@ -31,8 +31,8 @@ class URLHelper {
     if (!(location === null) && !(typeof location === 'string')) {
       throw new Error('Expected type for argument location is String.');
     }
-    const url = location || this.getURL();
-    const page = this.getPage();
+    const url = location || URLHelper.getURL();
+    const page = URLHelper.getPage();
     const args = url.substr(url.indexOf(page) + page.length);
 
     if (args.indexOf('#') > -1) {
@@ -54,7 +54,7 @@ class URLHelper {
       throw new Error('Expected type for argument hash is String.');
     }
 
-    return hash.substr(1, hash.length);
+    return hash.substring(1, hash.length);
   }
 
   static toSlug(value) {
@@ -62,7 +62,7 @@ class URLHelper {
       throw new Error('Expected type for argument value is String.');
     }
 
-    return value.toLocaleLowerCase().replace(' ', '-');
+    return value.toLocaleLowerCase().replace(/ /g, '-');
   }
 
   static toAnchor(value) {
