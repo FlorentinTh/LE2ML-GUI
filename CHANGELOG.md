@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.6](https://github.com/FlorentinTh/LE2ML-GUI/compare/v1.2.5...v1.2.6) (2022-02-02)
+
+
+### CI
+
+* **build-workflow:** remove update npm task that is not required anymore ([3b82099](https://github.com/FlorentinTh/LE2ML-GUI/commit/3b82099a7169a956a3627e164a9649d241e327ed))
+
+
+### Refactors
+
+* **src-files:** refactor to comply with object-shorthand eslint rule ([f1798f0](https://github.com/FlorentinTh/LE2ML-GUI/commit/f1798f0421a68a636d052b5a94d7a979e9bfe23d))
+
+
+### Chore
+
+* **deps:** update dependencies ([f04404a](https://github.com/FlorentinTh/LE2ML-GUI/commit/f04404a26e962a3e5d97920f00f89d8c252ad787))
+* **deps:** update dependencies ([04905f0](https://github.com/FlorentinTh/LE2ML-GUI/commit/04905f0a88f68698fd9d08162d1b4e4a3cd3c6e2))
+
 ### [1.2.5](https://github.com/FlorentinTh/LE2ML-GUI/compare/v1.2.4...v1.2.5) (2022-01-21)
 
 
