@@ -97,7 +97,7 @@ class FileContent extends Component {
     fileFilters = new Filters(filters, FilterType.FILES);
 
     if (loading) {
-      this.buildFileList(this.fileType, { defaultSort: false, loading: loading });
+      this.buildFileList(this.fileType, { defaultSort: false, loading });
     }
   }
 
@@ -116,7 +116,7 @@ class FileContent extends Component {
     if (opts.loading) {
       files = [];
       container.innerHTML = fileListTemplate({
-        files: files,
+        files,
         loading: opts.loading
       });
 
@@ -139,7 +139,7 @@ class FileContent extends Component {
         files = fileFilters.setDefaultSort(files);
       }
       container.innerHTML = fileListTemplate({
-        files: files,
+        files,
         fileType: value,
         loading: opts.loading
       });
@@ -375,7 +375,7 @@ class FileContent extends Component {
           .then(result => {
             if (result.value) {
               const data = {
-                filename: filename,
+                filename,
                 fileType: this.fileType
               };
               deleteFile(`/files?source=${this.dataSource}`, data, this.context)
@@ -452,7 +452,7 @@ async function deleteFile(url, data, context) {
   try {
     const response = await axios.delete(url, {
       headers: APIHelper.setAuthHeader(),
-      data: data
+      data
     });
     return response.data;
   } catch (error) {

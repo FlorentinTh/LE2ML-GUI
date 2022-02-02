@@ -55,14 +55,14 @@ class WindowingManagement extends Component {
     const total = allWindowFunctions === undefined ? 0 : allWindowFunctions.total;
     this.context.innerHTML = windowingManagementTemplate({
       title: this.title,
-      total: total
+      total
     });
 
     const filters = this.context.querySelectorAll('.filters span.filter');
     windowFuncFilters = new Filters(filters, FilterType.DEFAULT);
 
     if (loading) {
-      this.buildFuncList('#functions', { defaultSort: false, loading: loading });
+      this.buildFuncList('#functions', { defaultSort: false, loading });
     }
   }
 

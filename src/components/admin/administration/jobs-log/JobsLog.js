@@ -56,7 +56,7 @@ class JobsLog extends Component {
 
     if (loading) {
       this.buildLogEntriesList('#log-entries', {
-        loading: loading
+        loading
       });
     }
   }

@@ -71,7 +71,7 @@ class Windowing extends Task {
     const select = this.context.querySelector(id);
     select.innerHTML += funcListTemplate({
       functions: windowFunctions,
-      loading: loading
+      loading
     });
   }
 

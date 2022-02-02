@@ -52,14 +52,14 @@ class FeatureContent extends Component {
   initView(loading = false) {
     const total = allFeatures === undefined ? 0 : allFeatures.total;
     this.context.innerHTML = featureContentTemplate({
-      total: total
+      total
     });
 
     const filters = this.context.querySelectorAll('.filters span.filter');
     featuresFilters = new Filters(filters, FilterType.DEFAULT);
 
     if (loading) {
-      this.buildFeatureList('#features', { defaultSort: false, loading: loading });
+      this.buildFeatureList('#features', { defaultSort: false, loading });
     }
   }
 
@@ -87,7 +87,7 @@ class FeatureContent extends Component {
     if (opts.loading) {
       features = [];
       container.innerHTML = featureListTemplate({
-        features: features,
+        features,
         loading: opts.loading
       });
 
@@ -107,7 +107,7 @@ class FeatureContent extends Component {
       }
 
       container.innerHTML = featureListTemplate({
-        features: features,
+        features,
         loading: opts.loading
       });
 

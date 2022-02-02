@@ -110,9 +110,9 @@ class ModalHelper {
     icon = 'warning'
   ) {
     return Swal.fire({
-      title: title,
+      title,
       html: message,
-      icon: icon,
+      icon,
       position: 'top',
       confirmButtonText: confirmText,
       showCancelButton: cancelable,
@@ -125,7 +125,7 @@ class ModalHelper {
 
   static loading(title, message) {
     return Swal.fire({
-      title: title,
+      title,
       html: message,
       position: 'top',
       width: 600,

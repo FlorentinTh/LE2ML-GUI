@@ -64,7 +64,7 @@ class AttributeContent extends Component {
   render(loading = true) {
     const total = this.attributes === undefined ? 0 : this.attributes.length;
     this.context.innerHTML = attributeContentTemplate({
-      total: total
+      total
     });
 
     this.buildAttributeList(loading);
@@ -153,8 +153,9 @@ class AttributeContent extends Component {
       button.addEventListener('click', event => {
         event.preventDefault();
         event.stopImmediatePropagation();
+
         const content = editFileTemplate({
-          attribute: attribute
+          attribute
         });
         const elems = ['attribute-name'];
         ModalHelper.edit('Edit Attribute', content, 'Update', elems)

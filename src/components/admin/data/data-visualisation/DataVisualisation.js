@@ -73,7 +73,7 @@ class DataVisualisation extends Component {
     const select = this.context.querySelector(id);
     select.innerHTML += sourceListTemplate({
       sources: allSources,
-      loading: loading
+      loading
     });
   }
 
@@ -160,8 +160,8 @@ class DataVisualisation extends Component {
 
     const optGroup = this.context.querySelector(id);
     optGroup.innerHTML = fileListTemplate({
-      files: files,
-      loading: loading
+      files,
+      loading
     });
 
     const selectFile = this.context.querySelector('select#file');
@@ -224,8 +224,8 @@ class DataVisualisation extends Component {
     const attributeSelect = this.context.querySelector('select#attribute');
 
     attributeSelect.innerHTML = attributeListTemplate({
-      attributes: attributes,
-      loading: loading
+      attributes,
+      loading
     });
   }
 

@@ -75,7 +75,7 @@ class DataImport extends Component {
     const select = this.context.querySelector(id);
     select.innerHTML += sourceListTemplate({
       sources: allSources,
-      loading: loading
+      loading
     });
   }
 
@@ -270,8 +270,8 @@ class DataImport extends Component {
             }
 
             Store.update('file-upload', {
-              filename: filename,
-              size: size,
+              filename,
+              size,
               progress: progressValue
             });
           }

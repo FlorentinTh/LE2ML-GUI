@@ -110,7 +110,7 @@ class V1 {
       if (!(Object.keys(parameters).length === 0)) {
         result.algorithm = {
           ...result.algorithm,
-          parameters: parameters
+          parameters
         };
       }
     }

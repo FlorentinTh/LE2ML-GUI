@@ -51,7 +51,7 @@ class Jobs extends Component {
     });
 
     if (loading) {
-      this.buildJobList(this.jobState, { loading: loading });
+      this.buildJobList(this.jobState, { loading });
     }
   }
 
@@ -62,7 +62,7 @@ class Jobs extends Component {
     if (opts.loading) {
       jobs = [];
       container.innerHTML = jobListTemplate({
-        jobs: jobs,
+        jobs,
         loading: opts.loading
       });
     } else {
@@ -73,7 +73,7 @@ class Jobs extends Component {
               jobs = response.data.jobs;
 
               container.innerHTML = jobListTemplate({
-                jobs: jobs,
+                jobs,
                 jobType: value,
                 loading: opts.loading
               });
@@ -102,7 +102,7 @@ class Jobs extends Component {
         }
 
         container.innerHTML = jobListTemplate({
-          jobs: jobs,
+          jobs,
           jobType: value,
           loading: opts.loading
         });

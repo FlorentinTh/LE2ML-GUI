@@ -63,7 +63,7 @@ class FeatureManagement extends Component {
     const select = this.context.querySelector(id);
     select.innerHTML += sourceListTemplate({
       sources: allSources,
-      loading: loading
+      loading
     });
   }
 

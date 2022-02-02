@@ -121,7 +121,7 @@ class Admin extends Controller {
     const itemList = this.buildItemList(user);
 
     const options = {
-      context: context,
+      context,
       items: itemList,
       theme: true,
       logoURL: URLHelper.toAnchor(URLHelper.toSlug(itemList[0].name))

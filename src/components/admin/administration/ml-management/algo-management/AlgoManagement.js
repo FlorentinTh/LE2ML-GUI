@@ -56,14 +56,14 @@ class AlgoManagement extends Component {
     const total = allAlgorithms === undefined ? 0 : allAlgorithms.total;
     this.context.innerHTML = algoManagementTemplate({
       title: this.title,
-      total: total
+      total
     });
 
     const filters = this.context.querySelectorAll('.filters span.filter');
     algoFilters = new Filters(filters, FilterType.DEFAULT);
 
     if (loading) {
-      this.buildAlgoList('#algorithms', { defaultSort: false, loading: loading });
+      this.buildAlgoList('#algorithms', { defaultSort: false, loading });
     }
   }
 
@@ -91,7 +91,7 @@ class AlgoManagement extends Component {
     if (opts.loading) {
       algorithms = [];
       container.innerHTML = algoListTemplate({
-        algorithms: algorithms,
+        algorithms,
         loading: opts.loading
       });
 
@@ -111,7 +111,7 @@ class AlgoManagement extends Component {
       }
 
       container.innerHTML = algoListTemplate({
-        algorithms: algorithms,
+        algorithms,
         loading: opts.loading
       });
 

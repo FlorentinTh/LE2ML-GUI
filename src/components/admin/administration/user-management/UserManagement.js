@@ -46,7 +46,7 @@ class UserManagement extends Component {
     if (opts.loading) {
       users = [];
       container.innerHTML = userListTemplate({
-        users: users,
+        users,
         loading: opts.loading
       });
 
@@ -78,7 +78,7 @@ class UserManagement extends Component {
       }
 
       container.innerHTML = userListTemplate({
-        users: users,
+        users,
         loading: opts.loading
       });
 
@@ -157,8 +157,8 @@ class UserManagement extends Component {
     normalFilters = new Filters(normalFiltersElems, FilterType.USERS);
 
     if (loading) {
-      this.buildUserList('#users-admin', { defaultSort: false, loading: loading });
-      this.buildUserList('#users-normal', { defaultSort: false, loading: loading });
+      this.buildUserList('#users-admin', { defaultSort: false, loading });
+      this.buildUserList('#users-normal', { defaultSort: false, loading });
     }
   }
 

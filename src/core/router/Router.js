@@ -95,7 +95,7 @@ class Router {
       Router.setRoute(URLHelper.getPage());
     } else {
       if (!(menu === null)) {
-        Router.route({ hash: URLHelper.getHash(), menu: menu });
+        Router.route({ hash: URLHelper.getHash(), menu });
       } else {
         Router.route({ hash: URLHelper.getHash() });
       }

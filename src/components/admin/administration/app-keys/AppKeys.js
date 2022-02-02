@@ -56,7 +56,7 @@ class AppKeys extends Component {
     const total = allAppKeys === undefined ? 0 : allAppKeys.total;
     this.context.innerHTML = appKeysTemplate({
       title: this.title,
-      total: total
+      total
     });
 
     const filters = this.context.querySelectorAll('.filters span.filter');
@@ -64,7 +64,7 @@ class AppKeys extends Component {
     appKeysFilters = new Filters(filters, FilterType.APP_KEYS);
 
     if (loading) {
-      this.buildAppKeysList('#app-keys', { defaultSort: false, loading: loading });
+      this.buildAppKeysList('#app-keys', { defaultSort: false, loading });
     }
   }
 

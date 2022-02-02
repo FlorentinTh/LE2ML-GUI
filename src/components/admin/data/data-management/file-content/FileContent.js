@@ -77,7 +77,7 @@ class FileContent extends Component {
     const select = this.context.querySelector(id);
     select.innerHTML += sourceListTemplate({
       sources: allSources,
-      loading: loading
+      loading
     });
   }
 
@@ -170,8 +170,8 @@ class FileContent extends Component {
     const files = id.includes('raw') ? rawFiles : featuresFiles;
     const optGroup = this.context.querySelector(id);
     optGroup.innerHTML = fileListTemplate({
-      files: files,
-      loading: loading
+      files,
+      loading
     });
   }
 

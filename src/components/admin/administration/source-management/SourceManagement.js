@@ -51,11 +51,11 @@ class SourceManagement extends Component {
     const total = allSources === undefined ? 0 : allSources.total;
     this.context.innerHTML = sourceManagementTemplate({
       title: this.title,
-      total: total
+      total
     });
 
     if (loading) {
-      this.buildSourceList('#sources', { loading: loading });
+      this.buildSourceList('#sources', { loading });
     }
   }
 

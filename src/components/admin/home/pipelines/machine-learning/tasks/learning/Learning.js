@@ -65,7 +65,7 @@ class Learning extends Task {
     const select = this.context.querySelector(id);
     select.innerHTML += containerListTemplate({
       containers: allContainers,
-      loading: loading
+      loading
     });
   }
 
@@ -127,7 +127,7 @@ class Learning extends Task {
 
     const optGroup = this.context.querySelector(id);
     optGroup.innerHTML = algoListTemplate({
-      algos: algos
+      algos
     });
   }
 
@@ -232,7 +232,7 @@ class Learning extends Task {
         container.classList.add('no-conf');
       }
       container.innerHTML = paramsTemplate({
-        config: config,
+        config,
         algo: selectedAlgo,
         loading: false
       });

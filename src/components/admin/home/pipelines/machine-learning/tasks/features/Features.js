@@ -190,8 +190,8 @@ class Features extends Task {
     const container = this.context.querySelector(id + ' > .list-container');
 
     container.innerHTML = featureListTemplate({
-      features: features,
-      loading: loading
+      features,
+      loading
     });
   }
 
