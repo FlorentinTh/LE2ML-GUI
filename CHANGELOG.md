@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.7](https://github.com/FlorentinTh/LE2ML-GUI/compare/v1.2.6...v1.2.7) (2022-03-04)
+
+
+### Chore
+
+* **deps:** fix mistakenly removed node-sass dependency ([b07c146](https://github.com/FlorentinTh/LE2ML-GUI/commit/b07c14668b78c6d8eb49445ffa09196260020deb))
+* **deps:** update dependencies ([9ab5f48](https://github.com/FlorentinTh/LE2ML-GUI/commit/9ab5f48360051e3db79ca7f1900cbeae77f8ae31))
+* **deps:** update dependencies ([e455d0e](https://github.com/FlorentinTh/LE2ML-GUI/commit/e455d0e9d86b6356c3eb839f3fb34475144fd486))
+* **deps:** update dependencies ([674703a](https://github.com/FlorentinTh/LE2ML-GUI/commit/674703aedefef29029c80ab0332dd8a14fe86314))
+* **deps:** update dependencies ([7099cba](https://github.com/FlorentinTh/LE2ML-GUI/commit/7099cbae0e88edc89c0c86a04b1aefc02ea70b87))
+* **deps:** update dependencies ([67e4fb7](https://github.com/FlorentinTh/LE2ML-GUI/commit/67e4fb7563461732cbf0cd984354adf051a12b2a))
+
 ### [1.2.6](https://github.com/FlorentinTh/LE2ML-GUI/compare/v1.2.5...v1.2.6) (2022-02-02)
 
 
