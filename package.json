@@ -93,5 +93,12 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "overrides": {
+    "commitizen": "^4.2.4",
+    "cz-conventional-changelog": "^3.3.0",
+    "minimist": "^1.2.6",
+    "async": "^2.6.4",
+    "semver-regex": "^3.1.3"
   }
 }
