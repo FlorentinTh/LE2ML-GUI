@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.12](https://github.com/FlorentinTh/LE2ML-GUI/compare/v1.2.11...v1.2.12) (2022-04-22)
+
+
+### Chore
+
+* **deps:** fix several dependencies vulnerabilities ([3126e50](https://github.com/FlorentinTh/LE2ML-GUI/commit/3126e50cb40dffbcbc64668ee3242a3ed63c8988))
+* **eslint:** fix previous changes made in eslint config ([a25fca3](https://github.com/FlorentinTh/LE2ML-GUI/commit/a25fca339f119d277104bd611db9ceeac4ba0713))
+
 ### [1.2.11](https://github.com/FlorentinTh/LE2ML-GUI/compare/v1.2.10...v1.2.11) (2022-04-19)
 
 
