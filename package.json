@@ -81,7 +81,7 @@
     "axios": "^0.26.1",
     "dayjs": "^1.11.1",
     "email-validator": "^2.0.4",
-    "eventsource": "^2.0.0",
+    "eventsource": "^2.0.1",
     "handlebars": "^4.7.7",
     "handlebars-utils": "^1.0.6",
     "js-cookie": "^3.0.1",
