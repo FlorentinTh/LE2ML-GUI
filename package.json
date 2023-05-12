@@ -84,7 +84,7 @@
     "eventsource": "^2.0.2",
     "handlebars": "^4.7.7",
     "handlebars-utils": "^1.0.6",
-    "js-cookie": "^3.0.1",
+    "js-cookie": "^3.0.4",
     "js-file-download": "^0.4.12",
     "plotly.js-cartesian-dist-min": "^2.12.1",
     "sweetalert2": "^11.4.19"
